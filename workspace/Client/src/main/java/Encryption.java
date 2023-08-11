@@ -22,7 +22,7 @@ public class Encryption extends MessageToMessageEncoder<ByteBuf> {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
     IvParameterSpec ivParamSpec = new IvParameterSpec(iv.getBytes());
-        cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+    cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
 //
 //    @Override
 //    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
