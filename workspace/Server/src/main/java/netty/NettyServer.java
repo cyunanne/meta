@@ -33,17 +33,16 @@ public class NettyServer {
             bootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
 
             bootstrap.channel(NioServerSocketChannel.class);
-//            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
 
                     // SSL
-//                    File cert = new File(certPath); // 인증서
-//                    File key = new File(keyPath);   // 개인키
-//                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    File cert = new File(certPath); // 인증서
+                    File key = new File(keyPath);   // 개인키
+                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
                     // 암호화
                     pipeline.addLast(new Encryption());

@@ -34,13 +34,12 @@ public class Client {
                     ChannelPipeline pipeline = ch.pipeline();
 
                     // SSL
-//                    SslContext sslContext = SslContextBuilder.forClient().build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    SslContext sslContext = SslContextBuilder.forClient().build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
                     // 암호화
                     pipeline.addLast(new Encryption());
 //                    pipeline.addLast(new ByteArrayEncoder());
-
                     pipeline.addLast(new Decryption());
 
                     // default
