@@ -20,8 +20,8 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
         InputStream input = new BufferedInputStream(new FileInputStream((String)msg));
 
         byte[] buffer = new byte[1024];
-        System.arraycopy(filename.getBytes(), 0, buffer, 0, filename.length());
-        ctx.writeAndFlush(buffer);
+//        System.arraycopy(filename.getBytes(), 0, buffer, 0, filename.length());
+//        ctx.writeAndFlush(buffer);
 
         int read = -1;
         while ((read = input.read(buffer)) != -1) {

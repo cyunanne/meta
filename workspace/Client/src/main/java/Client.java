@@ -7,6 +7,8 @@ import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 
 import java.util.Scanner;
 
@@ -30,10 +32,10 @@ public class Client {
                     FileHandler fileHandler = new FileHandler();
 
                     // SSL
-//                    SslContext sslContext = SslContextBuilder.forClient().build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    SslContext sslContext = SslContextBuilder.forClient().build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-                    pipeline.addLast(new StringEncoder());
+//                    pipeline.addLast(new StringEncoder());
                     pipeline.addLast(new ByteArrayEncoder());
 //                    pipeline.addLast(new ByteArrayDecoder());
                     pipeline.addLast(new StringDecoder());

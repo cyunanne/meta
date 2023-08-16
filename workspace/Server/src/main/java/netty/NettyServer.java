@@ -16,9 +16,11 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 
+import javax.crypto.Cipher;
 import javax.net.ssl.SSLException;
-import java.io.File;
+import java.io.*;
 import java.net.InetSocketAddress;
+import java.security.spec.ECField;
 
 public class NettyServer {
 
@@ -33,12 +35,11 @@ public class NettyServer {
     public void run() {
 
         EventLoopGroup bossEventLoopGroup = new NioEventLoopGroup(); // Listen ServerSocket
-        EventLoopGroup workerEventLoopGroup = new NioEventLoopGroup(); // 만들어진 Channel에서 넘어온 이벤트 처리
+        EventLoopGroup workerEventLoopGroup = new NioEventLoopGroup();
 
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
-
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
@@ -47,25 +48,24 @@ public class NettyServer {
                     FileHandler fileHandler = new FileHandler();
 
                     // SSL
-//                    File cert = new File(certPath); // 인증서
-//                    File key = new File(keyPath);   // 개인키
-//                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    File cert = new File(certPath); // 인증서
+                    File key = new File(keyPath);   // 개인키
+                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
                     // outbound
 //                    pipeline.addLast(new ServerOutboundHandler());
                     pipeline.addLast(new StringEncoder());
 //                    pipeline.addLast(new StringDecoder());
-                    pipeline.addLast(new ByteArrayEncoder()); // 2
+                    pipeline.addLast(new ByteArrayEncoder());
                     pipeline.addLast(new ByteArrayDecoder());
-//                    pipeline.addLast(new Encryption());       // 1
+//                    pipeline.addLast(new Encryption());
 //                    pipeline.addLast(new Decryption());
 //                    pipeline.addLast(new Base64Encoder());
 
                     // inbound
 //                    pipeline.addLast(new ObjectEncoder());
-
-//                    pipeline.addLast(new ServerHandler());
+                    pipeline.addLast(new ServerHandler());
                     pipeline.addLast(fileHandler);
                 }
             });
