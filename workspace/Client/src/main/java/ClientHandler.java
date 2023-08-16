@@ -13,7 +13,20 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        String message = ((ByteBuf) msg).toString(Charset.defaultCharset());
+        String message = "";
+//        String message = msg instanceof byte[] ? new String((byte[])msg) : (String)msg;
+
+        if(msg instanceof byte[])
+            message = new String((byte[])msg);
+        else if(msg instanceof String)
+            message = (String)msg;
+        else if(msg instanceof ByteBuf)
+            message = ((ByteBuf) msg).toString(Charset.defaultCharset());
+        else {
+            ctx.fireChannelRead(msg);
+            return;
+        }
+
         System.out.println("Server : " + message);
     }
 

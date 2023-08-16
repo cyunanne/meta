@@ -1,18 +1,13 @@
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
-import javax.net.ssl.SSLException;
 import java.util.Scanner;
 
 public class Client {
@@ -32,42 +27,46 @@ public class Client {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
+                    FileHandler fileHandler = new FileHandler();
 
                     // SSL
-                    SslContext sslContext = SslContextBuilder.forClient().build();
-                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+//                    SslContext sslContext = SslContextBuilder.forClient().build();
+//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-                    // 암호화
-                    pipeline.addLast(new Encryption());
-//                    pipeline.addLast(new ByteArrayEncoder());
-                    pipeline.addLast(new Decryption());
+                    pipeline.addLast(new StringEncoder());
+                    pipeline.addLast(new ByteArrayEncoder());
+//                    pipeline.addLast(new ByteArrayDecoder());
+                    pipeline.addLast(new StringDecoder());
 
-                    // default
                     pipeline.addLast(new ClientHandler());
+                    pipeline.addLast(fileHandler);
+
                 }
             });
             Channel serverChannel = bootstrap.connect(host, port).sync().channel();
 
+//            MyCipher myCipherE = new MyCipher('E');
+//            byte[] data = myCipherE.encrypt("testtest".getBytes());
+//            System.out.println("encrytped : " + new String(data));
+//
+//            MyCipher myCipherD = new MyCipher('D');
+//            byte[] data2 = myCipherD.decrypt(data);
+//            System.out.println("decrytped : " + new String(data2));
+
             // 메시지 전송
             Scanner scanner = new Scanner(System.in);
             while(serverChannel.isWritable()) {
-                String message = scanner.nextLine();
-                ByteBuf buf = Unpooled.buffer().writeBytes(message.getBytes());
-                serverChannel.writeAndFlush(buf);
-//                serverChannel.writeAndFlush(message);
-
-                if("quit".equals(message)){
+                String filename = scanner.nextLine();
+                if("quit".equals(filename)){
                     serverChannel.closeFuture().sync();
                     break;
                 }
+
+                serverChannel.writeAndFlush(filename);
             }
 
         } finally {
             eventLoopGroup.shutdownGracefully();
         }
-    }
-
-    private static SslContext getSslContext() throws SSLException {
-        return SslContextBuilder.forClient().build();
     }
 }

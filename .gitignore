@@ -1,1 +1,5 @@
 *.iso
+workspace/test*
+workspace/Server/test*
+workspace/Client/test*
+*.exe
