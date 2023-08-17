@@ -7,8 +7,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class MyCipher {
 
-    private final String key = "01234567890123456789012345678901"; // 32byte
-    private final String iv = key.substring(0, 16); // 16byte
+    private String key = "01234567890123456789012345678901"; // 32byte
+    private String iv = key.substring(0, 16); // 16byte
 
     private javax.crypto.Cipher cipher;
     private SecretKeySpec keySpec;// = new SecretKeySpec(key.getBytes(), "AES");
@@ -22,6 +22,14 @@ public class MyCipher {
 
         if(ch == 'D') cipher.init(javax.crypto.Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
         else          cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+    }
+
+    public byte[] getKey() {
+        return key.getBytes();
+    }
+
+    public byte[] getIv() {
+        return iv.getBytes();
     }
 
     public Cipher getCipher() {

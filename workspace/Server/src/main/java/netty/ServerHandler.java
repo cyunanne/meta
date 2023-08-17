@@ -38,32 +38,4 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // 파일 복호화(확인용)
-//            decryption("testfile_enc", "testfile");
-//            System.out.println("파일 복호화 완료");
-    }
-
-    private static void decryption(String src, String des) {
-        try {
-            InputStream input = new BufferedInputStream(new FileInputStream(src));
-            OutputStream output = new BufferedOutputStream(new FileOutputStream(des));
-
-            Cipher cipher = (new MyCipher('D')).getCipher();
-            byte[] buffer = new byte[1024];
-            int read = -1;
-            while ((read = input.read(buffer)) != -1) {
-                output.write(cipher.update(buffer, 0, read));
-            }
-            output.write(cipher.doFinal());
-
-            input.close();
-            output.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

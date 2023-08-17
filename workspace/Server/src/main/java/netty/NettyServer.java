@@ -45,28 +45,19 @@ public class NettyServer {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-                    FileHandler fileHandler = new FileHandler();
 
                     // SSL
-//                    File cert = new File(certPath); // 인증서
-//                    File key = new File(keyPath);   // 개인키
-//                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    File cert = new File(certPath); // 인증서
+                    File key = new File(keyPath);   // 개인키
+                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-                    // outbound
-//                    pipeline.addLast(new ServerOutboundHandler());
-                    pipeline.addLast(new StringEncoder());
+//                    pipeline.addLast(new StringEncoder());
 //                    pipeline.addLast(new StringDecoder());
                     pipeline.addLast(new ByteArrayEncoder());
                     pipeline.addLast(new ByteArrayDecoder());
-//                    pipeline.addLast(new Encryption());
-//                    pipeline.addLast(new Decryption());
-//                    pipeline.addLast(new Base64Encoder());
-
-                    // inbound
-//                    pipeline.addLast(new ObjectEncoder());
 //                    pipeline.addLast(new ServerHandler());
-                    pipeline.addLast(fileHandler);
+                    pipeline.addLast(new FileHandler());
                 }
             });
 

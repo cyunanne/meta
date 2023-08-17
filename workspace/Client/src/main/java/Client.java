@@ -28,20 +28,14 @@ public class Client {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-//                    FileHandler fileHandler = new FileHandler();
 
                     // SSL
-//                    SslContext sslContext = SslContextBuilder.forClient().build();
-//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+                    SslContext sslContext = SslContextBuilder.forClient().build();
+                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-//                    pipeline.addLast(new StringEncoder());
                     pipeline.addLast(new ByteArrayEncoder());
-//                    pipeline.addLast(new ByteArrayDecoder());
                     pipeline.addLast(new StringDecoder());
-
-//                    pipeline.addLast(new ClientHandler());
                     pipeline.addLast(new FileHandler());
-
                 }
             });
 
