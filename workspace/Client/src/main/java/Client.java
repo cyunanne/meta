@@ -22,50 +22,38 @@ public class Client {
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
 
         try {
-            // 채널 생성
             Bootstrap bootstrap = new Bootstrap().group(eventLoopGroup);
             bootstrap.channel(NioSocketChannel.class);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-                    FileHandler fileHandler = new FileHandler();
+//                    FileHandler fileHandler = new FileHandler();
 
                     // SSL
-                    SslContext sslContext = SslContextBuilder.forClient().build();
-                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+//                    SslContext sslContext = SslContextBuilder.forClient().build();
+//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
 //                    pipeline.addLast(new StringEncoder());
                     pipeline.addLast(new ByteArrayEncoder());
 //                    pipeline.addLast(new ByteArrayDecoder());
                     pipeline.addLast(new StringDecoder());
 
-                    pipeline.addLast(new ClientHandler());
-                    pipeline.addLast(fileHandler);
+//                    pipeline.addLast(new ClientHandler());
+                    pipeline.addLast(new FileHandler());
 
                 }
             });
-            Channel serverChannel = bootstrap.connect(host, port).sync().channel();
 
-//            MyCipher myCipherE = new MyCipher('E');
-//            byte[] data = myCipherE.encrypt("testtest".getBytes());
-//            System.out.println("encrytped : " + new String(data));
-//
-//            MyCipher myCipherD = new MyCipher('D');
-//            byte[] data2 = myCipherD.decrypt(data);
-//            System.out.println("decrytped : " + new String(data2));
+            Channel channel = bootstrap.connect(host, port).sync().channel();
 
-            // 메시지 전송
             Scanner scanner = new Scanner(System.in);
-            while(serverChannel.isWritable()) {
-                String filename = scanner.nextLine();
-                if("quit".equals(filename)){
-                    serverChannel.closeFuture().sync();
-                    break;
-                }
-
-                serverChannel.writeAndFlush(filename);
+            String filename = scanner.nextLine();
+            if(!"quit".equals(filename)){
+                channel.writeAndFlush(filename);
             }
+
+            channel.close().sync();
 
         } finally {
             eventLoopGroup.shutdownGracefully();

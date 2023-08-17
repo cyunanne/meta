@@ -48,10 +48,10 @@ public class NettyServer {
                     FileHandler fileHandler = new FileHandler();
 
                     // SSL
-                    File cert = new File(certPath); // 인증서
-                    File key = new File(keyPath);   // 개인키
-                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
-                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
+//                    File cert = new File(certPath); // 인증서
+//                    File key = new File(keyPath);   // 개인키
+//                    SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
+//                    pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
                     // outbound
 //                    pipeline.addLast(new ServerOutboundHandler());
@@ -65,7 +65,7 @@ public class NettyServer {
 
                     // inbound
 //                    pipeline.addLast(new ObjectEncoder());
-                    pipeline.addLast(new ServerHandler());
+//                    pipeline.addLast(new ServerHandler());
                     pipeline.addLast(fileHandler);
                 }
             });
