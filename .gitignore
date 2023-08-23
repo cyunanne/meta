@@ -1,5 +1,5 @@
 *.iso
-workspace/test*
-workspace/Server/test*
-workspace/Client/test*
+test*
+Server/test*
+Client/test*
 *.exe
