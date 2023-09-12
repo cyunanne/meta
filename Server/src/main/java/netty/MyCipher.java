@@ -19,15 +19,16 @@ public class MyCipher {
     private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());
 
 
-    public MyCipher(char ch) throws Exception {
+    public MyCipher() throws Exception {
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    }
+
+    public void init(char ch) throws Exception {
         keySpec = new SecretKeySpec(key, "AES");
         ivParamSpec = new IvParameterSpec(iv);
 
-        if(ch == 'D')
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
-        else
-            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+        if(ch == 'D') cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
+        else          cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
     }
 
     public void setKey(byte[] key) {

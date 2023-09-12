@@ -6,21 +6,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.base64.Base64Decoder;
-import io.netty.handler.codec.base64.Base64Encoder;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
-import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 
-import javax.crypto.Cipher;
-import javax.net.ssl.SSLException;
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.security.spec.ECField;
 
 public class NettyServer {
 
@@ -52,11 +43,7 @@ public class NettyServer {
                     SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
                     pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-//                    pipeline.addLast(new StringEncoder());
-//                    pipeline.addLast(new StringDecoder());
-                    pipeline.addLast(new ByteArrayEncoder());
                     pipeline.addLast(new ByteArrayDecoder());
-//                    pipeline.addLast(new ServerHandler());
                     pipeline.addLast(new FileHandler());
                 }
             });

@@ -1,64 +1,61 @@
 package netty;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import shared.FileInfo;
 
 import javax.crypto.Cipher;
 import java.io.*;
-import java.util.Arrays;
 
 public class FileHandler extends ChannelInboundHandlerAdapter {
 
     private OutputStream outputStream;
-
-    public FileHandler() throws Exception {
-        outputStream = new FileOutputStream("testfile_enc");
-    }
+    private FileInfo info;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("channel active");
+        System.out.println("channel activated");
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        // 파일 정보 생성
+        if(info == null) {
+            ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) msg);
+            ObjectInputStream in = new ObjectInputStream(bis);
+            info = (FileInfo) in.readObject();
+            outputStream = new FileOutputStream(info.getFilename() + "_enc");
+            return;
+        }
+
         outputStream.write((byte[]) msg);
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) {
-//        System.out.println("channelReadComplete");
-    }
-    @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        outputStream.close();
+        if(outputStream != null) outputStream.close();
+        System.out.println("channel closed");
 
         // 파일 복호화(확인용)
-        decryption("testfile_enc", "testfile");
+        if(outputStream == null) return;
+         decryption(info.getFilename() + "_enc", info.getFilename(), info);
         System.out.println("파일 복호화 완료");
     }
 
-    private static void decryption(String src, String des) {
+    private static void decryption(String src, String des, FileInfo info) {
         try {
             InputStream input = new BufferedInputStream(new FileInputStream(src));
             OutputStream output = new BufferedOutputStream(new FileOutputStream(des));
 
-            MyCipher myCipher = new MyCipher('D');
+            MyCipher myCipher = new MyCipher();
             Cipher cipher = myCipher.getCipher();
             byte[] buffer = new byte[1024];
             int read = -1;
 
-            byte[] key = new byte[32];
-            input.read(key, 0, 32);
-            myCipher.setKey(key);
-
-            byte[] iv = new byte[16];
-            input.read(iv, 0, 16);
-            myCipher.setIv(iv);
-            
-//            System.out.println("key: " + new String(key));
-//            System.out.println("iv: " + new String(iv));
+            myCipher.setKey(info.getKey());
+            myCipher.setIv(info.getIv());
+            myCipher.init('D');
 
             while ((read = input.read(buffer)) != -1) {
                 output.write(cipher.update(buffer, 0, read));
