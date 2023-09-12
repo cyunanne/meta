@@ -25,7 +25,11 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
             ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) msg);
             ObjectInputStream in = new ObjectInputStream(bis);
             info = (FileInfo) in.readObject();
+
+            // 암호화된 파일에 정보 저장
             outputStream = new FileOutputStream(info.getFilename() + "_enc");
+            ObjectOutputStream obs = new ObjectOutputStream(outputStream);
+            obs.writeObject(info);
             return;
         }
 
@@ -39,14 +43,17 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
 
         // 파일 복호화(확인용)
         if(outputStream == null) return;
-         decryption(info.getFilename() + "_enc", info.getFilename(), info);
+        decryption(info.getFilename() + "_enc", info.getFilename()/*, info*/);
         System.out.println("파일 복호화 완료");
     }
 
-    private static void decryption(String src, String des, FileInfo info) {
+    private static void decryption(String src, String des/*, FileInfo info*/) {
         try {
             InputStream input = new BufferedInputStream(new FileInputStream(src));
             OutputStream output = new BufferedOutputStream(new FileOutputStream(des));
+
+            ObjectInputStream obs = new ObjectInputStream(input);
+            FileInfo info = (FileInfo) obs.readObject();
 
             MyCipher myCipher = new MyCipher();
             Cipher cipher = myCipher.getCipher();
