@@ -1,17 +1,13 @@
 import io.netty.channel.*;
-import io.netty.util.ReferenceCountUtil;
+import shared.FileInfo;
 
 import javax.crypto.Cipher;
 import java.io.*;
-import java.util.Arrays;
 
 public class FileHandler extends ChannelOutboundHandlerAdapter {
 
     private String filename;
     private InputStream inputStream;
-
-    private String key = "01234567890123456789012345678901"; // 32byte
-    private String iv = key.substring(0, 16); // 16byte
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -24,8 +20,17 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
 
             MyCipher myCipher = new MyCipher('E');
             Cipher cipher = myCipher.getCipher();
-            ctx.write(myCipher.getKey());
-            ctx.writeAndFlush(myCipher.getIv());
+
+            // 파일정보 생성
+            FileInfo fileInfo = new FileInfo(filename);
+            fileInfo.setKey(myCipher.getKey());
+            fileInfo.setIv(myCipher.getIv());
+
+            // 파일정보 전송
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(fileInfo);
+            ctx.writeAndFlush(bos.toByteArray()).sync();
 
             byte[] buffer = new byte[1024];
             int read = -1;
@@ -41,7 +46,6 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
         } finally {
             inputStream.close();
             System.out.println("파일 업로드 완료");
-            filename = null;
         }
     }
 

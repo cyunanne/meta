@@ -24,49 +24,11 @@ public class MyCipher {
         else          cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
     }
 
-    public byte[] getKey() {
-        return key.getBytes();
-    }
+    public byte[] getKey() { return key.getBytes(); }
 
-    public byte[] getIv() {
-        return iv.getBytes();
-    }
+    public byte[] getIv() { return iv.getBytes(); }
 
     public Cipher getCipher() {
         return cipher;
     }
-
-//    public byte[] encrypt(byte[] data) throws Exception {
-//        System.out.println("Encryption");
-//
-//        int offset = 0;
-//        int left = data.length;
-//        int len = left > 16 ? 16 : data.length;
-//        byte[] result = new byte[left + 16];
-//
-//        while( left > len ) {
-//            cipher.update(data, offset, len, result);
-//            left -= len;
-//            offset += len;
-//        }
-//        cipher.doFinal(data, offset, left, result);
-//        return result;
-//    }
-//
-//    public byte[] decrypt(byte[] data) throws Exception {
-//        System.out.println("Decryption");
-//
-//        int offset = 0;
-//        int left = data.length;
-//        int len = 16;
-//        byte[] result = new byte[256];
-//
-//        while( left > len ) {
-//            cipher.update(data, offset, len, result);
-//            left -= len;
-//            offset += len;
-//        }
-//        cipher.doFinal(data, offset, len, result);
-//        return result;
-//    }
 }

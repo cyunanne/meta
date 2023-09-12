@@ -3,10 +3,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 
@@ -34,7 +31,6 @@ public class Client {
                     pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
                     pipeline.addLast(new ByteArrayEncoder());
-                    pipeline.addLast(new StringDecoder());
                     pipeline.addLast(new FileHandler());
                 }
             });
