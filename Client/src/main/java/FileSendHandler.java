@@ -4,7 +4,7 @@ import shared.FileInfo;
 import javax.crypto.Cipher;
 import java.io.*;
 
-public class FileHandler extends ChannelOutboundHandlerAdapter {
+public class FileSendHandler extends ChannelOutboundHandlerAdapter {
 
     private String filename;
     private InputStream inputStream;
@@ -45,7 +45,7 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
 
         } finally {
             inputStream.close();
-            System.out.println("파일 업로드 완료");
+            System.out.println("파일 업로드 완료\n");
         }
     }
 

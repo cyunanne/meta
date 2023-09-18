@@ -9,9 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class MyCipher {
 
-//    private final String key = "01234567890123456789012345678901"; // 32byte
     private byte[] key;
-//    private final String iv = key.substring(0, 16); // 16byte
     private byte[] iv;
 
     private Cipher cipher;

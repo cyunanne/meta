@@ -1,4 +1,4 @@
-//import io.netty.channel.*;
+package old;//import io.netty.channel.*;
 //
 //import javax.crypto.Cipher;
 //import javax.crypto.NoSuchPaddingException;
@@ -11,7 +11,7 @@
 ///**
 // * ASE-256 암호화
 // */
-//public class Encryption extends ChannelOutboundHandlerAdapter {
+//public class old.Encryption extends ChannelOutboundHandlerAdapter {
 //
 //    private final String key = "01234567890123456789012345678901"; // 32byte
 //    private final String iv = key.substring(0, 16); // 16byte
@@ -21,7 +21,7 @@
 //    private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());
 //
 //
-//    public Encryption() throws Exception {
+//    public old.Encryption() throws Exception {
 //        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 //        keySpec = new SecretKeySpec(key.getBytes(), "AES");
 //        ivParamSpec = new IvParameterSpec(iv.getBytes());
@@ -30,7 +30,7 @@
 //
 //    @Override
 //    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-//        System.out.println("Encryption");
+//        System.out.println("old.Encryption");
 //        String message = null;
 //        if(msg instanceof String) message = (String)msg;
 //        else if(msg instanceof byte[]) message = new String((byte[])msg);
@@ -55,7 +55,7 @@ import java.util.List;
 /**
  * ASE-256 암호화
  */
-//public class Encryption extends ChannelOutboundHandlerAdapter {
+//public class old.Encryption extends ChannelOutboundHandlerAdapter {
 public class Encryption extends MessageToMessageEncoder<byte[]> {
     private final String key = "01234567890123456789012345678901"; // 32byte
     private final String iv = key.substring(0, 16); // 16byte
@@ -74,7 +74,7 @@ public class Encryption extends MessageToMessageEncoder<byte[]> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, byte[] msg, List<Object> list) throws Exception {
-        System.out.println("Encryption");
+        System.out.println("old.Encryption");
         byte[] encrypted = cipher.doFinal(msg);
         ctx.writeAndFlush(encrypted);
     }

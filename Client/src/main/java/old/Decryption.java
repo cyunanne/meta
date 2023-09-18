@@ -1,4 +1,4 @@
-//import io.netty.buffer.ByteBuf;
+package old;//import io.netty.buffer.ByteBuf;
 //import io.netty.buffer.Unpooled;
 //import io.netty.channel.ChannelHandlerContext;
 //import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -12,14 +12,14 @@
 ///**
 // * ASE-256 복호화
 // */
-//public class Decryption extends ChannelInboundHandlerAdapter {
+//public class old.Decryption extends ChannelInboundHandlerAdapter {
 //
 //    private final String key = "01234567890123456789012345678901"; // 32byte
 //    private final String iv = key.substring(0, 16); // 16byte
 //
 //    @Override
 //    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//        System.out.println("Decryption");
+//        System.out.println("old.Decryption");
 //        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 //        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
 //        IvParameterSpec ivParamSpec = new IvParameterSpec(iv.getBytes());
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * ASE-256 복호화
  */
-//public class Decryption extends ChannelInboundHandlerAdapter {
+//public class old.Decryption extends ChannelInboundHandlerAdapter {
 public class Decryption extends MessageToMessageDecoder<byte[]> {
 
     private final String key = "01234567890123456789012345678901"; // 32byte
