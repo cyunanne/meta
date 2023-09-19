@@ -1,12 +1,7 @@
 package netty;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
-import javax.crypto.Cipher;
-import java.io.*;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
@@ -16,7 +11,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead");
 
         String message = msg instanceof byte[] ? new String((byte[])msg) : (String)msg;
@@ -26,6 +21,15 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
         System.out.println("Client" + port + " : " + message);
+
+        switch(message) {
+            case "put" -> {
+                FileReceiver fr = new FileReceiver(8889);
+                ctx.writeAndFlush("ready");
+                fr.run();
+            }
+//            case "get" -> new FileReceiver(8889).run();
+        }
     }
 
     @Override

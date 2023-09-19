@@ -4,7 +4,7 @@ import shared.FileInfo;
 import javax.crypto.Cipher;
 import java.io.*;
 
-public class FileSendHandler extends ChannelOutboundHandlerAdapter {
+public class PutFileHandler extends ChannelOutboundHandlerAdapter {
 
     private String filename;
     private InputStream inputStream;

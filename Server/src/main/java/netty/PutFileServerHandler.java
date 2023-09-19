@@ -7,18 +7,19 @@ import shared.FileInfo;
 import javax.crypto.Cipher;
 import java.io.*;
 
-public class FileHandler extends ChannelInboundHandlerAdapter {
+public class PutFileServerHandler extends ChannelInboundHandlerAdapter {
 
     private OutputStream outputStream;
     private FileInfo info;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("channel activated");
+        System.out.println("File receiver is ready.");
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("channel read()");
 
         // 파일 정보 생성
         if(info == null) {
@@ -27,7 +28,7 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
             info = (FileInfo) in.readObject();
 
             // 암호화된 파일에 파일 정보 저장
-            outputStream = new FileOutputStream(info.getFilename() + "_enc");
+            outputStream = new FileOutputStream(info.getFilename());
             ObjectOutputStream obs = new ObjectOutputStream(outputStream);
             obs.writeObject(info);
             return;

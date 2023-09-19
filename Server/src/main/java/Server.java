@@ -5,6 +5,6 @@ public class Server {
         int port = 8888;
 
 //        new SocketServer(port).run();
-        new NettyServer(port).run();
+        new NettyServer(port, port+1).run();
     }
 } 
