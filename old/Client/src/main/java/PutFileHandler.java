@@ -30,14 +30,14 @@ public class PutFileHandler extends ChannelOutboundHandlerAdapter {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(bos);
             out.writeObject(fileInfo);
-            ctx.writeAndFlush(bos.toByteArray()).sync();
+            ctx.writeAndFlush(bos.toByteArray());
 
             byte[] buffer = new byte[1024];
             int read = -1;
             while ((read = inputStream.read(buffer)) != -1) {
                 ctx.writeAndFlush(cipher.update(buffer, 0, read));
             }
-            ctx.writeAndFlush(cipher.doFinal()).sync();
+            ctx.writeAndFlush(cipher.doFinal());
 
         } catch (FileNotFoundException e) {
             System.out.println("존재하지 않는 파일입니다.");
@@ -45,7 +45,7 @@ public class PutFileHandler extends ChannelOutboundHandlerAdapter {
 
         } finally {
             inputStream.close();
-            System.out.println("파일 업로드 완료\n");
+//            System.out.println("파일 업로드 완료\n");
         }
     }
 

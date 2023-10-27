@@ -6,7 +6,9 @@ public class Client {
     private static final int port = 8888;
 
     public static void main(String[] args) throws Exception {
-        new SocketWithNetty(host, port).run();
+        new NettyClient(host, port).run();
+
+//        new SocketWithNetty(host, port).run();
 //        SocketWithNetty sock = new SocketWithNetty(host, port);
 //        sock.connect();
 //        while( sock.run() );

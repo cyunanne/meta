@@ -12,20 +12,20 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("channelRead");
+        System.out.println("channelRead~~~");
 
-        String message = msg instanceof byte[] ? new String((byte[])msg) : (String)msg;
+        String[] messages = ((String)msg).split(" ");
         String port = ctx.channel().remoteAddress().toString().split(":")[1];
-        if ("quit".equals(message)) {
+        if ("quit".equals(messages[0])) {
             ctx.close();
             return;
         }
-        System.out.println("Client" + port + " : " + message);
-
-        switch(message) {
+        System.out.println("Client" + port + " : " + (String)msg);
+//        ctx.writeAndFlush("ready");
+        switch(messages[0]) {
             case "put" -> {
                 FileReceiver fr = new FileReceiver(8889);
-                ctx.writeAndFlush("ready");
+                ctx.writeAndFlush((String)msg);
                 fr.run();
             }
 //            case "get" -> new FileReceiver(8889).run();

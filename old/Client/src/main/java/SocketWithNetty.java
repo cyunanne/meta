@@ -2,9 +2,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.Future;
 
 import java.util.Scanner;
 
@@ -28,7 +26,7 @@ public class SocketWithNetty {
             eventLoopGroup = new NioEventLoopGroup();
             bootstrap = new Bootstrap().group(eventLoopGroup);
             bootstrap.channel(NioSocketChannel.class);
-            bootstrap.handler(new MainChannelInitializer());
+            bootstrap.handler(new MainClientInitializer());
 
         } catch (Exception e) {
             System.out.println("서버 연결 중 에러 발생");
@@ -55,29 +53,29 @@ public class SocketWithNetty {
             String str = scanner.nextLine();
 //            if (str.equals("quit")) break;
 
-            String[] strings = str.split(" ");
-            String command = "", filename = "";
-            if(strings.length < 2) {
-                command = "";
-            } else {
-                command = strings[0];
-                filename = strings[1];
-            }
+//            String[] strings = str.split(" ");
+//            String command = "", filename = "";
+//            if(strings.length < 2) {
+//                command = "";
+//            } else {
+//                command = strings[0];
+//                filename = strings[1];
+//            }
 
 
             channel.writeAndFlush(str).sync();
-            switch (command) {
-                case "put" -> sendFile(filename);
-                case "get" -> receiveFile(filename);
-//            case "put" -> new FileSender(host, port+1).run();
-//            case "get" -> new FileSender(host, port).run();
-//                default ->
-            }
+//            switch (command) {
+//                case "put" -> sendFile(filename);
+//                case "get" -> receiveFile(filename);
+////            case "put" -> new FileSender(host, port+1).run();
+////            case "get" -> new FileSender(host, port).run();
+////                default ->
+//            }
 //        }
 
 //        System.out.println("프로그램 종료 중");
-        channel.close();
-        disconnect();
+//        channel.close();
+//        disconnect();
     }
 
     public void sendFile(String filename) {
