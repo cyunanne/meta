@@ -5,24 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a39cb7f-45be-452c-bf25-22ac1ac1ebee" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/FileSender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/MessageHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/FileInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/FileInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/codec/HeaderEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/NettyServer2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/codec/HeaderDecoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/FileSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/FileSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/MessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../old/Client/src/main/java/PutFileHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +50,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/yuna/workspace/Server/src/main/java/netty/handler"
+    "last_opened_file_path": "C:/yuna/workspace/Server/src/main/java/netty/handler",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -64,6 +61,9 @@
       <recent name="C:\yuna\workspace\Server\src\main\java\netty\handler" />
       <recent name="C:\yuna\workspace\Server\src\main\java\netty\initializer" />
       <recent name="C:\yuna\workspace\Server\src\main\java\netty" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="netty" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Server">
@@ -98,5 +98,26 @@
       <updated>1698395298515</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java</url>
+          <line>36</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/codec/HeaderDecoder.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/codec/HeaderDecoder.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

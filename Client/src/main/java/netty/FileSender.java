@@ -25,7 +25,7 @@ public class FileSender extends NettyClient {
             channel = bootstrap.connect(host, port).sync().channel();
             System.out.println("파일채널 연결");
             System.out.println("파일 전송 시작");
-            channel.writeAndFlush(filename).sync();
+            channel.writeAndFlush(filename);//.sync();
             System.out.println("다...리..좀....떨지말아주세요.....");
 
         } catch(Exception e) {

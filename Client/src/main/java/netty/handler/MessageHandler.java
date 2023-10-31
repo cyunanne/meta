@@ -18,17 +18,14 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
         System.out.println("Server : " + (String)msg);
 
-        if(messages[0].equals("put")) {
-            FileSender sender = new FileSender("localhost", 8889, messages[1]);
-            sender.run();
-
-            if(sender.getChannel().isWritable()) {
-                System.out.println("파일전송완료 메시지를 보내고싶은 시점");
-            }
+//        if(messages[0].equals("put")) {
+//            FileSender sender = new FileSender("localhost", 8889, messages[1]);
+//            sender.run();
 //            ctx.writeAndFlush("fin");
+
 //        } else if(messages[0].equals("fin")) {
 //            ctx.close();
-        }
+//        }
     }
 
     @Override
