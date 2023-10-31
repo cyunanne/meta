@@ -43,10 +43,6 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
 
         outputStream = Files.newOutputStream(Paths.get("testfile"));
         outputStream.write((byte[]) msg);
-
-        if(ctx.channel().closeFuture().isDone()) {
-            System.out.println("?");
-        }
     }
 
     @Override

@@ -9,28 +9,27 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.List;
 
-public class HeaderDecoder extends MessageToMessageDecoder<ByteBuf> {
-
-    private static final int HEADER_SIZE = 58;
+public class HeaderParsor extends MessageToMessageDecoder<ByteBuf> {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
-        if(byteBuf.readableBytes() < HEADER_SIZE) {
+        if(byteBuf.readableBytes() < Header.HEADER_SIZE) {
             return;
         }
 
         byteBuf.markReaderIndex();
 
-        byte hData[] = new byte[HEADER_SIZE];
+        // header read
+        byte hData[] = new byte[Header.HEADER_SIZE];
         byteBuf.readBytes(hData);
 
+        // header parse
         ByteArrayInputStream bis = new ByteArrayInputStream(hData);
         ObjectInputStream ois = new ObjectInputStream(bis);
         Header header = (Header) ois.readObject();
 
-        int bodylen = header.getSize();
-
         //	Body read
+        int bodylen = header.getSize();
         if(byteBuf.readableBytes() < bodylen) {
             byteBuf.resetReaderIndex();
             return;
@@ -40,12 +39,13 @@ public class HeaderDecoder extends MessageToMessageDecoder<ByteBuf> {
         byte bData[] = new byte[bodylen];
         byteBuf.readBytes(bData);
 
+        // 다음 핸들러로 패스
         switch (header.getType()) {
             case 'M':
-                list.add(new String(bData));
+                list.add(new String(bData)); // msg(String)
                 break;
             case 'F':
-                list.add(bData);
+                list.add(bData); // file(byte[])
                 break;
         }
     }

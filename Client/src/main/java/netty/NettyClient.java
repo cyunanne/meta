@@ -11,9 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import netty.initializer.MessageInitializer;
 import netty.test.Header;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.instrument.Instrumentation;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +24,8 @@ public class NettyClient {
     protected EventLoopGroup eventLoopGroup;
     protected Bootstrap bootstrap;
     protected Channel channel;
+
+    Scanner scanner = new Scanner(System.in);
 
     public NettyClient(String host, int port, ChannelInitializer<SocketChannel> ci){
         this.host = host;
@@ -50,21 +50,37 @@ public class NettyClient {
             channel = bootstrap.connect(host, port).sync().channel();
 
             System.out.print(">>> ");
-            Scanner scanner = new Scanner(System.in);
-            String command = scanner.nextLine();
+            while( true ) {
+                String msg = scanner.nextLine();
+                if (msg.equals("quit")) break;
+                else {
+                    this.sendFile("testfile");
+                }
+            }
 
-            Header header = new Header('M', command.getBytes(StandardCharsets.UTF_8).length);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(header);
-
-            channel.write(bos.toByteArray());
-            channel.writeAndFlush(command).sync();
-
+            channel.closeFuture().sync();
         } catch(Exception e) {
             e.printStackTrace();
+        } finally {
             stop();
         }
+    }
+
+    public void sendMessage(String msg) throws InterruptedException {
+        channel.writeAndFlush(msg).sync();
+    }
+
+    public void sendFile(String filename) throws Exception {
+        InputStream inputStream = new FileInputStream(filename);
+        byte[] buffer = new byte[1024];
+        int read = -1;
+
+        while ((read = inputStream.read(buffer)) != -1) {
+            channel.writeAndFlush(buffer);
+        }
+
+        System.out.println("파일 전송 완료");
+        channel.writeAndFlush("__fin__");
     }
 
     public void stop() {

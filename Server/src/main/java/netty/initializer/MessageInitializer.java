@@ -3,10 +3,8 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.bytes.ByteArrayDecoder;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import netty.codec.HeaderDecoder;
+import netty.codec.HeaderParsor;
 import netty.handler.ServerHandler;
 
 public class MessageInitializer extends ChannelInitializer<SocketChannel> {
@@ -24,7 +22,7 @@ public class MessageInitializer extends ChannelInitializer<SocketChannel> {
 //        SslContext sslContext = SslContextBuilder.forServer(cert, key).build();
 //        pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-        pipeline.addLast(new HeaderDecoder());
+        pipeline.addLast(new HeaderParsor());
 //        pipeline.addLast(new StringDecoder());
 //        pipeline.addLast(new ByteArrayDecoder());
         pipeline.addLast(new StringEncoder());

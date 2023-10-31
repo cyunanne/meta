@@ -6,6 +6,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import netty.codec.FileEncoder;
+import netty.codec.MessageEncoder;
 import netty.handler.MessageHandler;
 
 public class MessageInitializer extends ChannelInitializer<SocketChannel> {
@@ -18,9 +20,13 @@ public class MessageInitializer extends ChannelInitializer<SocketChannel> {
 //        SslContext sslContext = SslContextBuilder.forClient().build();
 //        pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-        pipeline.addLast(new StringEncoder());
         pipeline.addLast(new StringDecoder());
+
         pipeline.addLast(new ByteArrayEncoder());
+        pipeline.addLast(new StringEncoder());
+        pipeline.addLast(new MessageEncoder());
+        pipeline.addLast(new FileEncoder());
+
         pipeline.addLast(new MessageHandler());
     }
 }

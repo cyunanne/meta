@@ -4,10 +4,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.test.Header;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
+
+    private OutputStream outputStream;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -18,26 +21,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("channelRead~~~");
 
-        if(msg instanceof String) {
-            String port = ctx.channel().remoteAddress().toString().split(":")[1];
-            System.out.println("Client" + port + " : " + (String)msg);
-            ctx.writeAndFlush((String)msg);
-        } else {
-            ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) msg);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            Header header = (Header) ois.readObject();
-        }
+        if (msg instanceof String) {
+            echoMessage(ctx, msg);
 
-//        String[] messages = ((String)msg).split(" ");
-//        ctx.writeAndFlush("ready");
-//        switch(messages[0]) {
-//            case "put" -> {z
-//                FileReceiver fr = new FileReceiver(8889);
-//                ctx.writeAndFlush((String)msg);
-//                fr.run();
-//            }
-////            case "get" -> new FileReceiver(8889).run();
-//        }
+        } else if (msg instanceof byte[]) {
+            outputStream = Files.newOutputStream(Paths.get("testfile"));
+            outputStream.write((byte[]) msg);
+        }
     }
 
     @Override
@@ -46,8 +36,25 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        if (outputStream != null) outputStream.close();
+        System.out.println("channel closed");
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
         cause.printStackTrace();
         ctx.close();
+    }
+
+    private void echoMessage(ChannelHandlerContext ctx, Object msg) throws IOException {
+        String message = (String)msg;
+        String port = ctx.channel().remoteAddress().toString().split(":")[1];
+        System.out.println("Client" + port + " : " + message);
+        ctx.writeAndFlush(message);
+
+        if(message.equals("__fin__")) {
+            outputStream.close();
+        }
     }
 }

@@ -16,14 +16,13 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String[] messages = ((String)msg).split(" ");
 
-        System.out.println("Server : " + (String)msg);
+        System.out.print("Server : " + (String)msg + "\n>>> ");
 
 //        if(messages[0].equals("put")) {
-//            FileSender sender = new FileSender("localhost", 8889, messages[1]);
-//            sender.run();
-//            ctx.writeAndFlush("fin");
-
-//        } else if(messages[0].equals("fin")) {
+//            new FileSender("localhost", 8889, messages[1]).run();
+//            ctx.writeAndFlush("__fin__");
+//
+//        } else if(messages[0].equals("quit")) {
 //            ctx.close();
 //        }
     }
