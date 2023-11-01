@@ -14,17 +14,15 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String[] messages = ((String)msg).split(" ");
+        String message = (String)msg;
 
-        System.out.print("Server : " + (String)msg + "\n>>> ");
+        System.out.println("Server : " + msg);
 
-//        if(messages[0].equals("put")) {
-//            new FileSender("localhost", 8889, messages[1]).run();
-//            ctx.writeAndFlush("__fin__");
-//
-//        } else if(messages[0].equals("quit")) {
-//            ctx.close();
-//        }
+        if(message.equals("fin")) {
+            System.out.println("파일 전송 완료");
+        }
+
+        System.out.print(">>> ");
     }
 
     @Override

@@ -15,6 +15,9 @@ import java.io.*;
 import java.lang.instrument.Instrumentation;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class NettyClient {
@@ -52,13 +55,19 @@ public class NettyClient {
             System.out.print(">>> ");
             while( true ) {
                 String msg = scanner.nextLine();
-                if (msg.equals("quit")) break;
-                else {
-                    this.sendFile("testfile");
+                String[] commands = msg.split(" ");
+
+                sendMessage(msg);
+                if (commands[0].equals("quit")) break;
+                if (commands.length < 2) {
+                    System.out.print("명령어를 확인해주세요.\n>>> ");
+                    continue;
                 }
+
+                channel.writeAndFlush(msg).sync();
             }
 
-            channel.closeFuture().sync();
+            System.out.println("프로그램을 종료합니다.");
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -69,18 +78,23 @@ public class NettyClient {
     public void sendMessage(String msg) throws InterruptedException {
         channel.writeAndFlush(msg).sync();
     }
-
     public void sendFile(String filename) throws Exception {
-        InputStream inputStream = new FileInputStream(filename);
-        byte[] buffer = new byte[1024];
-        int read = -1;
 
-        while ((read = inputStream.read(buffer)) != -1) {
-            channel.writeAndFlush(buffer);
-        }
-
-        System.out.println("파일 전송 완료");
-        channel.writeAndFlush("__fin__");
+//        InputStream inputStream = Files.newInputStream(Paths.get(filename));
+//        byte[] buffer = new byte[1024];
+//        int read = -1;
+//
+//        while ((read = inputStream.read(buffer)) != -1) {
+//            if(read < 1024) {
+//                buffer = Arrays.copyOfRange(buffer, 0, read);
+//                channel.writeAndFlush(buffer).sync();
+//            } else {
+//                channel.writeAndFlush(buffer);
+//            }
+//        }
+//
+//        channel.flush();
+//        sendMessage("fin");
     }
 
     public void stop() {

@@ -3,6 +3,9 @@ package netty.handler;
 import io.netty.channel.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class FileHandler extends ChannelOutboundHandlerAdapter {
 
@@ -12,11 +15,13 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 
-        try {
-            if(filename == null) {
-                this.filename = (String)msg;
-                this.inputStream = new FileInputStream(filename);
-            }
+        String[] commands = ((String) msg).split(" ");
+        if(commands[0].equals("put")) {
+            filename = commands[1];
+            inputStream = Files.newInputStream(Paths.get(filename));
+            ctx.writeAndFlush(msg).sync();
+
+            try {
 
 //            MyCipher myCipher = new MyCipher('E');
 //            Cipher cipher = myCipher.getCipher();
@@ -39,22 +44,45 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
 //            }
 //            ctx.writeAndFlush(cipher.doFinal());
 
-            byte[] buffer = new byte[1024];
-            int read = -1;
 
-            while ((read = inputStream.read(buffer)) != -1) {
-                ctx.writeAndFlush(buffer);
-            }
+                byte[] buffer = new byte[1024];
+                int read = -1;
 
-            System.out.println("파일 전송 완료");
+                while ((read = inputStream.read(buffer)) != -1) {
+//                    if(read < 1024) {
+//                        buffer = Arrays.copyOfRange(buffer, 0, read);
+//                        ctx.writeAndFlush(buffer).sync();
+//                    } else {
+                        ctx.writeAndFlush(buffer);
+//                    }
+                }
 
-        } catch (FileNotFoundException e) {
-            System.out.println("존재하지 않는 파일입니다.");
+                ctx.flush();
+                ctx.writeAndFlush("fin").sync();
+
+
+//            byte[] buffer = new byte[1024];
+//            int read = -1;
+//
+//            while ((read = inputStream.read(buffer)) != -1) {
+//                if(read < 1024) {
+//                    buffer = Arrays.copyOfRange(buffer, 0, read);
+//                    ctx.writeAndFlush(buffer).sync();
+//                } else {
+//                    ctx.writeAndFlush(buffer);
+//                }
+//            }
+
+//            System.out.println("파일 전송 완료");
+
+            } catch (FileNotFoundException e) {
+                System.out.println("존재하지 않는 파일입니다.");
 //            ReferenceCountUtil.release(msg);
 
-        } finally {
-            if(inputStream != null) inputStream.close();
+            } finally {
+                if (inputStream != null) inputStream.close();
 //            System.out.println("파일 업로드 완료\n");
+            }
         }
     }
 
