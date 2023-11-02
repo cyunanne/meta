@@ -24,10 +24,8 @@ public class MessageInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new StringDecoder());
         pipeline.addLast(new MessageHandler());
 
-        pipeline.addLast(new FileEncoder());
-//        pipeline.addLast(new StringEncoder());
-//        pipeline.addLast(new ByteArrayEncoder());
         pipeline.addLast(new MessageEncoder());
-        pipeline.addLast(new FileHandler());
+        pipeline.addLast(new FileEncoder());
+//        pipeline.addLast(new FileHandler());
     }
 }

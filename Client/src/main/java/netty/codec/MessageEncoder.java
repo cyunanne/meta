@@ -14,13 +14,12 @@ public class MessageEncoder extends MessageToMessageEncoder<String> {
     protected void encode(ChannelHandlerContext ctx, String msg, List<Object> list) throws Exception {
 
         byte[] msgBytes = msg.getBytes(Charset.defaultCharset());
-        int len = msgBytes.length;
+        short len = (short) msgBytes.length;
 
         ByteBuf data = Unpooled.buffer();
         data.writeByte((byte) 'M');
         data.writeShort(len);
         data.writeBytes(msgBytes);
         list.add(data);
-
     }
 }

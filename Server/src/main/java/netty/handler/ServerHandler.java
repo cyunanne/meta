@@ -1,5 +1,6 @@
 package netty.handler;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -11,6 +12,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     private OutputStream outputStream;
     private String filename;
+
+    private int size = 0;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -24,11 +27,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof String) {
             echoMessage(ctx, msg);
 
-        } else if (msg instanceof byte[]) {
+        } else { // if (msg instanceof byte[]) {
             if(outputStream == null) {
-                outputStream = new FileOutputStream(filename);
+                outputStream = Files.newOutputStream(Paths.get(filename));
             }
             outputStream.write((byte[]) msg);
+//            size += ((byte[]) msg).length;
         }
     }
 
@@ -54,17 +58,21 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String port = ctx.channel().remoteAddress().toString().split(":")[1];
         System.out.println("Client" + port + " : " + message);
 
-
         String[] commands = ((String) msg).split(" ");
         if(commands[0].equals("fin")) {
             closeFile();
-            ctx.writeAndFlush(commands[0]);
+//            System.out.println("size : " + size);
+        }
+
+        if(commands.length != 2) {
+            ctx.writeAndFlush(msg);
         } else if(commands[0].equals("put")) {
             filename = commands[1];
         }
     }
 
     private void closeFile() {
+        System.out.println("file closed");
         try {
             if (outputStream != null) {
                 outputStream.flush();

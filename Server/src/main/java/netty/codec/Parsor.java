@@ -3,10 +3,11 @@ package netty.codec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import io.netty.handler.codec.ReplayingDecoder;
 
 import java.util.List;
 
-public class Parsor extends MessageToMessageDecoder<ByteBuf> {
+public class Parsor extends ReplayingDecoder<ByteBuf> {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
@@ -15,11 +16,10 @@ public class Parsor extends MessageToMessageDecoder<ByteBuf> {
             return;
         }
 
-        // mark so we can reset here if the message isn't complete yet
         byteBuf.markReaderIndex();
 
         byte type = byteBuf.readByte();
-        int len = byteBuf.readUnsignedShort();
+        int len = byteBuf.readShort();
 
         if(byteBuf.readableBytes() < len) {
             byteBuf.resetReaderIndex();
@@ -29,7 +29,7 @@ public class Parsor extends MessageToMessageDecoder<ByteBuf> {
         byte data[] = new byte[len];
         byteBuf.readBytes(data);
 
-        // 핸들러로 패스
+        // 핸들러
         switch (type) {
             case 'M': list.add(new String(data)); break; // msg(String)
             case 'F': list.add(data); break; // file(byte[])

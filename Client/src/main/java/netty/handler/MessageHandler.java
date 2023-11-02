@@ -1,10 +1,7 @@
 package netty.handler;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import netty.FileSender;
-import netty.NettyClient;
 
 public class MessageHandler extends ChannelInboundHandlerAdapter {
 

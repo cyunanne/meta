@@ -1,7 +1,6 @@
 package netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -9,13 +8,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import netty.initializer.MessageInitializer;
-import netty.test.Header;
 
 import java.io.*;
-import java.lang.instrument.Instrumentation;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -57,14 +53,18 @@ public class NettyClient {
                 String msg = scanner.nextLine();
                 String[] commands = msg.split(" ");
 
-                sendMessage(msg);
                 if (commands[0].equals("quit")) break;
-                if (commands.length < 2) {
+                if (commands.length != 2) {
                     System.out.print("명령어를 확인해주세요.\n>>> ");
-                    continue;
+                } else if (commands[0].equals("put")) {
+                    sendMessage(msg);
+                    sendFile(commands[1]);
                 }
-
-                channel.writeAndFlush(msg).sync();
+//                else if (commands[0].equals("get")) {
+//                    downloadFile(commands[1]);
+//                } else {
+//
+//                }
             }
 
             System.out.println("프로그램을 종료합니다.");
@@ -76,25 +76,32 @@ public class NettyClient {
     }
 
     public void sendMessage(String msg) throws InterruptedException {
-        channel.writeAndFlush(msg).sync();
+        channel.writeAndFlush(msg);
     }
     public void sendFile(String filename) throws Exception {
 
-//        InputStream inputStream = Files.newInputStream(Paths.get(filename));
-//        byte[] buffer = new byte[1024];
-//        int read = -1;
-//
-//        while ((read = inputStream.read(buffer)) != -1) {
-//            if(read < 1024) {
-//                buffer = Arrays.copyOfRange(buffer, 0, read);
-//                channel.writeAndFlush(buffer).sync();
-//            } else {
-//                channel.writeAndFlush(buffer);
-//            }
-//        }
-//
-//        channel.flush();
-//        sendMessage("fin");
+        try {
+            InputStream inputStream = Files.newInputStream(Paths.get(filename));
+            byte[] buffer = new byte[1024];
+            int read = -1;
+
+            while ((read = inputStream.read(buffer)) != -1) {
+                if (read < 1024) {
+                    byte[] tmp = Arrays.copyOfRange(buffer, 0, read);
+                    channel.writeAndFlush(tmp).sync();
+                } else {
+                    channel.writeAndFlush(buffer).sync();
+                }
+            }
+
+            sendMessage("fin");
+        } catch (NoSuchFileException e) {
+            System.out.println("존재하지 않는 파일입니다.");
+        }
+    }
+
+    public void downloadFile(String filename) throws Exception {
+
     }
 
     public void stop() {

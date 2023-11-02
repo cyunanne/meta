@@ -5,17 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4057c2a6-feee-4169-b63c-630b09d3080f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/codec/Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/FileSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_FileSender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/NettyClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/codec/FileEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/codec/MessageEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/codec/MessageEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/MessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/FileInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/_FileInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/codec/HeaderParsor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/codec/Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
     </list>
@@ -96,21 +96,26 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java</url>
+          <line>23</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/netty/codec/MessageEncoder.java</url>
           <line>22</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/codec/FileEncoder.java</url>
-          <line>32</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java</url>
-          <line>60</line>
-          <option name="timeStamp" value="19" />
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf" memberName="array" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="((InstrumentedUnpooledUnsafeHeapByteBuf)data).array" custom="io.netty.buffer.UnpooledByteBufAllocator.InstrumentedUnpooledUnsafeHeapByteBuf" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
