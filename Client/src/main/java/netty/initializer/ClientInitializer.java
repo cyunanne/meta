@@ -3,15 +3,13 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import netty.codec.FileEncoder;
 import netty.codec.MessageEncoder;
 import netty.handler.FileHandler;
 import netty.handler.MessageHandler;
 
-public class MessageInitializer extends ChannelInitializer<SocketChannel> {
+public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
@@ -26,6 +24,6 @@ public class MessageInitializer extends ChannelInitializer<SocketChannel> {
 
         pipeline.addLast(new MessageEncoder());
         pipeline.addLast(new FileEncoder());
-//        pipeline.addLast(new FileHandler());
+        pipeline.addLast(new FileHandler());
     }
 }

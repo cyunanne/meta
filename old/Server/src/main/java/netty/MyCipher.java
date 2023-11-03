@@ -17,8 +17,13 @@ public class MyCipher {
     private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());
 
 
-    public MyCipher() throws Exception {
+    public MyCipher(char ch) throws Exception {
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        keySpec = new SecretKeySpec(key, "AES");
+        ivParamSpec = new IvParameterSpec(iv);
+
+        if(ch == 'D') cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
+        else          cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
     }
 
     public void init(char ch) throws Exception {

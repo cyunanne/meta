@@ -13,7 +13,7 @@ import netty.initializer.ServerInitializer;
 
 import java.net.InetSocketAddress;
 
-public class _NettyServer {
+public class NettyServer2 {
 
     private int port;
     private EventLoopGroup bossEventLoopGroup; // Listen ServerSocket
@@ -21,7 +21,7 @@ public class _NettyServer {
     private ServerBootstrap bootstrap;
     private ServerBootstrap bootstrap2;
 
-    public _NettyServer(
+    public NettyServer2(
             int port,
             ChannelInitializer<SocketChannel> msgInit,
             ChannelInitializer<SocketChannel> fileInit
@@ -44,7 +44,7 @@ public class _NettyServer {
         bootstrap2.childHandler(fileInit);
     }
 
-    public _NettyServer(int port) {
+    public NettyServer2(int port) {
         this(
                 port,
                 new ServerInitializer(),

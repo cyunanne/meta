@@ -27,12 +27,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof String) {
             echoMessage(ctx, msg);
 
-        } else { // if (msg instanceof byte[]) {
+        } else {
             if(outputStream == null) {
                 outputStream = Files.newOutputStream(Paths.get(filename));
             }
             outputStream.write((byte[]) msg);
-//            size += ((byte[]) msg).length;
         }
     }
 
@@ -61,7 +60,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String[] commands = ((String) msg).split(" ");
         if(commands[0].equals("fin")) {
             closeFile();
-//            System.out.println("size : " + size);
         }
 
         if(commands.length != 2) {

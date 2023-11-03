@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a39cb7f-45be-452c-bf25-22ac1ac1ebee" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyServer2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_NettyServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/codec/Parsor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/_FileHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/FileInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/_FileInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../old/Server/src/main/java/netty/MyCipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../old/Server/src/main/java/netty/MyCipher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,16 +94,5 @@
       <updated>1698395298515</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/codec/Parsor.java</url>
-          <line>31</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
