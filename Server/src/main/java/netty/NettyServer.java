@@ -6,8 +6,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import netty.initializer.FileInitializer;
-import netty.initializer.MessageInitializer;
+import netty.initializer._FileInitializer;
+import netty.initializer.ServerInitializer;
 
 import java.net.InetSocketAddress;
 
@@ -18,11 +18,7 @@ public class NettyServer {
     private EventLoopGroup workerEventLoopGroup;
     private ServerBootstrap bootstrap;
 
-    public NettyServer(
-            int port,
-            ChannelInitializer<SocketChannel> msgInit,
-            ChannelInitializer<SocketChannel> fileInit
-    ) {
+    public NettyServer(int port, ChannelInitializer<SocketChannel> msgInit) {
         this.port = port;
 
         bossEventLoopGroup = new NioEventLoopGroup(); // Listen ServerSocket
@@ -36,11 +32,7 @@ public class NettyServer {
     }
 
     public NettyServer(int port) {
-        this(
-                port,
-                new MessageInitializer(),
-                new FileInitializer()
-        );
+        this(port, new ServerInitializer());
     }
 
     public void run() {
