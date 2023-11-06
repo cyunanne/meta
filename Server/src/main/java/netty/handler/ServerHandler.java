@@ -3,6 +3,7 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import netty.cipher.ASE256Cipher;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,7 +14,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private OutputStream outputStream;
     private String filename;
 
-    private int size = 0;
+    // test
+    ASE256Cipher cipher = new ASE256Cipher('D');
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -25,13 +27,22 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 //        System.out.println("channelRead~~~");
 
         if (msg instanceof String) {
+            if(msg.equals("fin")) {
+               outputStream.write(cipher.doFinal());
+            }
             echoMessage(ctx, msg);
 
         } else {
             if(outputStream == null) {
                 outputStream = Files.newOutputStream(Paths.get(filename));
             }
-            outputStream.write((byte[]) msg);
+            // origin
+//            outputStream.write((byte[]) msg);
+
+            // test
+            byte[] enc = (byte[]) msg;
+            byte[] arr = cipher.update(enc, 0, enc.length);
+            outputStream.write(arr);
         }
     }
 

@@ -13,7 +13,8 @@ public class FileHandler extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws IOException {
-        ctx.writeAndFlush(msg);
+        if(msg instanceof String)
+            ctx.writeAndFlush(msg);
 
         // 파일 업로드
         String[] commands = ((String) msg).split(" ");

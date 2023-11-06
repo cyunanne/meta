@@ -21,6 +21,13 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.100.Final</version>
         </dependency>
+
+        <!-- zstd -->
+        <dependency>
+            <groupId>com.github.luben</groupId>
+            <artifactId>zstd-jni</artifactId>
+            <version>1.5.5-10</version>
+        </dependency>
     </dependencies>
 
 </project>
