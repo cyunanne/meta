@@ -2,11 +2,10 @@ package netty.initializer;
 
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.compression.ZstdEncoder;
 import io.netty.handler.codec.string.StringDecoder;
-import netty.handler.codec.FileEncoder;
-import netty.handler.codec.MessageEncoder;
-import netty.handler.Encryptor;
+import netty.handler.codec.*;
 import netty.handler.FileHandler;
 import netty.handler.MessageHandler;
 
@@ -20,14 +19,18 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 //        SslContext sslContext = SslContextBuilder.forClient().build();
 //        pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
+        // Inbound
         pipeline.addLast(new StringDecoder());
         pipeline.addLast(new MessageHandler());
 
+        // Outbound : Message
         pipeline.addLast(new MessageEncoder());
 
-        pipeline.addLast(new FileEncoder());    // (3) add header + send
-        pipeline.addLast(new Encryptor());      // (2) encrypt
-        pipeline.addLast(new ZstdEncoder(3, 1024, 1024));    // () compress
+        // Outbound : File
+        pipeline.addLast(new FileEncoderByteBuf());    // (4) add header + send
+        pipeline.addLast(new CipherEncoderByteBuf());  // (3) encrypt
+        pipeline.addLast(new ZstdEncoder());    // (2) compress
+        pipeline.addLast(new ByteArrayEncoder());
         pipeline.addLast(new FileHandler());    // (1) load file
     }
 }

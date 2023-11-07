@@ -1,4 +1,4 @@
-package netty.handler;
+package netty.handler.codec;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
@@ -7,7 +7,7 @@ import netty.cipher.ASE256Cipher;
 
 import java.io.IOException;
 
-public class Encryptor extends ChannelOutboundHandlerAdapter {
+public class CipherEncoder extends ChannelOutboundHandlerAdapter {
 
     ASE256Cipher cipher = new ASE256Cipher('E');
 

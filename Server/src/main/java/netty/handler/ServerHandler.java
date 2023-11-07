@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
-    private OutputStream outputStream;
+    private OutputStream os;
     private String filename;
 
     // test
@@ -28,21 +28,23 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         if (msg instanceof String) {
             if(msg.equals("fin")) {
-               outputStream.write(cipher.doFinal());
+               os.write(cipher.doFinal());
+               os.flush();
+               os.close();
             }
             echoMessage(ctx, msg);
 
         } else {
-            if(outputStream == null) {
-                outputStream = Files.newOutputStream(Paths.get(filename));
+            if(os == null) {
+                os = Files.newOutputStream(Paths.get(filename));
             }
             // origin
-//            outputStream.write((byte[]) msg);
+//            os.write((byte[]) msg);
 
             // test
             byte[] enc = (byte[]) msg;
             byte[] arr = cipher.update(enc, 0, enc.length);
-            outputStream.write(arr);
+            os.write(arr);
         }
     }
 
@@ -83,10 +85,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private void closeFile() {
         System.out.println("file closed");
         try {
-            if (outputStream != null) {
-                outputStream.flush();
-                outputStream.close();
-                outputStream = null;
+            if (os != null) {
+                os.flush();
+                os.close();
+                os = null;
             }
         } catch (Exception e) {
             e.printStackTrace();

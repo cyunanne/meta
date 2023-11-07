@@ -5,23 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4057c2a6-feee-4169-b63c-630b09d3080f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/Compressor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/Encryptor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoderByteBuf.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CompEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoderByteBuf.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/codec/MessageEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/MessageEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Compressor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Encryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_NettyServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_FileHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/_FileInitializer.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +62,7 @@
       <recent name="C:\yuna\workspace\Client\src\main\java\netty\handler" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="netty.handler.codec" />
       <recent name="netty.codec" />
     </key>
   </component>
@@ -97,6 +92,15 @@
     <servers />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoderByteBuf.java</url>
+          <line>19</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="io.netty.buffer.UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf" memberName="array" />
