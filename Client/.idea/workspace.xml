@@ -5,17 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4057c2a6-feee-4169-b63c-630b09d3080f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoderByteBuf.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CompEncoder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoderByteBuf.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherDecoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/MessageEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Compressor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Encryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_FileSender.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/MessageHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoderByteBuf.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CompEncoder.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoderByteBuf.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/FileEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/_FileInitializer.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/NettyServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/Header.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/cipher/ASE256Cipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,14 +55,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/yuna/workspace/Server&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/yuna/workspace/Client"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\yuna\workspace\Client" />
@@ -95,9 +107,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoderByteBuf.java</url>
-          <line>19</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,10 +1,10 @@
 package netty.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.cipher.ASE256Cipher;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,10 +12,9 @@ import java.nio.file.Paths;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     private OutputStream os;
-    private String filename;
 
     // test
-    ASE256Cipher cipher = new ASE256Cipher('D');
+    ASE256Cipher cipher = new ASE256Cipher(Cipher.DECRYPT_MODE);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -27,17 +26,15 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 //        System.out.println("channelRead~~~");
 
         if (msg instanceof String) {
-            if(msg.equals("fin")) {
-               os.write(cipher.doFinal());
-               os.flush();
-               os.close();
+            String message = (String) msg;
+            if (message.equals("fin")) {
+                closeFile();
+            } else if (message.startsWith("get")) {
+
             }
             echoMessage(ctx, msg);
 
         } else {
-            if(os == null) {
-                os = Files.newOutputStream(Paths.get(filename));
-            }
             // origin
 //            os.write((byte[]) msg);
 
@@ -70,15 +67,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String port = ctx.channel().remoteAddress().toString().split(":")[1];
         System.out.println("Client" + port + " : " + message);
 
-        String[] commands = ((String) msg).split(" ");
-        if(commands[0].equals("fin")) {
-            closeFile();
-        }
-
-        if(commands.length != 2) {
-            ctx.writeAndFlush(msg);
-        } else if(commands[0].equals("put")) {
-            filename = commands[1];
+        if (message.startsWith("put")) {
+            String filename = message.split(" ")[1];
+            os = Files.newOutputStream(Paths.get(filename));
+        } else {
+            ctx.writeAndFlush(message);
         }
     }
 
@@ -88,7 +81,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             if (os != null) {
                 os.flush();
                 os.close();
-                os = null;
+//                os = null;
             }
         } catch (Exception e) {
             e.printStackTrace();

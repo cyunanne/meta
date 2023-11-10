@@ -6,7 +6,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import netty.initializer._FileInitializer;
 import netty.initializer.ServerInitializer;
 
 import java.net.InetSocketAddress;

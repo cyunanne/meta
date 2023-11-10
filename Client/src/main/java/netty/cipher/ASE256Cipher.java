@@ -14,21 +14,19 @@ public class ASE256Cipher {
     private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());
 
 
-    public ASE256Cipher(char ch) {
+    public ASE256Cipher(int mode) {
         try {
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             keySpec = new SecretKeySpec(key.getBytes(), "AES");
             ivParamSpec = new IvParameterSpec(iv.getBytes());
-
-            if (ch == 'D') cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
-            else cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+            cipher.init(mode, keySpec, ivParamSpec);
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public byte[] update(byte[] bytes, int i, int i1) {
-        return cipher.update(bytes, i, i1);
+    public byte[] update(byte[] bytes) {
+        return cipher.update(bytes);
     }
 
     public byte[] doFinal() {
