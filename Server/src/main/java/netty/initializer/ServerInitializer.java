@@ -4,8 +4,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.string.StringEncoder;
-import netty.handler.FileHandler;
+import netty.handler.FileHandlerForServer;
 import netty.handler.codec.FileEncoder;
 import netty.handler.codec.MessageEncoder;
 import netty.handler.codec.Parsor;
@@ -27,13 +26,12 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 //        pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
         // Outbound : Message
-//        pipeline.addLast(new StringEncoder());
         pipeline.addLast(new MessageEncoder());
 
         // Outbound : File
         pipeline.addLast(new FileEncoder());        // (3) add header + send
         pipeline.addLast(new ByteArrayEncoder());   // (2) byte[] -> ByteBuf
-        pipeline.addLast(new FileHandler());        // (1) load file
+        pipeline.addLast(new FileHandlerForServer());        // (1) load file
 
         // Inbound
         pipeline.addLast(new Parsor());

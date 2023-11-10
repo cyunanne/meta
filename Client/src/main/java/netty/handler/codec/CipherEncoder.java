@@ -13,27 +13,22 @@ import java.io.IOException;
 
 public class CipherEncoder extends ChannelOutboundHandlerAdapter {
 
-    ASE256Cipher cipher = new ASE256Cipher(Cipher.ENCRYPT_MODE);
+    private ASE256Cipher cipher;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws IOException {
 //        System.out.println("CipherEncoderByeBuf.write()");
         if(msg instanceof String) {
-            if(msg.equals("fin")) {
+            if(((String)msg).startsWith("put")) {
+                cipher = new ASE256Cipher(Cipher.ENCRYPT_MODE);
+            } else if(msg.equals("fin")) {
                 ctx.writeAndFlush(Unpooled.wrappedBuffer(cipher.doFinal()));
             }
             ctx.writeAndFlush(msg);
+
+        } else {
+            byte[] data = ByteBufUtil.getBytes((ByteBuf) msg);
+            ctx.writeAndFlush(Unpooled.wrappedBuffer(cipher.update(data)));
         }
-
-//        ByteBuf buf = (ByteBuf) msg;
-//        int len = buf.readableBytes();
-//        byte[] plain = new byte[len];
-//        buf.readBytes(plain);
-//        buf.release();
-
-        byte[] data = ByteBufUtil.getBytes((ByteBuf) msg);
-
-//        ctx.writeAndFlush(Unpooled.wrappedBuffer(cipher.update(plain)));
-        ctx.writeAndFlush(Unpooled.wrappedBuffer(cipher.update(data)));
     }
 }

@@ -25,8 +25,8 @@ public class ASE256Cipher {
         }
     }
 
-    public byte[] update(byte[] bytes, int i, int i1) {
-        return cipher.update(bytes, i, i1);
+    public byte[] update(byte[] bytes) {
+        return cipher.update(bytes);
     }
 
     public byte[] doFinal() {

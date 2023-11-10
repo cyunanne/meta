@@ -9,6 +9,8 @@ public class ASE256Cipher {
     private final String key = "01234567890123456789012345678901"; // 32byte
     private final String iv = key.substring(0, 16); // 16byte
 
+    private int mode = Cipher.ENCRYPT_MODE;
+
     private Cipher cipher;
     private SecretKeySpec keySpec;// = new SecretKeySpec(key.getBytes(), "AES");
     private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());

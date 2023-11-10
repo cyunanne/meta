@@ -28,6 +28,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof String) {
             String message = (String) msg;
             if (message.equals("fin")) {
+//                os.write(cipher.doFinal());
                 closeFile();
             } else if (message.startsWith("get")) {
 
@@ -36,12 +37,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         } else {
             // origin
-//            os.write((byte[]) msg);
+            os.write((byte[]) msg);
 
             // test
-            byte[] enc = (byte[]) msg;
-            byte[] arr = cipher.update(enc, 0, enc.length);
-            os.write(arr);
+//            os.write(cipher.update((byte[]) msg));
         }
     }
 
@@ -52,7 +51,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        closeFile();
+//        closeFile();
         System.out.println("channel closed");
     }
 
