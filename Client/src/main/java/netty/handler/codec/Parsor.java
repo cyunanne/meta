@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Parsor extends ReplayingDecoder<ByteBuf> {
 
+    int size = 0;
+
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
 
@@ -24,6 +26,9 @@ public class Parsor extends ReplayingDecoder<ByteBuf> {
             byteBuf.resetReaderIndex();
             return;
         }
+
+        size += len;
+        System.out.println(size);
 
         byte data[] = new byte[len];
         byteBuf.readBytes(data);

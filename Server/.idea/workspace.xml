@@ -6,15 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="6a39cb7f-45be-452c-bf25-22ac1ac1ebee" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/cipher/ASE256Cipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandlerForClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandlerForClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/CipherDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/CipherDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/CipherEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/CipherEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserGuide.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/UserGuide.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/cipher/ASE256Cipher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandlerForServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandlerForServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

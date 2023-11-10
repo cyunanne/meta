@@ -27,16 +27,13 @@ public class FileHandlerForClient extends ChannelOutboundHandlerAdapter {
                 int read = -1;
 
                 while ((read = is.read(buffer)) != -1) {
+                    // 마지막 블록 길이 만큼 자르기
                     if(read < BLOCK_SIZE) {
-                        // 마지막 블록 길이 만큼 자르기
-                        byte[] trimmed = Arrays.copyOfRange(buffer, 0, read);
-                        ctx.writeAndFlush(trimmed);
-                    } else {
-                        ctx.writeAndFlush(buffer);
+                        buffer = Arrays.copyOfRange(buffer, 0, read);
                     }
+                    ctx.writeAndFlush(buffer);
                 }
                 ctx.writeAndFlush("fin");
-
             } catch (NoSuchFileException e) {
                 System.out.println("존재하지 않는 파일입니다.");
             } catch (Exception e) {

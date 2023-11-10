@@ -17,11 +17,6 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 //        SslContext sslContext = SslContextBuilder.forClient().build();
 //        pipeline.addLast(sslContext.newHandler(ch.alloc()));
 
-        // Inbound
-        pipeline.addLast(new Parsor());             // (1) header detach + ByteBuf -> byte[]
-        pipeline.addLast(new CipherDecoder());      // (2) decrypt
-        pipeline.addLast(new ClientHandler());      // (3) save file
-
         // Outbound : Message
         pipeline.addLast(new MessageEncoder());
 
@@ -31,5 +26,10 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 //        pipeline.addLast(new ZstdEncoder());        // (3) compress
         pipeline.addLast(new ByteArrayEncoder());   // (2) byte[] -> ByteBuf
         pipeline.addLast(new FileHandlerForClient());        // (1) load file
+
+        // Inbound
+        pipeline.addLast(new Parsor());             // (1) header detach + ByteBuf -> byte[]
+        pipeline.addLast(new CipherDecoder());      // (2) decrypt
+        pipeline.addLast(new ClientHandler());      // (3) save file
     }
 }

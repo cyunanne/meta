@@ -11,7 +11,7 @@ public class FileEncoder extends MessageToMessageEncoder<ByteBuf> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf data, List<Object> list) throws Exception {
-        System.out.println("FileEncoderByteBuf.encode()");
+//        System.out.println("FileEncoderByteBuf.encode()");
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte((byte) 'F');
         buf.writeShort(data.readableBytes());

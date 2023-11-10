@@ -31,6 +31,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             } else if (message.startsWith("get")) {
                 String filename = message.split(" ")[1];
                 os = Files.newOutputStream(Paths.get(filename));
+            } else {
+                System.out.println("?????????");
             }
 
             System.out.print(">>> ");

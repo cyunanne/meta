@@ -14,7 +14,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private OutputStream os;
 
     // test
-    ASE256Cipher cipher = new ASE256Cipher(Cipher.DECRYPT_MODE);
+    private ASE256Cipher cipher = new ASE256Cipher(Cipher.DECRYPT_MODE);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
