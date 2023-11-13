@@ -1,0 +1,6 @@
+1 message / file
+1 put / get / fin(put) / fin(get)
+1 data / filename / filesize
+2 data-length
+-----------------
+N data

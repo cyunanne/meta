@@ -18,8 +18,14 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        // files
+        if (msg instanceof byte[]){
+            byte[] data = (byte[]) msg;
+            os.write(data);
+        }
+
         // messages
-        if (msg instanceof String) {
+        else if (msg instanceof String) {
             String message = (String) msg;
             System.out.println("Server : " + msg);
 
@@ -36,10 +42,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             }
 
             System.out.print(">>> ");
-
-        // files
-        } else {
-            os.write((byte[]) msg);
         }
     }
 

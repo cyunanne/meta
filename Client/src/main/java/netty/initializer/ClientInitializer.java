@@ -21,14 +21,14 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new MessageEncoder());
 
         // Outbound : File
-        pipeline.addLast(new FileEncoder());        // (5) add header + send
-        pipeline.addLast(new CipherEncoder());      // (4) encrypt
-//        pipeline.addLast(new ZstdEncoder());        // (3) compress
-        pipeline.addLast(new ByteArrayEncoder());   // (2) byte[] -> ByteBuf
-        pipeline.addLast(new FileHandlerForClient());        // (1) load file
+        pipeline.addLast(new FileEncoder());            // (5) add header + send
+        pipeline.addLast(new CipherEncoder());          // (4) encrypt
+//        pipeline.addLast(new ZstdEncoder());          // (3) compress
+        pipeline.addLast(new ByteArrayEncoder());       // (2) byte[] -> ByteBuf
+        pipeline.addLast(new FileHandlerForClient());   // (1) load file
 
         // Inbound
-        pipeline.addLast(new Parsor());             // (1) header detach + ByteBuf -> byte[]
+        pipeline.addLast(new Parsor());             // (1) header detach + ByteBuf -> byte[] / String
         pipeline.addLast(new CipherDecoder());      // (2) decrypt
         pipeline.addLast(new ClientHandler());      // (3) save file
     }

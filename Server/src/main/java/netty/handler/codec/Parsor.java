@@ -1,12 +1,16 @@
 package netty.handler.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class Parsor extends ReplayingDecoder<ByteBuf> {
+
+//    int size = 0;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
@@ -15,23 +19,25 @@ public class Parsor extends ReplayingDecoder<ByteBuf> {
             return;
         }
 
-        byteBuf.markReaderIndex();
+//        byteBuf.markReaderIndex();
 
         byte type = byteBuf.readByte();
-        int len = byteBuf.readShort();
+        int len = byteBuf.readUnsignedShort();
 
         if(byteBuf.readableBytes() < len) {
-            byteBuf.resetReaderIndex();
+//            byteBuf.resetReaderIndex();
             return;
         }
 
-        byte data[] = new byte[len];
-        byteBuf.readBytes(data);
-
+//        size += len;
+//        System.out.println(size);
+        byte[] buf = new byte[len];
+        byteBuf.readBytes(buf);
+//
         // 핸들러
         switch (type) {
-            case 'M': list.add(new String(data)); break; // msg(String)
-            case 'F': list.add(data); break; // file(byte[])
+            case 'M': list.add(new String(buf)); break; // msg(String)
+            case 'F': list.add(buf); break; // file(byte[])
         }
     }
 }
