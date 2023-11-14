@@ -1,9 +1,7 @@
 package netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -41,12 +39,18 @@ public class NettyClient {
 
     public void run() {
         try {
-            channel = bootstrap.connect(host, port).sync().channel();
 
             System.out.print(">>> ");
-            String filename = scanner.nextLine();
-            channel.writeAndFlush(filename).sync();
+            while( true ) {
+                String filename = scanner.nextLine();
+                if(filename.equals("quit")) break;
 
+                channel = bootstrap.connect(host, port).sync().channel();
+                channel.writeAndFlush(filename);
+            }
+            channel.close();
+
+            System.out.println("프로그램을 종료합니다.");
         } catch(Exception e) {
             e.printStackTrace();
         } finally {

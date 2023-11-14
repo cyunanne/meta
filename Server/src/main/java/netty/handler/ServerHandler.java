@@ -42,9 +42,17 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         switch(header.getType()) {
-            case Header.TYPE_MSG: break;
-            case Header.TYPE_META: setFileSpec(byteBuf); break;
-            case Header.TYPE_DATA: writeToFile(byteBuf, header); break;
+            case Header.TYPE_MSG:
+                break;
+
+            case Header.TYPE_META:
+                setFileSpec(byteBuf);
+                break;
+
+            case Header.TYPE_DATA:
+                if( writeToFile(byteBuf, header) ) break;
+                ctx.writeAndFlush(new TransferData(Header.TYPE_MSG, Header.CMD_PUT, true));
+                break;
             default: break;
         }
     }
@@ -57,7 +65,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 //        closeFile();
-        System.out.println("channel closed");
+//        System.out.println("channel closed");
     }
 
     @Override
@@ -97,14 +105,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         fos = new FileOutputStream(fileSpec.getName());
     }
 
-    private void writeToFile(ByteBuf byteBuf, Header header) throws IOException {
+    private boolean writeToFile(ByteBuf byteBuf, Header header) throws IOException {
         FileChannel fileChannel = fos.getChannel();
         received += fileChannel.write(byteBuf.nioBuffer());
-        byteBuf.release();
 
-//        if (/*header.isEof() &&*/ header.getLength() <= received) {
-//            fos.close();
-//            received = 0L;
-//        }
+        if (header.isEof() && fileSpec.getSize() <= received) {
+            fos.close();
+            received = 0L;
+            return false;
+        }
+
+        return true;
     }
 }
