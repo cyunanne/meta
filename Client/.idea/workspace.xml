@@ -5,32 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4057c2a6-feee-4169-b63c-630b09d3080f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/_NettyClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/_test/FileSpec.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/_FileHandlerForClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Sender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_Parsor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/_ClientInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/FileSpec.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/Header.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/TransferData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/HandlerForServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_ServerHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/_Parsor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/_ServerInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/NettyClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/FileSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_test/FileSpec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandlerForClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandlerForClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/Sender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/FileHandlerForServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_FileHandlerForServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/TransferData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/HandlerForServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/HandlerForServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../header degine.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../header degine.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,12 +52,14 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/yuna/workspace/Client/src/main/java/netty"
+    "git-widget-placeholder": "home",
+    "last_opened_file_path": "D:/meta/Client",
+    "settings.editor.selected.configurable": "reference.idesettings.debugger.typerenderers"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\meta\Client" />
       <recent name="C:\yuna\workspace\Client\src\main\java\netty" />
       <recent name="C:\yuna\workspace\Client\src\main\java\netty\_test" />
       <recent name="C:\yuna\workspace\Client" />
@@ -125,13 +117,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java</url>
-          <line>27</line>
+          <line>46</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/Sender.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="27" />
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -145,5 +147,9 @@
         <watch expression="((InstrumentedUnpooledUnsafeHeapByteBuf)data).array" custom="io.netty.buffer.UnpooledByteBufAllocator.InstrumentedUnpooledUnsafeHeapByteBuf" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

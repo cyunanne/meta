@@ -2,6 +2,8 @@ package netty.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import netty._test.Header;
+import netty._test.TransferData;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -17,32 +19,49 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if( !(msg instanceof TransferData) ) return;
 
-        // files
-        if (msg instanceof byte[]){
-            byte[] data = (byte[]) msg;
-            os.write(data);
+        TransferData td = (TransferData) msg;
+        Header header = td.getHeader();
+
+        switch(header.getType()) {
+            case Header.TYPE_MSG:
+                if( header.isEof() ) {
+                    ctx.close();
+                    System.out.print("업로드 성공\n>>> ");
+                }
+                break;
+            case Header.TYPE_META: break;
+            case Header.TYPE_DATA: break;
+            default: break;
         }
 
-        // messages
-        else if (msg instanceof String) {
-            String message = (String) msg;
-            System.out.println("Server : " + msg);
 
-            if (message.equals("fin")) {
-                System.out.println("파일 업로드 완료");
-            } else if (message.equals("fin-d")) {
-                System.out.println("파일 다운로드 완료");
-                closeFile();
-            } else if (message.startsWith("get")) {
-                String filename = message.split(" ")[1];
-                os = Files.newOutputStream(Paths.get(filename));
-            } else {
-                System.out.println("?????????");
-            }
-
-            System.out.print(">>> ");
-        }
+//        // files
+//        if (msg instanceof byte[]){
+//            byte[] data = (byte[]) msg;
+//            os.write(data);
+//        }
+//
+//        // messages
+//        else if (msg instanceof String) {
+//            String message = (String) msg;
+//            System.out.println("Server : " + msg);
+//
+//            if (message.equals("fin")) {
+//                System.out.println("파일 업로드 완료");
+//            } else if (message.equals("fin-d")) {
+//                System.out.println("파일 다운로드 완료");
+//                closeFile();
+//            } else if (message.startsWith("get")) {
+//                String filename = message.split(" ")[1];
+//                os = Files.newOutputStream(Paths.get(filename));
+//            } else {
+//                System.out.println("?????????");
+//            }
+//
+//            System.out.print(">>> ");
+//        }
     }
 
     @Override

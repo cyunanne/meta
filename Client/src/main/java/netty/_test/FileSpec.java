@@ -32,6 +32,14 @@ public class FileSpec implements Serializable {
         this.compressed = fs.compressed;
     }
 
+    public FileSpec(String filename) {
+        this.name = filename;
+        this.size = new File(filename).length();
+        this.endOfFileList = true;
+        this.encrypted = false;
+        this.compressed = false;
+    }
+
     public FileSpec(ByteBuf byteBuf) {
         FileSpec fs = null;
 

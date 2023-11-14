@@ -19,21 +19,20 @@ import java.util.Arrays;
 
 public class FileHandlerForClient extends ChannelOutboundHandlerAdapter {
 
-    int BLOCK_SIZE = 1024;
+    int BLOCK_SIZE = Short.MAX_VALUE;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws IOException {
         String filename = (String) msg;
-        File file = new File(filename);
-
-        FileSpec fs = new FileSpec(filename, file.length(), true, false, false);
+        FileSpec fs = new FileSpec(filename);
         ctx.writeAndFlush(new TransferData(fs));
 
         FileInputStream fis = new FileInputStream(filename);
         byte[] buffer = new byte[BLOCK_SIZE];
         int read = -1;
         while( (read = fis.read(buffer)) != -1 ) {
-            ctx.writeAndFlush(new TransferData(buffer, Header.CMD_PUT, false, read));
+            boolean eof = ( read < BLOCK_SIZE );
+            ctx.writeAndFlush(new TransferData(buffer, Header.CMD_PUT, eof, read));
         }
         fis.close();
     }

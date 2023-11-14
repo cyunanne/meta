@@ -48,8 +48,9 @@ public class HandlerForServer extends ChannelOutboundHandlerAdapter {
         FileChannel fileChannel = fos.getChannel();
         received += fileChannel.write(byteBuf.nioBuffer());
 
-//        if (header.isEof() && header.getLength() <= received) {
-//            fos.close();
-//        }
+        if (header.isEof() && fileSpec.getSize() <= received) {
+            fos.close();
+            received = 0L;
+        }
     }
 }

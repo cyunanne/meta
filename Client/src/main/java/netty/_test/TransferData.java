@@ -5,7 +5,7 @@ import io.netty.buffer.Unpooled;
 
 public class TransferData {
     private final Header header;
-    private final ByteBuf data;
+    private ByteBuf data;
 
     public TransferData(Header header, ByteBuf byteBuf) {
         this.header = header;
@@ -25,6 +25,10 @@ public class TransferData {
     public TransferData(byte[] data, int cmd, boolean eof, int length) {
         this.data = Unpooled.wrappedBuffer(data, 0, length);
         this.header = new Header(Header.TYPE_DATA, cmd, eof, length);
+    }
+
+    public TransferData(int type, int cmd, boolean eof) {
+        this.header = new Header(Header.TYPE_DATA, cmd, eof, 0);
     }
 
     public Header getHeader() {
