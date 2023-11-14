@@ -1,27 +1,18 @@
 package netty.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import netty._test.FileSpec;
-import netty._test.Header;
-import netty._test.TransferData;
 import netty.cipher.ASE256Cipher;
 
 import javax.crypto.Cipher;
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class ServerHandler extends ChannelInboundHandlerAdapter {
+public class _ServerHandler extends ChannelInboundHandlerAdapter {
 
     private OutputStream os;
-
-    private FileOutputStream fos;
-    private FileSpec fileSpec;
-    private Long received = 0L;
 
     // test
     private ASE256Cipher cipher = new ASE256Cipher(Cipher.DECRYPT_MODE);
@@ -35,17 +26,22 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 //        System.out.println("channelRead~~~");
 
-        if ( !(msg instanceof TransferData) ) return;
+        if (msg instanceof String) {
+            String message = (String) msg;
+            if (message.equals("fin")) {
+//                os.write(cipher.doFinal());
+                closeFile();
+            } else if (message.startsWith("get")) {
 
-        TransferData td = (TransferData) msg;
-        Header header = td.getHeader();
-        ByteBuf byteBuf = td.getData();
+            }
+            echoMessage(ctx, msg);
 
-        switch(header.getType()) {
-            case Header.TYPE_MSG: break;
-            case Header.TYPE_META: setFileSpec(byteBuf); break;
-            case Header.TYPE_DATA: writeToFile(byteBuf, header); break;
-            default: break;
+        } else {
+            // origin
+            os.write((byte[]) msg);
+
+            // test
+//            os.write(cipher.update((byte[]) msg));
         }
     }
 
@@ -90,21 +86,5 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void setFileSpec(ByteBuf byteBuf) throws IOException {
-        fileSpec = new FileSpec(byteBuf);
-        fos = new FileOutputStream(fileSpec.getName());
-    }
-
-    private void writeToFile(ByteBuf byteBuf, Header header) throws IOException {
-        FileChannel fileChannel = fos.getChannel();
-        received += fileChannel.write(byteBuf.nioBuffer());
-        byteBuf.release();
-
-//        if (/*header.isEof() &&*/ header.getLength() <= received) {
-//            fos.close();
-//            received = 0L;
-//        }
     }
 }

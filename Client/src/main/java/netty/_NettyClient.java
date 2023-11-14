@@ -11,7 +11,7 @@ import netty.initializer.ClientInitializer;
 
 import java.util.Scanner;
 
-public class NettyClient {
+public class _NettyClient {
 
     protected String host;
     protected int port;
@@ -21,7 +21,7 @@ public class NettyClient {
 
     Scanner scanner = new Scanner(System.in);
 
-    public NettyClient(String host, int port, ChannelInitializer<SocketChannel> ci){
+    public _NettyClient(String host, int port, ChannelInitializer<SocketChannel> ci){
         this.host = host;
         this.port = port;
 
@@ -31,7 +31,7 @@ public class NettyClient {
         bootstrap.handler(ci);
     }
 
-    public NettyClient(String host, int port) {
+    public _NettyClient(String host, int port) {
         this(host, port, new ClientInitializer());
     }
 
@@ -44,9 +44,22 @@ public class NettyClient {
             channel = bootstrap.connect(host, port).sync().channel();
 
             System.out.print(">>> ");
-            String filename = scanner.nextLine();
-            channel.writeAndFlush(filename).sync();
+            while( true ) {
+                String msg = scanner.nextLine();
+                String[] commands = msg.split(" ");
 
+                if (commands[0].equals("quit")) break;
+                if (commands.length != 2) {
+                    System.out.print("명령어를 확인해주세요.\n>>> ");
+                } else channel.writeAndFlush(msg);
+
+//                else if (commands[0].equals("put")) {
+//                    sendMessage(msg);
+//                    sendFile(commands[1]);
+//                }
+            }
+
+            System.out.println("프로그램을 종료합니다.");
         } catch(Exception e) {
             e.printStackTrace();
         } finally {

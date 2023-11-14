@@ -7,7 +7,7 @@ public class Header {
 
     public static final int HEADER_SIZE = 3;
 
-//    public enum TYPE { MSG, META, DATA }
+    //    public enum TYPE { MSG, META, DATA }
 //    public enum CMD { PUT, GET }
     public static final int TYPE_MSG = 0x00;
     public static final int TYPE_META = 0x01;
@@ -52,8 +52,8 @@ public class Header {
 
     public ByteBuf makeHeader() {
         int data = ( this.type << TYPE_INDEX ) |
-                   ( this.cmd << CMD_INDEX ) |
-                   ( (this.eof ? 1 : 0) << EOF_INDEX );
+                ( this.cmd << CMD_INDEX ) |
+                ( (this.eof ? 1 : 0) << EOF_INDEX );
         return Unpooled.buffer().writeByte(data).writeShort(this.length);
     }
 

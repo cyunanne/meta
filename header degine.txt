@@ -1,6 +1,22 @@
-1 message / file
-1 put / get / fin(put) / fin(get)
-1 data / filename / filesize
-2 data-length
------------------
-N data
+00/01/10/11		message / meta-data / data / ---empty---
+0/1 				put / get
+0/1				EOF
+0				----empty----
+0				----empty----
+0				----empty----
+0				----empty----
+short(2bytes)		data-length
+(헤더 버전, checksum, 압축..?
+--------------------------------------------- 3bytes
+data
+
+
+
+
+파일 전송 시작할 때 1회 전달
+==== file-spec ====
+String	filename
+Long		filesize
+Boolean	End of file-list
+Boolean	encrypted
+Boolean	compressed
