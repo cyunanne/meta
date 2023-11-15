@@ -6,7 +6,7 @@
 0				----empty----
 0				----empty----
 short(2bytes)		data-length
-(헤더 버전, checksum, 압축..?
+(헤더 버전, checksum, 압축..?)
 --------------------------------------------- 3bytes
 data
 
