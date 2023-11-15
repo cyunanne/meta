@@ -41,6 +41,8 @@ public class NettyServer {
             ChannelFuture bindFuture = bootstrap.bind(new InetSocketAddress(port)).sync();
             Channel channel = bindFuture.channel();
 
+            System.out.println("Server Started.");
+
             // 채널 닫힐 때까지 프로그램 대기
             channel.closeFuture().sync();
 

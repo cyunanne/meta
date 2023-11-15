@@ -19,10 +19,8 @@ public class Parsor extends ReplayingDecoder<ByteBuf> {
         }
 
         Header header = new Header(byteBuf.readSlice(Header.HEADER_SIZE));
-        int ri = byteBuf.readerIndex(); // for check => should be 3
 
         // 데이터가 모두 들어올 때 까지 대기
-        // => return 후 readerIndex 초기화
         int len = header.getLength();
         if(byteBuf.readableBytes() < len) {
             return;

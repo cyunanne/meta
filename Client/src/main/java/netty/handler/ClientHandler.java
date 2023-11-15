@@ -28,6 +28,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             case Header.TYPE_MSG:
                 if( header.isEof() ) {
                     ctx.close();
+                    System.out.println("Server Disconnected.");
                     System.out.print("업로드 성공\n>>> ");
                 }
                 break;

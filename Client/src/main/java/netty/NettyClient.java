@@ -46,9 +46,11 @@ public class NettyClient {
                 if(filename.equals("quit")) break;
 
                 channel = bootstrap.connect(host, port).sync().channel();
+                System.out.println("Server Connected.");
+
                 channel.writeAndFlush(filename);
+                channel.closeFuture().sync();
             }
-            channel.close();
 
             System.out.println("프로그램을 종료합니다.");
         } catch(Exception e) {

@@ -14,7 +14,7 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
 
         // Outbound : File
-        pipeline.addLast(new Sender());            // (5) add header + send
+        pipeline.addLast(new Sender());                 // (5) add header + send
         pipeline.addLast(new FileHandlerForClient());   // (1) load file
 
         // Inbound

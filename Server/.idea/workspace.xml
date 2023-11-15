@@ -5,22 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a39cb7f-45be-452c-bf25-22ac1ac1ebee" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/Sender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Client/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Client/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/FileServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/NettyClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/FileSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/FileSpec.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/TransferData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/_test/Header.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandlerForClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/FileHandlerForClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/_FileEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/ClientInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/_ClientInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/main/java/netty/initializer/_ClientInitializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/HandlerForServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/HandlerForServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/NettyServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/HandlerForServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/_HandlerForServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/Sender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/FileEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_FileEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/MessageEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_MessageEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_Parsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/ServerInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/_ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/_ServerInitializer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +49,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "cyunanne"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="42050dd6-b708-48ba-bd52-726184b444a4" />
+        <option name="url" value="https://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@github.com/cyunanne/meta" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -53,8 +80,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "home",
-    "last_opened_file_path": "D:/meta/Server",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/dev/netty/Server",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0"
@@ -75,7 +102,14 @@
       <recent name="netty" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Server">
+    <configuration name="FileServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FileServer" />
+      <module name="Server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Server" />
       <module name="Server" />
@@ -86,6 +120,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.FileServer" />
       </list>
     </recent_temporary>
   </component>
@@ -100,20 +135,41 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/HandlerForServer.java</url>
-          <line>50</line>
-          <option name="timeStamp" value="34" />
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/ServerHandler.java</url>
+          <line>65</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/Sender.java</url>
-          <line>15</line>
-          <option name="timeStamp" value="45" />
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/_Parsor.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java</url>
+          <line>18</line>
+          <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="io.netty.buffer.PooledUnsafeDirectByteBuf" memberName="memory" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

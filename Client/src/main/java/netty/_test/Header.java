@@ -7,8 +7,6 @@ public class Header {
 
     public static final int HEADER_SIZE = 3;
 
-//    public enum TYPE { MSG, META, DATA }
-//    public enum CMD { PUT, GET }
     public static final int TYPE_MSG = 0x00;
     public static final int TYPE_META = 0x01;
     public static final int TYPE_DATA = 0x02;
@@ -50,7 +48,7 @@ public class Header {
         this.length = buf.readUnsignedShort();
     }
 
-    public ByteBuf makeHeader() {
+    public ByteBuf getByteBuf() {
         int data = ( this.type << TYPE_INDEX ) |
                    ( this.cmd << CMD_INDEX ) |
                    ( (this.eof ? 1 : 0) << EOF_INDEX );
@@ -72,12 +70,5 @@ public class Header {
     public int getLength() {
         return length;
     }
-
-//    public ByteBuf getByteBuf() {
-//        ByteBuf buf = Unpooled.buffer();
-//        buf.writeShort(this.length);
-//        buf.writeBytes(data);
-//        list.add(buf);
-//    }
 
 }

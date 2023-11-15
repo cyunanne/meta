@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.stream.ChunkedFile;
 import netty._test.FileSpec;
 import netty._test.Header;
 import netty._test.TransferData;
@@ -23,6 +25,7 @@ public class FileHandlerForClient extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws IOException {
+        System.out.println("FileSpec sent.");
         String filename = (String) msg;
         FileSpec fs = new FileSpec(filename);
         ctx.writeAndFlush(new TransferData(fs));

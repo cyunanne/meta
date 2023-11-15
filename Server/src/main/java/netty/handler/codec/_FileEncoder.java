@@ -7,7 +7,7 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 
 import java.util.List;
 
-public class FileEncoder extends MessageToMessageEncoder<ByteBuf> {
+public class _FileEncoder extends MessageToMessageEncoder<ByteBuf> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf data, List<Object> list) throws Exception {

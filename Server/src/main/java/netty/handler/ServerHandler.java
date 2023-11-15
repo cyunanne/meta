@@ -12,6 +12,7 @@ import javax.crypto.Cipher;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -35,6 +36,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 //        System.out.println("channelRead~~~");
 
+        os = Files.newOutputStream(Paths.get("my.pdf"));
+        os.write((byte[]) msg);
+
+
+
         if ( !(msg instanceof TransferData) ) return;
 
         TransferData td = (TransferData) msg;
@@ -50,8 +56,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 break;
 
             case Header.TYPE_DATA:
-                if( writeToFile(byteBuf, header) ) break;
-                ctx.writeAndFlush(new TransferData(Header.TYPE_MSG, Header.CMD_PUT, true));
+
+//                byte[] arr = new byte[header.getLength()];
+//                byteBuf.readBytes(arr);
+//                fos.write(arr);
+//                byteBuf.release();
+
+//                if( writeToFile(byteBuf, header) ) break;
+//                ctx.writeAndFlush(new TransferData(Header.TYPE_MSG, Header.CMD_PUT, true));
                 break;
             default: break;
         }
@@ -63,9 +75,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
 //        closeFile();
-//        System.out.println("channel closed");
+        System.out.println("channel closed : " + ctx.channel().remoteAddress());
     }
 
     @Override
@@ -93,7 +105,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             if (os != null) {
                 os.flush();
                 os.close();
-//                os = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,13 +119,19 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private boolean writeToFile(ByteBuf byteBuf, Header header) throws IOException {
         FileChannel fileChannel = fos.getChannel();
         received += fileChannel.write(byteBuf.nioBuffer());
+        byteBuf.release();
+
+        System.out.println(fileSpec.getSize() + " / " + received);
 
         if (header.isEof() && fileSpec.getSize() <= received) {
             fos.close();
+
+            System.out.println("File Closed : " + fileSpec.getName() + " / " + received + " bytes");
+
             received = 0L;
+            fileSpec = null;
             return false;
         }
-
         return true;
     }
 }

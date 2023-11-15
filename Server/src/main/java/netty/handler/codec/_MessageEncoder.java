@@ -8,7 +8,7 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public class MessageEncoder extends MessageToMessageEncoder<String> {
+public class _MessageEncoder extends MessageToMessageEncoder<String> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, String msg, List<Object> list) throws Exception {
