@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import netty.initializer.MessageInitializer;
 import netty.initializer.old.ServerInitializer;
 
 import java.net.InetSocketAddress;
@@ -18,7 +19,9 @@ public class MessageServer implements Runnable{
     private EventLoopGroup workerEventLoopGroup;
     private ServerBootstrap bootstrap;
 
-    public MessageServer(int port, ChannelInitializer<SocketChannel> msgInit) {
+    private Channel channel;
+
+    public MessageServer(int port) {
         this.port = port;
 
         bossEventLoopGroup = new NioEventLoopGroup(); // Listen ServerSocket
@@ -28,28 +31,22 @@ public class MessageServer implements Runnable{
         bootstrap = new ServerBootstrap();
         bootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
         bootstrap.channel(NioServerSocketChannel.class);
-        bootstrap.childHandler(msgInit);
-    }
-
-    public MessageServer(int port) {
-        this(port, new ServerInitializer());
+        bootstrap.childHandler(new MessageInitializer());
     }
 
     @Override
     public void run() {
         try {
-            // 채널 연결 대기
-            Channel channel = bootstrap.bind(new InetSocketAddress(port)).sync().channel();
-
+            channel = bootstrap.bind(new InetSocketAddress(port)).sync().channel();
             channel.closeFuture().sync();
-
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-
-        } finally {
-            workerEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
-            bossEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
         }
+    }
+
+    public void close() {
+        workerEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
+        bossEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
     }
 
 }

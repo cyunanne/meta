@@ -5,62 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4057c2a6-feee-4169-b63c-630b09d3080f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/FileTransfer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/MessageTransfer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/common/ChunkedFileWithH.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileLoadHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/FileSaveHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/old/FileHandlerForClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/handler/old/Sender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/FileDownloadInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/FileUploadInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/MessageServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/common/ChunkedFileWithH.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/FileLoadHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/FileSaveHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/old/FileHandlerForServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/old/ServerHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/old/codec/Parsor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/FileDownloadInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/FileUploadInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/old/FileInitializerForServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/MessageHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/MessageInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/NettyClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_NettyClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/FileSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/common/FileSpec.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/common/Header.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/common/TransferData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/old/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/FileHandlerForClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/old/_Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/_FileHandlerForClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherDecoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/CipherEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/MessageEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/handler/old/codec/Parsor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_FileEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/handler/codec/_Parsor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/ClientInitializer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/initializer/_ClientInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/MessageTransfer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/MessageTransfer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/FileServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/FileServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/FileSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/common/FileSpec.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/Header.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/common/Header.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/_test/TransferData.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/common/TransferData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/old/Sender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/ServerHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_FileHandlerForServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_HandlerForServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/_ServerHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/Parsor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/_FileEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/_MessageEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/handler/codec/_Parsor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/ServerInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/old/ServerInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/initializer/_ServerInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Server/src/main/java/netty/MessageServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Server/src/main/java/netty/MessageServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,19 +43,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/dev/netty/Client/src/main/java/netty/common&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.idesettings.debugger.typerenderers&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "home",
+    "last_opened_file_path": "C:/dev/netty/Client/src/main/java/netty/common",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.idesettings.debugger.typerenderers"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\dev\netty\Client\src\main\java\netty\common" />
@@ -175,6 +129,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/netty/handler/old/ClientHandler.java</url>
           <line>24</line>
           <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/netty/MessageTransfer.java</url>
+          <line>39</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

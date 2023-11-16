@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import netty.initializer.FileDownloadInitializer;
 import netty.initializer.FileUploadInitializer;
+import netty.initializer.MessageInitializer;
 
 public class MessageTransfer {
 
@@ -25,7 +26,7 @@ public class MessageTransfer {
             eventLoopGroup = new NioEventLoopGroup();
             bootstrap = new Bootstrap().group(eventLoopGroup);
             bootstrap.channel(NioSocketChannel.class);
-            bootstrap.handler(new FileUploadInitializer());
+            bootstrap.handler(new MessageInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
 
             System.out.println("Server Connected.");
@@ -34,20 +35,16 @@ public class MessageTransfer {
         }
     }
 
-    public void send(String filePath) {
+    public void send(String msg) {
         try {
-
-
+            channel.writeAndFlush(msg);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-
-        } finally {
-            if(channel != null) channel.close();
         }
     }
 
     public void close() {
-        System.out.println("bye!!!");
+        if(channel != null) channel.close();
         eventLoopGroup.shutdownGracefully();
     }
 }

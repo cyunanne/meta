@@ -7,25 +7,23 @@ import java.util.Scanner;
 public class Client {
 
     public static void main(String[] args) {
-        FileTransfer ft = new FileTransfer("localhost", 8888);
-        MessageTransfer mt = new MessageTransfer("localhost", 8889);
+        MessageTransfer mt = new MessageTransfer("localhost", 8888);
+        FileTransfer ft = new FileTransfer("localhost", 8889);
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
             System.out.print(">>> ");
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
+            if(input.isEmpty()) continue;
 
-            int command = parser(input);
+            String[] commands = input.split(" ");
+            int command = parser(commands);
             if( command == -1 ) break;
-            if( command == 0 ) continue;
-
-            String msg = input.split(" ").length == 1 ?
-                    input : input.trim().split(" ")[1];
 
             switch (command) {
-                case 1: mt.send(msg); break;
-                case 2: ft.upload(msg); break;
-                case 3: ft.download(msg); break;
+                case 1: ft.upload(commands[1]); break;
+                case 2: ft.download(commands[1]); break;
+                default: mt.send(input); break;
             }
         }
 
@@ -40,21 +38,24 @@ public class Client {
         return file.exists();
     }
 
-    private static int parser(String command) {
+    private static int parser(String[] commands) {
 
         // file transfer
-        if(command.startsWith("put ")) return 2;
-        if(command.startsWith("get ")) return 3;
-
-        // exceptions
-        if(command.equals("quit")) return -1;
-        if(command.trim().isEmpty()) return 0;
-        if(!isFileExist(command)) {
+        if(commands[0].equals("put")) {
+            if(isFileExist(commands[1])) return 1;
+            System.out.println("파일을 찾을 수 없습니다.");
+            return 0;
+        }
+        if(commands[0].equals("get")) {
+            if(isFileExist(commands[1])) return 2;
             System.out.println("파일을 찾을 수 없습니다.");
             return 0;
         }
 
+        // exceptions
+        if(commands[0].equals("quit")) return -1;
+
         // message
-        return 1;
+        return 0;
     }
 }
