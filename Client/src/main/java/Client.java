@@ -6,6 +6,12 @@ import java.util.Scanner;
 
 public class Client {
 
+    private static final int SIG_QUIT = -1;
+    private static final int SIG_IGNORE = 0;
+    private static final int SIG_PUT = 1;
+    private static final int SIG_GET = 2;
+    private static final int SIG_MSG = 3;
+
     public static void main(String[] args) {
         MessageTransfer mt = new MessageTransfer("localhost", 8888);
         FileTransfer ft = new FileTransfer("localhost", 8889);
@@ -18,11 +24,11 @@ public class Client {
 
             String[] commands = input.split(" ");
             int command = parser(commands);
-            if( command == -1 ) break;
+            if( command == SIG_QUIT ) break;
 
             switch (command) {
-                case 1: ft.upload(commands[1]); break;
-                case 2: ft.download(commands[1]); break;
+                case SIG_PUT: ft.upload(commands[1]); break;
+                case SIG_GET: ft.download(commands[1]); break;
                 default: mt.send(input); break;
             }
         }
@@ -42,20 +48,20 @@ public class Client {
 
         // file transfer
         if(commands[0].equals("put")) {
-            if(isFileExist(commands[1])) return 1;
+            if(isFileExist(commands[1])) return SIG_PUT;
             System.out.println("파일을 찾을 수 없습니다.");
-            return 0;
+            return SIG_IGNORE;
         }
         if(commands[0].equals("get")) {
-            if(isFileExist(commands[1])) return 2;
+            if(isFileExist(commands[1])) return SIG_GET;
             System.out.println("파일을 찾을 수 없습니다.");
-            return 0;
+            return SIG_IGNORE;
         }
 
         // exceptions
-        if(commands[0].equals("quit")) return -1;
+        if(commands[0].equals("quit")) return SIG_QUIT;
 
         // message
-        return 0;
+        return SIG_IGNORE;
     }
 }
