@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
 
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
@@ -14,7 +15,8 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws FileNotFoundException {
         System.out.println("Client Connected : " + ctx.channel().remoteAddress());
-        fos = new FileOutputStream("test-0.pdf");
+        String tmpFilePath = "upload." + LocalDateTime.now().toString().replaceAll("[^0-9]", "");
+        fos = new FileOutputStream(tmpFilePath);
     }
 
     @Override
