@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.stream.ChunkedStream;
+import io.netty.handler.stream.ChunkedWriteHandler;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,6 +19,7 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
         try {
             FileInputStream fis = new FileInputStream(filePath);
             ChunkedStream chunkedStream = new ChunkedStream(fis);
+
             ctx.writeAndFlush(chunkedStream).addListener(ChannelFutureListener.CLOSE);
 
         } catch (FileNotFoundException e) {

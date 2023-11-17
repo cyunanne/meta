@@ -4,9 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
 
-import java.io.FileNotFoundException;
-
-public class MessageHandler extends ChannelInboundHandlerAdapter {
+public class MessageInboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

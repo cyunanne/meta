@@ -14,7 +14,7 @@ public class Client {
 
     public static void main(String[] args) {
         MessageTransfer mt = new MessageTransfer("localhost", 8888);
-        FileTransfer ft = new FileTransfer("localhost", 8889);
+        FileTransfer ft = new FileTransfer("localhost", 8889, mt);
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
@@ -24,7 +24,7 @@ public class Client {
 
             String[] commands = input.split(" ");
             int command = parser(commands);
-            if( command == SIG_QUIT ) break;
+            if(command == SIG_QUIT) break;
 
             switch (command) {
                 case SIG_PUT: ft.upload(commands[1]); break;

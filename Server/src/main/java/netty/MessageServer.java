@@ -18,7 +18,6 @@ public class MessageServer implements Runnable{
     private EventLoopGroup bossEventLoopGroup; // Listen ServerSocket
     private EventLoopGroup workerEventLoopGroup;
     private ServerBootstrap bootstrap;
-
     private Channel channel;
 
     public MessageServer(int port) {
@@ -38,7 +37,9 @@ public class MessageServer implements Runnable{
     public void run() {
         try {
             channel = bootstrap.bind(new InetSocketAddress(port)).sync().channel();
+
             channel.closeFuture().sync();
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -47,6 +48,10 @@ public class MessageServer implements Runnable{
     public void close() {
         workerEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
         bossEventLoopGroup.shutdownGracefully().awaitUninterruptibly();
+    }
+
+    public Channel getChannel() {
+        return this.channel;
     }
 
 }

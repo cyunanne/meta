@@ -7,8 +7,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import netty.common.Message;
-import netty.initializer.FileDownloadInitializer;
-import netty.initializer.FileUploadInitializer;
 import netty.initializer.MessageInitializer;
 
 import java.nio.charset.Charset;

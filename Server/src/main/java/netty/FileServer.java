@@ -2,15 +2,13 @@ package netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import netty.initializer.old.ServerInitializer;
+import netty.initializer.FileInitializer;
 
 import java.net.InetSocketAddress;
+import java.time.LocalDateTime;
 
 public class FileServer implements Runnable {
 
@@ -19,7 +17,7 @@ public class FileServer implements Runnable {
     private EventLoopGroup workerEventLoopGroup;
     private ServerBootstrap bootstrap;
 
-    public FileServer(int port, ChannelInitializer<SocketChannel> msgInit) {
+    public FileServer(int port) {
         this.port = port;
 
         bossEventLoopGroup = new NioEventLoopGroup(); // Listen ServerSocket
@@ -29,11 +27,7 @@ public class FileServer implements Runnable {
         bootstrap = new ServerBootstrap();
         bootstrap.group(bossEventLoopGroup, workerEventLoopGroup);
         bootstrap.channel(NioServerSocketChannel.class);
-        bootstrap.childHandler(msgInit);
-    }
-
-    public FileServer(int port) {
-        this(port, new ServerInitializer());
+        bootstrap.childHandler(new FileInitializer());
     }
 
     @Override

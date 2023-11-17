@@ -15,11 +15,8 @@ public class MessageInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
-        // Inbound
-        pipeline.addLast(new StringDecoder());
-        pipeline.addLast(new MessageHandler());
-
         // Outbound
         pipeline.addLast(new StringEncoder());
+        pipeline.addLast(new MessageHandler());
     }
 }
