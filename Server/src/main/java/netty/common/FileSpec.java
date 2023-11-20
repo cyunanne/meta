@@ -5,17 +5,18 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 
 public class FileSpec implements Serializable {
 
     private static final long serialVersionUID = 123L;
 
-    private final String name;
-    private final Long size;
-    private final Boolean endOfFileList;
-    private final Boolean encrypted;
-    private final Boolean compressed;
+    private String name = "";
+    private Long size = 0L;
+    private Boolean endOfFileList = true;
+    private Boolean encrypted = false;
+    private Boolean compressed = false;
+
+    public FileSpec() {}
 
     public FileSpec(String name, Long size, Boolean endOfFileList, Boolean encrypted, Boolean compressed) {
         this.name = name;
@@ -46,7 +47,9 @@ public class FileSpec implements Serializable {
 
         try (ByteBufInputStream bis = new ByteBufInputStream(byteBuf);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
+
             fs = (FileSpec) ois.readObject();
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -58,22 +61,9 @@ public class FileSpec implements Serializable {
         this.compressed = fs.compressed;
     }
 
-    public FileSpec(ByteBuffer buffer) {
-        FileSpec fs = null;
-
-        ByteBuf byteBuf = Unpooled.wrappedBuffer(buffer);
-        try (ByteBufInputStream bis = new ByteBufInputStream(byteBuf);
-             ObjectInputStream ois = new ObjectInputStream(bis)) {
-            fs = (FileSpec) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        this.name = fs.name;
-        this.size = fs.size;
-        this.endOfFileList = fs.endOfFileList;
-        this.encrypted = fs.encrypted;
-        this.compressed = fs.compressed;
+    public FileSpec setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getName() {
@@ -96,7 +86,7 @@ public class FileSpec implements Serializable {
         return compressed;
     }
 
-    public byte[] getByteArray() {
+    public byte[] toByteArray() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         try {
@@ -110,7 +100,7 @@ public class FileSpec implements Serializable {
         return bos.toByteArray();
     }
 
-    public ByteBuf getByteBuf() {
-        return Unpooled.wrappedBuffer(this.getByteArray());
+    public ByteBuf toByteBuf() {
+        return Unpooled.wrappedBuffer(this.toByteArray());
     }
 }

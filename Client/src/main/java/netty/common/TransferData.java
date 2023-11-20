@@ -13,7 +13,7 @@ public class TransferData {
     }
 
     public TransferData(FileSpec fs) {
-        this.data = fs.getByteBuf();
+        this.data = fs.toByteBuf();
         this.header = new Header(Header.TYPE_META, this.data.readableBytes());
     }
 

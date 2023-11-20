@@ -23,11 +23,11 @@ public class Message {
     private static final int OK_INDEX = 5;
     private static final int EOF_INDEX = 4;
 
-    private int type; // 0 : message / 1 : meta-data
-    private int cmd; // 0 : put / 1 : get
-    private boolean ok;
-    private boolean eof; // true : eof
-    private int length;
+    private int type = 0; // 0 : message / 1 : meta-data
+    private int cmd = 0; // 0 : put / 1 : get
+    private boolean ok = true;
+    private boolean eof = false; // true : eof
+    private int length = 0;
 
     private ByteBuf data;
 
@@ -63,15 +63,28 @@ public class Message {
         this.length = buf.readUnsignedShort();
     }
 
+    public Message(byte data) {
+        this.type = (data & TYPE_BIT) >> TYPE_INDEX;
+        this.cmd = (data & CMD_BIT) >> CMD_INDEX;
+        this.ok = ((data & OK_BIT) >> OK_INDEX) == 1;
+        this.eof = ((data & EOF_BIT) >> EOF_INDEX) == 1;
+    }
+
     public ByteBuf getByteBuf() {
         int header = ( this.type << TYPE_INDEX ) |
                 ( this.cmd << CMD_INDEX ) |
                 ( (this.ok ? 1 : 0) << OK_INDEX ) |
                 ( (this.eof ? 1 : 0) << EOF_INDEX );
-        return Unpooled.buffer()
-                .writeByte(header)
-                .writeShort(this.length)
-                .writeBytes(data);
+
+        if(data == null)
+            return Unpooled.buffer()
+                    .writeByte(header)
+                    .writeShort(this.length);
+        else
+            return Unpooled.buffer()
+                    .writeByte(header)
+                    .writeShort(this.length)
+                    .writeBytes(data);
     }
 
     public int getType() {
@@ -102,9 +115,9 @@ public class Message {
         return this;
     }
 
-    public Message setLength(int length) {
+    public int setLength(int length) {
         this.length = length;
-        return this;
+        return this.length;
     }
 
     public Message setData(ByteBuf data) {

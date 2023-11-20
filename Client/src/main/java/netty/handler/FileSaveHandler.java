@@ -3,35 +3,49 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import netty.common.Header;
-import netty.common.TransferData;
+import netty.common.FileSpec;
+import netty.common.Message;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.time.LocalDateTime;
 
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws FileNotFoundException {
-        fos = new FileOutputStream("test-0.pdf");
-    }
+    private FileSpec filespec;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if( !(msg instanceof ByteBuf) ) return;
-
         ByteBuf byteBuf = (ByteBuf) msg;
-        fos.getChannel().write(byteBuf.nioBuffer());
+
+        // 파일 정보 수신
+        if(filespec == null) {
+            Message header = new Message(byteBuf.readByte());
+            int len = header.setLength(byteBuf.readUnsignedShort());
+            filespec = new FileSpec(byteBuf.readBytes(len));
+
+            String filePath = filespec.getName();
+            switch (header.getCmd()) {
+
+                // download
+                case Message.CMD_GET:
+                    fos = new FileOutputStream(filePath);
+                    break;
+            }
+        }
+
+        // 파일 저장
+        if(fos != null) {
+            fos.getChannel().write(byteBuf.nioBuffer());
+        }
         byteBuf.release();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        fos.close();
+        if(fos != null) fos.close();
     }
 
     @Override

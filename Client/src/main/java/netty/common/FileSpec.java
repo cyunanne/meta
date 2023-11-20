@@ -10,11 +10,13 @@ public class FileSpec implements Serializable {
 
     private static final long serialVersionUID = 123L;
 
-    private final String name;
-    private final Long size;
-    private final Boolean endOfFileList;
-    private final Boolean encrypted;
-    private final Boolean compressed;
+    private String name = "";
+    private Long size = 0L;
+    private Boolean endOfFileList = true;
+    private Boolean encrypted = false;
+    private Boolean compressed = false;
+
+    public FileSpec() {}
 
     public FileSpec(String name, Long size, Boolean endOfFileList, Boolean encrypted, Boolean compressed) {
         this.name = name;
@@ -59,6 +61,11 @@ public class FileSpec implements Serializable {
         this.compressed = fs.compressed;
     }
 
+    public FileSpec setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getName() {
         return name;
     }
@@ -79,7 +86,7 @@ public class FileSpec implements Serializable {
         return compressed;
     }
 
-    public byte[] getByteArray() {
+    public byte[] toByteArray() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         try {
@@ -93,7 +100,7 @@ public class FileSpec implements Serializable {
         return bos.toByteArray();
     }
 
-    public ByteBuf getByteBuf() {
-        return Unpooled.wrappedBuffer(this.getByteArray());
+    public ByteBuf toByteBuf() {
+        return Unpooled.wrappedBuffer(this.toByteArray());
     }
 }

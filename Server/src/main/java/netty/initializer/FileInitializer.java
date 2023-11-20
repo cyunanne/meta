@@ -3,10 +3,8 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import netty.handler.FileHandler;
-import netty.handler.FileSaveHandler;
-import netty.handler.MessageHandler;
-import netty.handler.MessageOutboundHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import netty.handler.*;
 
 public class FileInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -15,10 +13,12 @@ public class FileInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
 
         // Download (outbound)
-//        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk & send
-        pipeline.addLast(new MessageOutboundHandler());
+        pipeline.addLast(new MessageEncoder());         // (9) Message -> ByteBuf
+        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk & send
+        pipeline.addLast(new FileLoadHandler());        // (1) load a file
 
         // Upload (inbound)
+//        pipeline.addLast(new MessageDecoder());
         pipeline.addLast(new FileSaveHandler());    // file save
 
     }

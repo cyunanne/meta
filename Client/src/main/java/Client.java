@@ -47,13 +47,9 @@ public class Client {
     private static int parser(String[] commands) {
 
         // file transfer
+        if(commands[0].equals("get")) return SIG_GET;
         if(commands[0].equals("put")) {
             if(isFileExist(commands[1])) return SIG_PUT;
-            System.out.println("파일을 찾을 수 없습니다.");
-            return SIG_IGNORE;
-        }
-        if(commands[0].equals("get")) {
-            if(isFileExist(commands[1])) return SIG_GET;
             System.out.println("파일을 찾을 수 없습니다.");
             return SIG_IGNORE;
         }

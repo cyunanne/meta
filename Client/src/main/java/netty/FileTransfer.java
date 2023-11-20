@@ -27,31 +27,27 @@ public class FileTransfer {
         bootstrap = new Bootstrap().group(eventLoopGroup);
         bootstrap.channel(NioSocketChannel.class);
     }
-    
-//    파일 전송 중간에 메시지 전송 채널을 바꿀 일이 있을까? 없을듯
-/*    public FileTransfer(String host, int port) {
-        this(host, port, null);
-    }
-
-    public void setMessageTransfer(MessageTransfer messageTransfer) {
-        this.messageTransfer = messageTransfer;
-    }*/
 
     public void upload(String filePath) {
         Channel channel = null;
 
         try {
-            bootstrap.handler(new FileUploadInitializer(messageTransfer));
+            bootstrap.handler(new FileUploadInitializer(filePath));
             channel = bootstrap.connect(host, port).sync().channel();
             System.out.println("Upload Started.");
 
-            // 파일 정보 전송 to Message Channel
+            /*// 파일 정보 전송 to Message Channel
             Message msg = new Message(Message.CMD_PUT);
             msg.setData(new FileSpec(filePath).getByteBuf());
-            messageTransfer.send(msg);
+            messageTransfer.send(msg);*/
+
+            // 파일 정보 전송 to File Channel
+            Message msg = new Message(Message.CMD_PUT);
+            msg.setData(new FileSpec(filePath).toByteBuf());
+            channel.writeAndFlush(msg);
 
             // 파일 전송 to File Channel
-            channel.writeAndFlush(filePath);
+            channel.writeAndFlush(filePath).addListener(ChannelFutureListener.CLOSE);
             channel.closeFuture().sync();
 
             System.out.println("Upload Succeed.");
@@ -71,6 +67,11 @@ public class FileTransfer {
             bootstrap.handler(new FileDownloadInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
             System.out.println("Download Started.");
+
+            // 파일 정보(파일명) 전송 to File Channel
+            Message msg = new Message(Message.CMD_GET);
+            msg.setData(new FileSpec().setName(filePath).toByteBuf());
+            channel.writeAndFlush(msg);
 
             channel.closeFuture().sync();
 

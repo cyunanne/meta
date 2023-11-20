@@ -10,7 +10,7 @@ public class MessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("Message Channel Connected.");
+        System.out.println("Message Channel Connected : " + ctx.channel().remoteAddress());
     }
 
     @Override

@@ -12,10 +12,10 @@ import netty.handler.*;
 
 public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
 
-    private MessageTransfer messageTransfer;
+    private String filePath;
 
-    public FileUploadInitializer(MessageTransfer mt) {
-        this.messageTransfer = mt;
+    public FileUploadInitializer(String filePath) {
+        this.filePath = filePath;
     }
 
     @Override
@@ -23,11 +23,12 @@ public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
 
         // outbound
-        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk & send
-        pipeline.addLast(new FileLoadHandler());        // (1) file load
+        pipeline.addLast(new MessageEncoder());         // (9) send header
+        pipeline.addLast(new ChunkedWriteHandler());    // (2) send
+        pipeline.addLast(new Test());                   // byteBuf -> ChunkedStream
+        pipeline.addLast(new FileLoadHandler());        // (1) file load & chunk
 
         // inbound
-        pipeline.addLast(new MessageParser(messageTransfer));  // (0) parse
-        pipeline.addLast(new MessageHandler()); // (2) print
+//        pipeline.addLast(new Test2(filePath));                  //
     }
 }
