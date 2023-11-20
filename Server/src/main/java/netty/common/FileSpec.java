@@ -61,6 +61,29 @@ public class FileSpec implements Serializable {
         this.compressed = fs.compressed;
     }
 
+    public FileSpec(byte[] data) {
+
+        ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
+        FileSpec fs = null;
+
+        try (ByteBufInputStream bis = new ByteBufInputStream(byteBuf);
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
+
+            fs = (FileSpec) ois.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        this.name = fs.name;
+        this.size = fs.size;
+        this.endOfFileList = fs.endOfFileList;
+        this.encrypted = fs.encrypted;
+        this.compressed = fs.compressed;
+
+        byteBuf.release();
+    }
+
     public FileSpec setName(String name) {
         this.name = name;
         return this;
@@ -74,15 +97,15 @@ public class FileSpec implements Serializable {
         return size;
     }
 
-    public Boolean getEndOfFileList() {
+    public Boolean isEndOfFileList() {
         return endOfFileList;
     }
 
-    public Boolean getEncrypted() {
+    public Boolean isEncrypted() {
         return encrypted;
     }
 
-    public Boolean getCompressed() {
+    public Boolean isCompressed() {
         return compressed;
     }
 
