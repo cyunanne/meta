@@ -3,23 +3,23 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.string.StringEncoder;
 import netty.common.FileSpec;
 import netty.common.Message;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.time.LocalDateTime;
 
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
     private FileSpec filespec;
 
+    private Long fileSize = 0L;
+
     private Long received = 0L;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) throws FileNotFoundException {
         System.out.println("File Channel Connected : " + ctx.channel().remoteAddress());
     }
 
@@ -32,14 +32,17 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
             Message header = new Message(byteBuf.readByte());
             int len = header.setLength(byteBuf.readUnsignedShort());
             filespec = new FileSpec(byteBuf.readBytes(len));
+            fileSize = filespec.getSize();
 
             String filePath = filespec.getName();
+            filePath += (filespec.isCompressed() ? ".zstd" : "");
+            filePath += (filespec.isEncrypted() ? ".enc" : "");
+
             switch (header.getCmd()) {
 
                 // upload
                 case Message.CMD_PUT:
                     fos = new FileOutputStream(filePath);
-//                    ctx.writeAndFlush(new Message(true));
                     break;
 
                 // download
@@ -47,16 +50,12 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
                     ctx.writeAndFlush(filePath);
                     break;
             }
+        }
 
         // 파일 수신
-        } else {
+        if(fos != null) {
             received += fos.getChannel().write(byteBuf.nioBuffer());
-//            fos.getChannel().force(true);
-//            System.out.println(received);
-
-            if(filespec.getSize() <= received) {
-                ctx.close();
-            }
+            if (received >= fileSize) ctx.close(); // 채널종료
         }
 
         byteBuf.release();

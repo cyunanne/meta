@@ -12,9 +12,11 @@ public class FileInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
-        // Download (outbound)
+        // Outbound : Message
         pipeline.addLast(new MessageEncoder());         // (9) Message -> ByteBuf
-        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk & send
+
+        // Download (outbound)
+        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk
         pipeline.addLast(new FileLoadHandler());        // (1) load a file
 
         // Upload (inbound)

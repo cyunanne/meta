@@ -3,6 +3,7 @@ package netty.initializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.compression.ZstdEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -22,13 +23,17 @@ public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
-        // outbound
-        pipeline.addLast(new MessageEncoder());         // (9) send header
-        pipeline.addLast(new ChunkedWriteHandler());    // (2) send
-        pipeline.addLast(new Test());                   // byteBuf -> ChunkedStream
-        pipeline.addLast(new FileLoadHandler());        // (1) file load & chunk
+        // outbound : Message
+        pipeline.addLast(new MessageEncoder());         // (9) send header (Message -> ByteBuf)
 
-        // inbound
-//        pipeline.addLast(new Test2(filePath));                  //
+        // outbound : File
+        pipeline.addLast(new EncoderTest());            // (4) encrypt
+//        pipeline.addLast(new EncoderTest2());           // (3) compress
+//        pipeline.addLast(new ZstdEncoder());            // (3) compress
+
+        // TODO 헤더 붙이기..?
+
+        pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk (ChunkedInput -> ByteBuf)
+        pipeline.addLast(new FileLoadHandler());        // (1) file load & chunk
     }
 }

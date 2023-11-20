@@ -1,6 +1,7 @@
 package netty;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -48,6 +49,7 @@ public class FileTransfer {
 
             // 파일 전송 to File Channel
             channel.writeAndFlush(filePath).addListener(ChannelFutureListener.CLOSE);
+//            channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE); // 전송 완료 후 채널 닫기
             channel.closeFuture().sync();
 
             System.out.println("Upload Succeed.");

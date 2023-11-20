@@ -18,29 +18,35 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf) msg;
 
-        // 파일 정보 수신
-        if(filespec == null) {
-            Message header = new Message(byteBuf.readByte());
-            int len = header.setLength(byteBuf.readUnsignedShort());
-            filespec = new FileSpec(byteBuf.readBytes(len));
+        if(msg instanceof FileSpec) {
+            filespec = (FileSpec) msg;
 
-            String filePath = filespec.getName();
-            switch (header.getCmd()) {
+        } else if (msg instanceof ByteBuf) {
+            ByteBuf byteBuf = (ByteBuf) msg;
 
-                // download
-                case Message.CMD_GET:
-                    fos = new FileOutputStream(filePath);
-                    break;
+            // 파일 정보 수신
+            if (filespec == null) {
+                Message header = new Message(byteBuf.readByte());
+                int len = header.setLength(byteBuf.readUnsignedShort());
+                filespec = new FileSpec(byteBuf.readBytes(len));
+
+                String filePath = filespec.getName();
+                switch (header.getCmd()) {
+
+                    // download
+                    case Message.CMD_GET:
+                        fos = new FileOutputStream(filePath);
+                        break;
+                }
             }
-        }
 
-        // 파일 저장
-        if(fos != null) {
-            fos.getChannel().write(byteBuf.nioBuffer());
+            // 파일 저장
+            if (fos != null) {
+                fos.getChannel().write(byteBuf.nioBuffer());
+            }
+            byteBuf.release();
         }
-        byteBuf.release();
     }
 
     @Override

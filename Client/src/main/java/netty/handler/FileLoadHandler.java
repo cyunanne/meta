@@ -1,6 +1,7 @@
 package netty.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,22 +28,20 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
         if( !(msg instanceof String) ) {
-            ctx.write(msg);
+            ctx.writeAndFlush(msg);
             return;
         }
-        
-        String filePath = (String) msg;
 
         try {
-            // 파일 전송
-            RandomAccessFile raf = new RandomAccessFile(filePath, "r");
-            ChunkedFile chunkedFile = new ChunkedFile(raf, 0, raf.length(), 8192); // 파일을 8KB씩 조각내어 전송
+            String filePath = (String) msg;
+            RandomAccessFile file = new RandomAccessFile(filePath, "r");
+            ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), 8192);
+            ctx.writeAndFlush(chunkedFile);
 
-            while (!chunkedFile.isEndOfInput()) {
-                ByteBuf chunk = chunkedFile.readChunk(ctx.alloc());
-                ctx.writeAndFlush(chunk);
-                chunk.release();
-            }
+            // Stream
+//            FileInputStream fis = new FileInputStream(filePath);
+//            ChunkedStream chunkedStream = new ChunkedStream(fis);
+//            ctx.writeAndFlush(chunkedStream).addListener(ChannelFutureListener.CLOSE);
 
         } catch (FileNotFoundException e) {
             System.out.println("파일을 찾을 수 없습니다.");
