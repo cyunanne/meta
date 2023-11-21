@@ -14,8 +14,8 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
 
-    private Long fileSize = 0L;
-    private Long received = 0L;
+    private long fileSize = 0L;
+    private long received = 0L;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws FileNotFoundException {
@@ -35,8 +35,8 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
             fileSize = filespec.getSize();
 
             String filePath = filespec.getName();
-            filePath += (filespec.isCompressed() ? ".zstd" : "");
-            filePath += (filespec.isEncrypted() ? ".enc" : "");
+//            filePath += (filespec.isCompressed() ? ".zstd" : "");
+//            filePath += (filespec.isEncrypted() ? ".enc" : "");
 
             switch (header.getCmd()) {
 
@@ -55,7 +55,7 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
         // 파일 수신
         if(fos != null) {
             received += fos.getChannel().write(byteBuf.nioBuffer());
-            if (received >= fileSize) ctx.close(); // 채널종료
+            if (received >= fileSize) ctx.close();
         }
 
         byteBuf.release();
@@ -63,10 +63,8 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if(fos != null) {
-            fos.getChannel().force(true);
-            fos.close();
-        }
+        if(fos != null) fos.close();
+        System.out.println("Channel Closed : " + ctx.channel().remoteAddress());
     }
 
     @Override
