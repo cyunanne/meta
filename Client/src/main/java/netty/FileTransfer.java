@@ -28,7 +28,7 @@ public class FileTransfer {
         Channel channel = null;
 
         try {
-            bootstrap.handler(new FileUploadInitializer(filePath));
+            bootstrap.handler(new FileUploadInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
             System.out.println("Upload Started.");
 

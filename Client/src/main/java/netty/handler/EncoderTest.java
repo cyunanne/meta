@@ -31,7 +31,6 @@ public class EncoderTest extends MessageToMessageEncoder<TransferData> {
         byte[] enc = header.isEof() ? cipher.doFinal(plain) : cipher.update(plain);
         
         list.add(td.setData(enc));
-        
 
         // ByteBuf가 넘어왔을 때
 //        int len = byteBuf.readableBytes();
