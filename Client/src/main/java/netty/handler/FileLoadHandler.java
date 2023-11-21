@@ -28,11 +28,10 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
             RandomAccessFile file = new RandomAccessFile(filePath, "r");
             ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), 8192);
             ctx.writeAndFlush(chunkedFile);
-
             // Stream
 //            FileInputStream fis = new FileInputStream(filePath);
 //            ChunkedStream chunkedStream = new ChunkedStream(fis);
-//            ctx.writeAndFlush(chunkedStream).addListener(ChannelFutureListener.CLOSE);
+//            ctx.writeAndFlush(chunkedStream)
 
         } catch (FileNotFoundException e) {
             System.out.println("파일을 찾을 수 없습니다.");
@@ -43,7 +42,8 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
     }
 
     @Override
-    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
         System.out.println("File Channel Closed.");
     }
+
 }

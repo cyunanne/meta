@@ -11,47 +11,37 @@ import java.io.FileOutputStream;
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
-
-    private Long fileSize = 0L;
-    private Long received = 0L;
+    private long fileSize = 0L;
+    private long received = 0L;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        // 메타데이터
+        if(msg instanceof FileSpec) {
+            FileSpec fs = (FileSpec) msg;
+            fileSize = fs.getSize();
+            fos = new FileOutputStream(fs.getName());
+            return;
+        }
+
+        // 파일 저장
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
-        // 파일 정보 수신
-        if(header.getType() == Header.TYPE_META) {
-            FileSpec filespec = new FileSpec(byteBuf.readBytes(header.getLength()));
-            fileSize = filespec.getSize();
-
-            String filePath = filespec.getName();
-
-            switch (header.getCmd()) {
-
-                // download
-                case Header.CMD_GET:
-                    fos = new FileOutputStream(filePath);
-                    break;
-            }
-        }
-
-        // 파일 저장
         if (fos != null) {
-            received += fos.getChannel().write(byteBuf.nioBuffer());
-            if (received >= fileSize) ctx.close(); // 채널종료
+            fos.getChannel().write(byteBuf.nioBuffer());
+            received += header.getLength();
+            if (received == fileSize) ctx.close(); // 채널종료
         }
+
         byteBuf.release();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if(fos != null) {
-            fos.getChannel().force(true);
-            fos.close();
-        }
+        if(fos != null) fos.close();
     }
 
     @Override

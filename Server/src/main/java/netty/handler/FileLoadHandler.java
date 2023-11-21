@@ -21,12 +21,10 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
 
         // 파일 정보 전송
         String filePath = (String) msg;
-//        Message header = new Message(Message.CMD_GET);
-//        header.setData(new FileSpec(filePath).toByteBuf());
-//        ctx.writeAndFlush(header);
-        ctx.writeAndFlush(new FileSpec(filePath));
+        FileSpec fs = new FileSpec(filePath).setEncrypted(true);
+        ctx.writeAndFlush(fs);
 
-        // 파일 전송 : ChunkedStream
+        // 파일 전송
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "r");
             ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), 8192);
