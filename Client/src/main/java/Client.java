@@ -20,18 +20,13 @@ public class Client {
             if(input.isEmpty()) continue;
 
             String[] commands = input.split(" ");
-            if(commands.length != 2) {
-                System.out.println("명령어를 확인해주세요.");
-                continue;
-            }
 
             int command = parser(commands);
             if(command == SIG_QUIT) break;
 
-            String filepath = commands[1];
             switch (command) {
-                case SIG_PUT: ft.upload(filepath); break;
-                case SIG_GET: ft.download(filepath); break;
+                case SIG_PUT: ft.upload(commands[1]); break;
+                case SIG_GET: ft.download(commands[1]); break;
                 case SIG_IGNORE: continue;
                 default: System.out.println("메시지 파싱 오류");
             }
@@ -49,6 +44,13 @@ public class Client {
 
     private static int parser(String[] commands) {
 
+        // exceptions
+        if(commands[0].equals("quit")) return SIG_QUIT;
+        if(commands.length != 2) {
+            System.out.println("명령어를 확인해주세요.");
+            return SIG_IGNORE;
+        }
+
         // file transfer
         if(commands[0].equals("get")) return SIG_GET;
         if(commands[0].equals("put")) {
@@ -57,10 +59,8 @@ public class Client {
             return SIG_IGNORE;
         }
 
-        // exceptions
-        if(commands[0].equals("quit")) return SIG_QUIT;
-
-        // message
+        // wrong command
+        System.out.println("명령어를 확인해주세요.");
         return SIG_IGNORE;
     }
 }
