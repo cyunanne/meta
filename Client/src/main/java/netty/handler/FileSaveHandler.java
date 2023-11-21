@@ -5,12 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
 import netty.common.Header;
-import netty.common.Message;
 import netty.common.TransferData;
-
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.time.LocalDateTime;
 
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
