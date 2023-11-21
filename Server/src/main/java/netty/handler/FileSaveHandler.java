@@ -5,7 +5,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
 import netty.common.Header;
-import netty.common.Message;
 import netty.common.TransferData;
 
 import java.io.FileNotFoundException;
@@ -42,12 +41,12 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
             switch (header.getCmd()) {
 
                 // upload
-                case Message.CMD_PUT:
+                case Header.CMD_PUT:
                     fos = new FileOutputStream(filePath);
                     break;
 
                 // download
-                case Message.CMD_GET:
+                case Header.CMD_GET:
                     ctx.writeAndFlush(filePath);
                     break;
             }
