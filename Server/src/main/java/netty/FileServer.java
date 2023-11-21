@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import netty.initializer.FileInitializer;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 
@@ -39,7 +40,7 @@ public class FileServer implements Runnable {
 
             channel.closeFuture().sync();
 
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
             throw new RuntimeException(e);
 
         } finally {

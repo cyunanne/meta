@@ -23,9 +23,10 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
 
         // 파일 정보 전송
         String filePath = (String) msg;
-        Message header = new Message(Message.CMD_GET);
-        header.setData(new FileSpec(filePath).toByteBuf());
-        ctx.writeAndFlush(header);
+//        Message header = new Message(Message.CMD_GET);
+//        header.setData(new FileSpec(filePath).toByteBuf());
+//        ctx.writeAndFlush(header);
+        ctx.writeAndFlush(new FileSpec(filePath));
 
         // 파일 전송 : ChunkedStream
         try {
@@ -42,7 +43,8 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
             System.out.println("파일을 찾을 수 없습니다.");
             ctx.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

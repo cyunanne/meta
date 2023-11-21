@@ -29,4 +29,3 @@ public class DecoderTest extends MessageToMessageDecoder<ByteBuf> {
         list.add(Unpooled.wrappedBuffer(enc));
     }
 }
-

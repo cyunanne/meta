@@ -1,4 +1,4 @@
-package netty.handler.old;
+package netty.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
@@ -10,7 +10,7 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, TransferData dt, List<Object> list) throws Exception {
-        list.add(dt.getHeader().getByteBuf());
+        list.add(dt.getHeader().toByteBuf());
         list.add(dt.getData());
     }
 }

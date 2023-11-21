@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
+import netty.common.Header;
 import netty.common.Message;
+import netty.common.TransferData;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,44 +16,46 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
 
-    private FileSpec filespec;
+    private Long fileSize = 0L;
+    private Long received = 0L;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        if(msg instanceof FileSpec) {
-            filespec = (FileSpec) msg;
+        TransferData td = (TransferData) msg;
+        Header header = td.getHeader();
+        ByteBuf byteBuf = td.getData();
 
-        } else if (msg instanceof ByteBuf) {
-            ByteBuf byteBuf = (ByteBuf) msg;
+        // 파일 정보 수신
+        if(header.getType() == Header.TYPE_META) {
+            FileSpec filespec = new FileSpec(byteBuf.readBytes(header.getLength()));
+            fileSize = filespec.getSize();
 
-            // 파일 정보 수신
-            if (filespec == null) {
-                Message header = new Message(byteBuf.readByte());
-                int len = header.setLength(byteBuf.readUnsignedShort());
-                filespec = new FileSpec(byteBuf.readBytes(len));
+            String filePath = filespec.getName();
 
-                String filePath = filespec.getName();
-                switch (header.getCmd()) {
+            switch (header.getCmd()) {
 
-                    // download
-                    case Message.CMD_GET:
-                        fos = new FileOutputStream(filePath);
-                        break;
-                }
+                // download
+                case Message.CMD_GET:
+                    fos = new FileOutputStream(filePath);
+                    break;
             }
-
-            // 파일 저장
-            if (fos != null) {
-                fos.getChannel().write(byteBuf.nioBuffer());
-            }
-            byteBuf.release();
         }
+
+        // 파일 저장
+        if (fos != null) {
+            received += fos.getChannel().write(byteBuf.nioBuffer());
+            if (received >= fileSize) ctx.close(); // 채널종료
+        }
+        byteBuf.release();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if(fos != null) fos.close();
+        if(fos != null) {
+            fos.getChannel().force(true);
+            fos.close();
+        }
     }
 
     @Override

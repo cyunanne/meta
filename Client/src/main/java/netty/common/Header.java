@@ -7,7 +7,7 @@ public class Header {
 
     public static final int HEADER_SIZE = 3;
 
-    public static final int TYPE_MSG = 0x00;
+    public static final int TYPE_SIG = 0x00;
     public static final int TYPE_META = 0x01;
     public static final int TYPE_DATA = 0x02;
 
@@ -52,11 +52,11 @@ public class Header {
     }
 
     public Header(boolean ok) {
-        this(TYPE_MSG, CMD_PUT, false, true, 0);
+        this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
 
     public Header() {
-        this(TYPE_MSG, CMD_PUT, false, true, 0);
+        this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
 
 
@@ -67,9 +67,10 @@ public class Header {
         this.eof = ((data & EOF_BIT) >> EOF_OFFSET) == 1;
         this.ok = ((data & OK_BIT) >> OK_OFFSET) == 1;
         this.length = buf.readUnsignedShort();
+        buf.release();
     }
 
-    public ByteBuf getByteBuf() {
+    public ByteBuf toByteBuf() {
         int data = ( this.type << TYPE_OFFSET) |
                 ( this.cmd << CMD_OFFSET) |
                 ( (this.eof ? 1 : 0) << EOF_OFFSET) |

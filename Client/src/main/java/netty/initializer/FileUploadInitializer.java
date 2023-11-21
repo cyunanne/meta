@@ -23,17 +23,13 @@ public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
-        // outbound : Message
-        pipeline.addLast(new MessageEncoder());         // (9) send header (Message -> ByteBuf)
-
         // outbound : File
-        pipeline.addLast(new EncoderTest());            // (4) encrypt
-//        pipeline.addLast(new EncoderTest2());           // (3) compress
-//        pipeline.addLast(new ZstdEncoder());            // (3) compress
-
-        // TODO 헤더 붙이기..?
-
+        pipeline.addLast(new Sender());                 // (5) send
+//        pipeline.addLast(new EncoderTest());            // (4) encrypt
+//        pipeline.addLast(new EncoderTest2());         // (3) compress
+//        pipeline.addLast(new ZstdEncoder());          // (3) compress
+        pipeline.addLast(new TransferDataBuilder());    // bulid a TransferData
         pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk (ChunkedInput -> ByteBuf)
-        pipeline.addLast(new FileLoadHandler());        // (1) file load & chunk
+        pipeline.addLast(new FileLoadHandler());        // (1) file load
     }
 }

@@ -1,14 +1,15 @@
-package netty.handler.old.codec;
+package netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.ReplayingDecoder;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import java.util.List;
 
-public class Parsor extends ReplayingDecoder<ByteBuf> {
+public class Parser extends ReplayingDecoder<ByteBuf> {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {

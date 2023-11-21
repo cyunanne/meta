@@ -1,15 +1,13 @@
 package netty.common;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import io.netty.util.ReferenceCountUtil;
 
 public class Header {
 
     public static final int HEADER_SIZE = 3;
 
-    public static final int TYPE_MSG = 0x00;
+    public static final int TYPE_SIG = 0x00;
     public static final int TYPE_META = 0x01;
     public static final int TYPE_DATA = 0x02;
 
@@ -21,10 +19,10 @@ public class Header {
     private static final int EOF_BIT = 0b0001_0000;
     private static final int OK_BIT = 0b0000_1000;
 
-    private static final int TYPE_INDEX = 6;
-    private static final int CMD_INDEX = 5;
-    private static final int EOF_INDEX = 4;
-    private static final int OK_INDEX = 3;
+    private static final int TYPE_OFFSET = 6;
+    private static final int CMD_OFFSET = 5;
+    private static final int EOF_OFFSET = 4;
+    private static final int OK_OFFSET = 3;
 
     private int type; // 0 : message / 1 : meta-data / 2 : data
     private int cmd; // 0 : put / 1 : get
@@ -48,33 +46,35 @@ public class Header {
         this(type, cmd, eof, true, 0);
     }
 
+
     public Header(int type, int length) {
         this(type, CMD_PUT, false, length);
     }
 
     public Header(boolean ok) {
-        this(TYPE_MSG, CMD_PUT, false, true, 0);
+        this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
 
     public Header() {
-        this(TYPE_MSG, CMD_PUT, false, true, 0);
+        this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
 
 
     public Header(ByteBuf buf) {
         byte data = buf.readByte();
-        this.type = (data & TYPE_BIT) >> TYPE_INDEX;
-        this.cmd = (data & CMD_BIT) >> CMD_INDEX;
-        this.eof = ((data & EOF_BIT) >> EOF_INDEX) == 1;
-        this.ok = ((data & OK_BIT) >> OK_INDEX) == 1;
+        this.type = (data & TYPE_BIT) >> TYPE_OFFSET;
+        this.cmd = (data & CMD_BIT) >> CMD_OFFSET;
+        this.eof = ((data & EOF_BIT) >> EOF_OFFSET) == 1;
+        this.ok = ((data & OK_BIT) >> OK_OFFSET) == 1;
         this.length = buf.readUnsignedShort();
+        buf.release();
     }
 
-    public ByteBuf getByteBuf() {
-        int data = ( this.type << TYPE_INDEX ) |
-                ( this.cmd << CMD_INDEX ) |
-                ( (this.eof ? 1 : 0) << EOF_INDEX ) |
-                ( (this.ok ? 1 : 0) << OK_INDEX );
+    public ByteBuf toByteBuf() {
+        int data = ( this.type << TYPE_OFFSET) |
+                ( this.cmd << CMD_OFFSET) |
+                ( (this.eof ? 1 : 0) << EOF_OFFSET) |
+                ( (this.ok ? 1 : 0) << OK_OFFSET);
         return Unpooled.buffer().writeByte(data).writeShort(this.length);
     }
 
@@ -99,10 +99,10 @@ public class Header {
     }
 
     public Header setHeader(byte data) {
-        this.type = (data & TYPE_BIT) >> TYPE_INDEX;
-        this.cmd = (data & CMD_BIT) >> CMD_INDEX;
-        this.eof = ((data & EOF_BIT) >> EOF_INDEX) == 1;
-        this.ok = ((data & OK_BIT) >> OK_INDEX) == 1;
+        this.type = (data & TYPE_BIT) >> TYPE_OFFSET;
+        this.cmd = (data & CMD_BIT) >> CMD_OFFSET;
+        this.eof = ((data & EOF_BIT) >> EOF_OFFSET) == 1;
+        this.ok = ((data & OK_BIT) >> OK_OFFSET) == 1;
         return this;
     }
 

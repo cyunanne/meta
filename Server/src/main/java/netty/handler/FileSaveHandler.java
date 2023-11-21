@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
+import netty.common.Header;
 import netty.common.Message;
+import netty.common.TransferData;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,10 +14,8 @@ import java.io.FileOutputStream;
 public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
-    private FileSpec filespec;
 
     private Long fileSize = 0L;
-
     private Long received = 0L;
 
     @Override
@@ -25,13 +25,14 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf) msg;
+
+        TransferData td = (TransferData) msg;
+        Header header = td.getHeader();
+        ByteBuf byteBuf = td.getData();
 
         // 파일 정보 수신
-        if(filespec == null) {
-            Message header = new Message(byteBuf.readByte());
-            int len = header.setLength(byteBuf.readUnsignedShort());
-            filespec = new FileSpec(byteBuf.readBytes(len));
+        if(header.getType() == Header.TYPE_META) {
+            FileSpec filespec = new FileSpec(byteBuf.readBytes(header.getLength()));
             fileSize = filespec.getSize();
 
             String filePath = filespec.getName();

@@ -1,5 +1,4 @@
 import netty.FileTransfer;
-import netty.MessageTransfer;
 
 import java.io.File;
 import java.util.Scanner;
@@ -10,11 +9,9 @@ public class Client {
     private static final int SIG_IGNORE = 0;
     private static final int SIG_PUT = 1;
     private static final int SIG_GET = 2;
-    private static final int SIG_MSG = 3;
 
     public static void main(String[] args) {
-        MessageTransfer mt = new MessageTransfer("localhost", 8888);
-        FileTransfer ft = new FileTransfer("localhost", 8889, mt);
+        FileTransfer ft = new FileTransfer("localhost", 8889);
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
@@ -23,17 +20,23 @@ public class Client {
             if(input.isEmpty()) continue;
 
             String[] commands = input.split(" ");
+            if(commands.length != 2) {
+                System.out.println("명령어를 확인해주세요.");
+                continue;
+            }
+
             int command = parser(commands);
             if(command == SIG_QUIT) break;
 
+            String filepath = commands[1];
             switch (command) {
-                case SIG_PUT: ft.upload(commands[1]); break;
-                case SIG_GET: ft.download(commands[1]); break;
-                default: mt.send(input); break;
+                case SIG_PUT: ft.upload(filepath); break;
+                case SIG_GET: ft.download(filepath); break;
+                case SIG_IGNORE: continue;
+                default: System.out.println("메시지 파싱 오류");
             }
         }
 
-        mt.close();
         ft.close();
         scanner.close();
         System.out.println("Shutdown Program...");
