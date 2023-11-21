@@ -36,7 +36,7 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
             switch (header.getCmd()) {
 
                 // download
-                case Message.CMD_GET:
+                case Header.CMD_GET:
                     fos = new FileOutputStream(filePath);
                     break;
             }
