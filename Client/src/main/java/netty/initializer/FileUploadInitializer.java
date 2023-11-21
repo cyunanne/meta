@@ -1,9 +1,13 @@
 package netty.initializer;
 
-import io.netty.channel.*;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import netty.handler.*;
+import netty.handler.EncoderTest;
+import netty.handler.FileLoadHandler;
+import netty.handler.Sender;
+import netty.handler.TransferDataBuilder;
 
 public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
 

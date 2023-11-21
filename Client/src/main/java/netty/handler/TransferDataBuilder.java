@@ -4,14 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import io.netty.handler.stream.ChunkedFile;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
-
-import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
-import java.net.SocketAddress;
 
 public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
 

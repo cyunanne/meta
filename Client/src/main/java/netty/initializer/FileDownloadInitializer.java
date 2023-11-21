@@ -3,7 +3,10 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import netty.handler.*;
+import netty.handler.FileSaveHandler;
+import netty.handler.Parser;
+import netty.handler.Sender;
+import netty.handler.TransferDataBuilder;
 
 public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
 
