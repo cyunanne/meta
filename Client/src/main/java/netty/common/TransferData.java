@@ -46,14 +46,12 @@ public class TransferData {
     public TransferData setData(ByteBuf buf) {
         this.data.release();
         this.data = buf.retain();
-        this.header.setLength(buf.readableBytes());
         return this;
     }
 
     public TransferData setData(byte[] data) {
         this.data.release();
         this.data = Unpooled.wrappedBuffer(data);
-        this.header.setLength(data.length);
         return this;
     }
 

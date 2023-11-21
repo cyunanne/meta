@@ -42,6 +42,7 @@ public class EncoderTest extends ChannelOutboundHandlerAdapter {
 
             byte[] enc = transferred >= fileSize ? cipher.doFinal(plain) : cipher.update(plain);
             td.setData(enc);
+            header.setLength(enc.length); // 암호화 후 데이터 길이가 달라질 수 있음
         }
 
         ctx.writeAndFlush(td);
