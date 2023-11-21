@@ -35,7 +35,8 @@ public class FileTransfer {
             System.out.println("Upload Started.");
 
             // 파일 정보 전송
-            channel.writeAndFlush(new FileSpec(filePath));
+            FileSpec fs = new FileSpec(filePath).setEncrypted(true);
+            channel.writeAndFlush(fs);
 
             // 파일 전송 (전송완료 후 서버에서 채널 종료)
             channel.writeAndFlush(filePath).addListener(ChannelFutureListener.CLOSE);

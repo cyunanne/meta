@@ -1,43 +1,51 @@
 package netty.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageEncoder;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 import netty.cipher.AES256Cipher;
+import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import javax.crypto.Cipher;
-import java.util.List;
 
-public class EncoderTest extends MessageToMessageEncoder<TransferData> {
+public class EncoderTest extends ChannelOutboundHandlerAdapter {
 
-//    private static int BLOCK_SIZE = 8192;
+    private long fileSize = 0L;
+    private long transferred = 0L;
+    private boolean doEncrypt = false;
 
     private AES256Cipher cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, TransferData td, List<Object> list) throws Exception {
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         // TODO 암호화
 
+        if (msg instanceof FileSpec) {
+            FileSpec fs = (FileSpec) msg;
+            fileSize = fs.getSize();
+            doEncrypt = fs.isEncrypted();
+            return;
+        }
+
+        TransferData td = (TransferData) msg;
         Header header = td.getHeader();
-        ByteBuf data = td.getData();
-        
-        // TODO Encrypt 비트가 1인지 확인
 
-        byte[] plain = new byte[header.getLength()];
-        data.readBytes(plain);
-        byte[] enc = header.isEof() ? cipher.doFinal(plain) : cipher.update(plain);
-        
-        list.add(td.setData(enc));
+        // 파일 데이터 암호화
+        if (doEncrypt && header.getType() == Header.TYPE_DATA) {
+            int len = header.getLength();
+            transferred += len;
 
-        // ByteBuf가 넘어왔을 때
-//        int len = byteBuf.readableBytes();
-//        byte[] plain = new byte[len];
-//        byteBuf.readBytes(plain);
-//
-//        byte[] enc = len < BLOCK_SIZE ? cipher.doFinal(plain) : cipher.update(plain);
-//        list.add(Unpooled.wrappedBuffer(enc));
+            byte[] plain = new byte[len];
+            td.getData().readBytes(plain);
+
+            byte[] enc = transferred >= fileSize ? cipher.doFinal(plain) : cipher.update(plain);
+            td.setData(enc);
+        }
+
+        ctx.writeAndFlush(td);
     }
+
 }
 
