@@ -16,7 +16,8 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
         // 파일 데이터
         if(msg instanceof ByteBuf) {
             ByteBuf buf = (ByteBuf) msg;
-            Header header = new Header(Header.TYPE_DATA, buf.readableBytes());
+            Header header = new Header(Header.TYPE_DATA);
+            header.setLength(buf.readableBytes());
             TransferData td = new TransferData(header, buf);
             ctx.writeAndFlush(td);
 
@@ -34,6 +35,7 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
 
             TransferData td = new TransferData(header, buf);
             ctx.writeAndFlush(td);
+            ctx.writeAndFlush(sf); // 다음 핸들러에서 활용하기위한 용도
 
         // 그 외
         } else {
