@@ -16,9 +16,11 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
         // 파일 데이터
         if(msg instanceof ByteBuf) {
             ByteBuf buf = (ByteBuf) msg;
+
             Header header = new Header(Header.TYPE_DATA);
             header.setLength(buf.readableBytes());
             TransferData td = new TransferData(header, buf);
+
             ctx.writeAndFlush(td);
 
         // 메타 데이터
@@ -26,20 +28,13 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
             FileSpec sf = (FileSpec) msg;
             ByteBuf buf = sf.toByteBuf();
 
-            Header header;
-            if(sf.getSize() > 0 ) {
-                header = new Header(Header.TYPE_META, Header.CMD_PUT, false, buf.readableBytes());
-            } else {
-                header = new Header(Header.TYPE_META, Header.CMD_GET, true, buf.readableBytes());
-            }
-
+            int headerType = sf.getSize() > 0 ? Header.CMD_PUT : Header.CMD_GET;
+            Header header = new Header(Header.TYPE_META, headerType, false, buf.readableBytes());
             TransferData td = new TransferData(header, buf);
+
             ctx.writeAndFlush(td);
             ctx.writeAndFlush(sf); // 다음 핸들러에서 활용하기위한 용도
 
-        // 그 외
-        } else {
-            ctx.writeAndFlush(msg);
         }
 
     }

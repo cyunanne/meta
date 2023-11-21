@@ -1,7 +1,6 @@
 package netty.handler;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.cipher.AES256Cipher;
@@ -11,11 +10,11 @@ import netty.common.TransferData;
 
 import javax.crypto.Cipher;
 
-public class DecoderTest extends ChannelInboundHandlerAdapter {
+public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
-    private boolean doDecrypt = false;
     private long received = 0L;
     private long fileSize = 0L;
+    private boolean doDecrypt = false;
     private AES256Cipher cipher = new AES256Cipher(Cipher.DECRYPT_MODE);
 
     @Override

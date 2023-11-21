@@ -5,7 +5,8 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.stream.ChunkedFile;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
 import java.net.SocketAddress;
 
 public class FileLoadHandler extends ChannelOutboundHandlerAdapter {

@@ -10,7 +10,7 @@ import netty.common.TransferData;
 
 import javax.crypto.Cipher;
 
-public class EncoderTest extends ChannelOutboundHandlerAdapter {
+public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
     private long fileSize = 0L;
     private long transferred = 0L;
@@ -20,13 +20,12 @@ public class EncoderTest extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        // TODO 암호화
 
+        // 메타 데이터 활용 (전달X)
         if (msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
             fileSize = fs.getSize();
             doEncrypt = fs.isEncrypted();
-            return;
         }
 
         TransferData td = (TransferData) msg;
