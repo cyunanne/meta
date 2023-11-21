@@ -109,6 +109,26 @@ public class FileSpec implements Serializable {
         return compressed;
     }
 
+    public FileSpec setSize(Long size) {
+        this.size = size;
+        return this;
+    }
+
+    public FileSpec setEndOfFileList(Boolean endOfFileList) {
+        this.endOfFileList = endOfFileList;
+        return this;
+    }
+
+    public FileSpec setEncrypted(Boolean encrypted) {
+        this.encrypted = encrypted;
+        return this;
+    }
+
+    public FileSpec setCompressed(Boolean compressed) {
+        this.compressed = compressed;
+        return this;
+    }
+
     public byte[] toByteArray() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 

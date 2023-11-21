@@ -55,6 +55,10 @@ public class Header {
         this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
 
+    public Header(int type) {
+        this.type = type;
+    }
+
     public Header() {
         this(TYPE_SIG, CMD_PUT, false, true, 0);
     }
@@ -111,4 +115,23 @@ public class Header {
         return this;
     }
 
+    public Header setType(int type) {
+        this.type = type;
+        return this;
+    }
+
+    public Header setCmd(int cmd) {
+        this.cmd = cmd;
+        return this;
+    }
+
+    public Header setEof(boolean eof) {
+        this.eof = eof;
+        return this;
+    }
+
+    public Header setOk(boolean ok) {
+        this.ok = ok;
+        return this;
+    }
 }
