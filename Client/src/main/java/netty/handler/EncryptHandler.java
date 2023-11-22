@@ -29,6 +29,8 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
             if(doEncrypt) {
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
+                fs.setKey(cipher.getKey());
+                fs.setIv(cipher.getIv());
             }
         }
 

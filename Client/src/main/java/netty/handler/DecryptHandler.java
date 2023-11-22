@@ -32,6 +32,8 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
             if(doDecrypt) {
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE);
+//                cipher.setKey(fs.getKey());
+//                cipher.setIv(fs.getIv());
             }
 
             ctx.fireChannelRead(fs);

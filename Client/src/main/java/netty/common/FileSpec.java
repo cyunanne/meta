@@ -11,24 +11,20 @@ public class FileSpec implements Serializable {
     private static final long serialVersionUID = 123L;
 
     private String name = "";
-    private Long size = 0L;
-    private Boolean endOfFileList = true;
-    private Boolean encrypted = false;
-    private Boolean compressed = false;
+    private long size = 0L;
+    private byte[] key;
+    private byte[] iv;
+    private boolean endOfFileList = true;
+    private boolean encrypted = false;
+    private boolean compressed = false;
 
     public FileSpec() {}
-
-    public FileSpec(String name, Long size, Boolean endOfFileList, Boolean encrypted, Boolean compressed) {
-        this.name = name;
-        this.size = size;
-        this.endOfFileList = endOfFileList;
-        this.encrypted = encrypted;
-        this.compressed = compressed;
-    }
 
     public FileSpec(FileSpec fs) {
         this.name = fs.name;
         this.size = fs.size;
+        this.key = fs.key;
+        this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
         this.encrypted = fs.encrypted;
         this.compressed = fs.compressed;
@@ -37,9 +33,6 @@ public class FileSpec implements Serializable {
     public FileSpec(String filename) {
         this.name = filename;
         this.size = new File(filename).length();
-        this.endOfFileList = true;
-        this.encrypted = false;
-        this.compressed = false;
     }
 
     public FileSpec(ByteBuf byteBuf) {
@@ -56,6 +49,8 @@ public class FileSpec implements Serializable {
 
         this.name = fs.name;
         this.size = fs.size;
+        this.key = fs.key;
+        this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
         this.encrypted = fs.encrypted;
         this.compressed = fs.compressed;
@@ -77,6 +72,8 @@ public class FileSpec implements Serializable {
 
         this.name = fs.name;
         this.size = fs.size;
+        this.key = fs.key;
+        this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
         this.encrypted = fs.encrypted;
         this.compressed = fs.compressed;
@@ -145,5 +142,23 @@ public class FileSpec implements Serializable {
 
     public ByteBuf toByteBuf() {
         return Unpooled.wrappedBuffer(this.toByteArray());
+    }
+
+    public byte[] getKey() {
+        return key;
+    }
+
+    public byte[] getIv() {
+        return iv;
+    }
+
+    public FileSpec setKey(byte[] key) {
+        this.key = key;
+        return this;
+    }
+
+    public FileSpec setIv(byte[] iv) {
+        this.iv = iv;
+        return this;
     }
 }
