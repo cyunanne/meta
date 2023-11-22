@@ -9,8 +9,9 @@ import netty.common.TransferData;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
-public class FileSaveHandler extends ChannelInboundHandlerAdapter {
+public class UploadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
 
@@ -40,6 +41,7 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
                 // upload
                 case Header.CMD_PUT:
                     fos = new FileOutputStream(filePath);
+                    new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
                     break;
 
                 // download
