@@ -13,18 +13,8 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
 
-        // 파일 데이터
-        if(msg instanceof ByteBuf) {
-            ByteBuf buf = (ByteBuf) msg;
-
-            Header header = new Header(Header.TYPE_DATA);
-            header.setLength(buf.readableBytes());
-            TransferData td = new TransferData(header, buf);
-
-            ctx.writeAndFlush(td);
-
         // 메타 데이터
-        } else if(msg instanceof FileSpec) {
+        if(msg instanceof FileSpec) {
             FileSpec sf = (FileSpec) msg;
             ByteBuf buf = sf.toByteBuf();
 
@@ -33,8 +23,17 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
             TransferData td = new TransferData(header, buf);
 
             ctx.writeAndFlush(td);
-            ctx.writeAndFlush(sf); // 다음 핸들러에서 활용하기위한 용도
+        }
 
+        // 파일 데이터
+        else if(msg instanceof ByteBuf) {
+            ByteBuf buf = (ByteBuf) msg;
+
+            Header header = new Header(Header.TYPE_DATA);
+            header.setLength(buf.readableBytes());
+            TransferData td = new TransferData(header, buf);
+
+            ctx.writeAndFlush(td);
         }
 
     }
