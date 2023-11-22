@@ -16,7 +16,7 @@ public class AES256Cipher {
     private Cipher cipher;
 
     public AES256Cipher(int mode) {
-        this(mode, "01234567890123456789012345678901".getBytes(), "0123456789012345".getBytes());
+        this(mode, generateKey(), generateIv());
     }
 
     public AES256Cipher(int mode, byte[] key, byte[] iv) {
@@ -55,7 +55,7 @@ public class AES256Cipher {
         this.cipher = null;
     }
 
-    private byte[] generateKey() {
+    private static byte[] generateKey() {
         KeyGenerator keyGen = null;
         try {
             keyGen = KeyGenerator.getInstance("AES");
@@ -66,7 +66,7 @@ public class AES256Cipher {
         return keyGen.generateKey().getEncoded(); // SecretKey -> byte[]
     }
 
-    private byte[] generateIv() {
+    private static byte[] generateIv() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] keyBytes = new byte[16];
         secureRandom.nextBytes(keyBytes);
