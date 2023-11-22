@@ -3,15 +3,13 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import java.io.FileOutputStream;
-import java.net.SocketAddress;
 
-public class FileSaveHandler extends ChannelInboundHandlerAdapter {
+public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
     private long fileSize = 0L;
@@ -26,7 +24,7 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        // 메타데이터
+        // 메타 데이터
         if(msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
             fileSize = fs.getSize();
@@ -34,7 +32,7 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        // 파일 저장
+        // 파일 데이터
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();

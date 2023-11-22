@@ -18,6 +18,6 @@ public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
         // inbound
         pipeline.addLast(new Parser());
         pipeline.addLast(new DecryptHandler());  // decrypt
-        pipeline.addLast(new FileSaveHandler());
+        pipeline.addLast(new DownloadHandler());
     }
 }

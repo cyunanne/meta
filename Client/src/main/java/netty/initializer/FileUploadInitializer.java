@@ -18,6 +18,6 @@ public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new CompressHandler());        // (4) compress
         pipeline.addLast(new TransferDataBuilder());    // (3) bulid a TransferData
         pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk (ChunkedInput -> ByteBuf)
-        pipeline.addLast(new FileLoadHandler());        // (1) file load
+        pipeline.addLast(new UploadHandler());        // (1) file load
     }
 }
