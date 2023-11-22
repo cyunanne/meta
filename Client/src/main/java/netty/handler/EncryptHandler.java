@@ -1,5 +1,6 @@
 package netty.handler;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -21,9 +22,13 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 
-        // 메타 데이터 활용 (전달X)
-        if (msg instanceof FileSpec) {
-            FileSpec fs = (FileSpec) msg;
+        TransferData td = (TransferData) msg;
+        Header header = td.getHeader();
+        ByteBuf data = td.getData();
+
+        // 메타 데이터
+        if (header.getType() == Header.TYPE_META) {
+            FileSpec fs = new FileSpec(data);
             fileSize = fs.getSize();
             doEncrypt = fs.isEncrypted();
 
@@ -31,19 +36,17 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey());
                 fs.setIv(cipher.getIv());
+                td.setDataAndLength(fs.toByteBuf()); // key, iv 추가 된만큼 길이 증가
             }
         }
 
-        TransferData td = (TransferData) msg;
-        Header header = td.getHeader();
-
         // 파일 데이터 암호화
-        if (doEncrypt && header.getType() == Header.TYPE_DATA) {
+        else if (doEncrypt && header.getType() == Header.TYPE_DATA) {
             int len = header.getLength();
             transferred += len;
 
             byte[] plain = new byte[len];
-            td.getData().readBytes(plain);
+            data.readBytes(plain);
 
             byte[] enc = transferred == fileSize ? cipher.doFinal(plain) : cipher.update(plain);
             td.setDataAndLength(enc); // 암호화 후 데이터 길이가 달라질 수 있음

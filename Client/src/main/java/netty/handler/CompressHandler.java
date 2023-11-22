@@ -1,5 +1,6 @@
 package netty.handler;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -14,19 +15,18 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 
-        // 메타 데이터
-        if (msg instanceof FileSpec) {
-            FileSpec fs = (FileSpec) msg;
-            doCompress = fs.isEncrypted();
-            ctx.writeAndFlush(fs);
-            return;
-        }
-
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
+        ByteBuf data = td.getData();
+
+        // 메타 데이터
+        if (header.getType() == Header.TYPE_META) {
+            FileSpec fs = new FileSpec(data);
+            doCompress = fs.isEncrypted();
+        }
 
         // 데이터 압축
-        if(doCompress && header.getType() == Header.TYPE_DATA) {
+        else if(doCompress && header.getType() == Header.TYPE_DATA) {
             // TODO 데이터 압축 & TransferData 갱신
         }
 
