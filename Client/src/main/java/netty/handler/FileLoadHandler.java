@@ -15,7 +15,7 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
         super.connect(ctx, remoteAddress, localAddress, promise);
-        System.out.println("File Channel Connected.");
+        System.out.println("Channel Connected.");
     }
 
     @Override
@@ -30,6 +30,7 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
             RandomAccessFile file = new RandomAccessFile(filePath, "r");
             ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), Header.CHUNK_SIZE);
             ctx.writeAndFlush(chunkedFile);
+
             // Stream
 //            FileInputStream fis = new FileInputStream(filePath);
 //            ChunkedStream chunkedStream = new ChunkedStream(fis);
