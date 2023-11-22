@@ -45,11 +45,11 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             int len = byteBuf.readableBytes();
             received += len;
 
-            byte[] plain = new byte[len];
-            byteBuf.readBytes(plain);
+            byte[] enc = new byte[len];
+            byteBuf.readBytes(enc);
 
-            byte[] enc = received == fileSize ? cipher.doFinal(plain) : cipher.update(plain);
-            td.setData(enc);
+            byte[] plain = received >= fileSize ? cipher.doFinal(enc) : cipher.update(enc);
+            td.setDataAndLength(plain);
         }
 
         ctx.fireChannelRead(td);
