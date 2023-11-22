@@ -5,6 +5,7 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.stream.ChunkedFile;
 import netty.common.FileSpec;
+import netty.common.Header;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class FileLoadHandler extends ChannelOutboundHandlerAdapter {
         // 파일 전송
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "r");
-            ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), 8192);
+            ChunkedFile chunkedFile = new ChunkedFile(file, 0, file.length(), Header.CHUNK_SIZE);
             ctx.writeAndFlush(chunkedFile);
 
             // Stream
