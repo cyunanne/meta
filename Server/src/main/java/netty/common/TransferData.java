@@ -50,9 +50,15 @@ public class TransferData {
     }
 
     public TransferData setData(byte[] data) {
-        this.data.release();
-        this.data = Unpooled.wrappedBuffer(data);
-        return this;
+        return this.setData(Unpooled.wrappedBuffer(data));
     }
 
+    public TransferData setDataAndLength(ByteBuf buf) {
+        this.header.setLength(buf.readableBytes());
+        return this.setData(buf);
+    }
+
+    public TransferData setDataAndLength(byte[] data) {
+        return this.setDataAndLength(Unpooled.wrappedBuffer(data));
+    }
 }

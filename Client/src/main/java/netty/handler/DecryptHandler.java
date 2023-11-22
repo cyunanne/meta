@@ -43,7 +43,6 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
             byte[] enc = received == fileSize ? cipher.doFinal(plain) : cipher.update(plain);
             td.setData(enc);
-            // 복호화 후에도 데이터 길이 달라질 수 있지만 길이 비교를 위해 처리 X
         }
 
         ctx.fireChannelRead(td);
