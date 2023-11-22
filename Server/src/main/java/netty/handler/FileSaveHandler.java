@@ -31,12 +31,9 @@ public class FileSaveHandler extends ChannelInboundHandlerAdapter {
 
         // 파일 정보 수신
         if(header.getType() == Header.TYPE_META) {
-            FileSpec filespec = new FileSpec(byteBuf.readBytes(header.getLength()));
-            fileSize = filespec.getSize();
-
+            FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getName();
-//            filePath += (filespec.isCompressed() ? ".zstd" : "");
-//            filePath += (filespec.isEncrypted() ? ".enc" : "");
+            fileSize = filespec.getSize();
 
             switch (header.getCmd()) {
 

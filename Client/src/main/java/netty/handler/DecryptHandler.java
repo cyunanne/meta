@@ -26,7 +26,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
         // 메타 데이터 FileSpec 생성 및 전달
         if(header.getType() == Header.TYPE_META) {
-            FileSpec fs = new FileSpec(byteBuf.readBytes(header.getLength()));
+            FileSpec fs = new FileSpec(byteBuf);
             fileSize = fs.getSize();
             doDecrypt = fs.isEncrypted();
             ctx.fireChannelRead(fs);
