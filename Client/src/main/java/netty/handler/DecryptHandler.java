@@ -47,7 +47,8 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             byteBuf.readBytes(enc);
 
             // padded data 가 없는 경우 doFinal() 오류 발생
-            // 예) 데이터 크기가 암호화 블록 크기와 일치 (128-bit 배수)
+            // = 데이터 크기가 암호화 블록 크기와 일치(128-bit 배수)
+            // = received(암호화 된 파일 크기) == fileSize(파일 원래 크기)
             byte[] plain = received > fileSize ? cipher.doFinal(enc) : cipher.update(enc);
             td.setDataAndLength(plain);
         }
