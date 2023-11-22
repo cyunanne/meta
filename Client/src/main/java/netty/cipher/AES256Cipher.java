@@ -3,31 +3,36 @@ package netty.cipher;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 public class AES256Cipher {
 
-    private final String key = "01234567890123456789012345678901"; // 32byte
-    private final String iv = key.substring(0, 16); // 16byte
-
-    private int mode = Cipher.ENCRYPT_MODE;
-
+    private byte[] key;
+    private byte[] iv;
     private Cipher cipher;
-    private SecretKeySpec keySpec;// = new SecretKeySpec(key.getBytes(), "AES");
-    private IvParameterSpec ivParamSpec;// = new IvParameterSpec(iv.getBytes());
-
 
     public AES256Cipher(int mode) {
-        System.out.println("cipher created");
+        this(mode, "01234567890123456789012345678901".getBytes(), "0123456789012345".getBytes());
+    }
+
+    public AES256Cipher(int mode, byte[] key, byte[] iv) {
+        this.key = key;
+        this.iv = iv;
+
         try {
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            IvParameterSpec ivParamSpec = new IvParameterSpec(iv);
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            keySpec = new SecretKeySpec(key.getBytes(), "AES");
-            ivParamSpec = new IvParameterSpec(iv.getBytes());
             cipher.init(mode, keySpec, ivParamSpec);
         } catch(Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("cipher created");
     }
 
     public byte[] update(byte[] bytes) {
@@ -48,5 +53,39 @@ public class AES256Cipher {
 
     public void clear() {
         this.cipher = null;
+    }
+
+    private byte[] generateKey() {
+        KeyGenerator keyGen = null;
+        try {
+            keyGen = KeyGenerator.getInstance("AES");
+            keyGen.init(256); // 키 길이 설정
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return keyGen.generateKey().getEncoded(); // SecretKey -> byte[]
+    }
+
+    private byte[] generateIv() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] keyBytes = new byte[16];
+        secureRandom.nextBytes(keyBytes);
+        return keyBytes;
+    }
+
+    public byte[] getKey() {
+        return this.key;
+    }
+
+    public byte[] getIv() {
+        return this.iv;
+    }
+
+    public void setKey(byte[] key) {
+        this.key = key;
+    }
+
+    public void setIv(byte[] iv) {
+        this.iv = iv;
     }
 }
