@@ -46,7 +46,9 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             byte[] enc = new byte[len];
             byteBuf.readBytes(enc);
 
-            byte[] plain = received >= fileSize ? cipher.doFinal(enc) : cipher.update(enc);
+            // padded data 가 없는 경우 doFinal() 오류 발생
+            // 예) 데이터 크기가 암호화 블록 크기와 일치 (128-bit 배수)
+            byte[] plain = received > fileSize ? cipher.doFinal(enc) : cipher.update(enc);
             td.setDataAndLength(plain);
         }
 
