@@ -16,7 +16,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
     private long transferred = 0L;
     private boolean doEncrypt = false;
 
-    private AES256Cipher cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
+    private AES256Cipher cipher;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -26,6 +26,10 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             FileSpec fs = (FileSpec) msg;
             fileSize = fs.getSize();
             doEncrypt = fs.isEncrypted();
+
+            if(doEncrypt) {
+                cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
+            }
         }
 
         TransferData td = (TransferData) msg;

@@ -12,10 +12,10 @@ import javax.crypto.Cipher;
 
 public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
-    private long received = 0L;
     private long fileSize = 0L;
+    private long received = 0L;
     private boolean doDecrypt = false;
-    private AES256Cipher cipher = new AES256Cipher(Cipher.DECRYPT_MODE);
+    private AES256Cipher cipher;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -29,6 +29,11 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             FileSpec fs = new FileSpec(byteBuf);
             fileSize = fs.getSize();
             doDecrypt = fs.isEncrypted();
+
+            if(doDecrypt) {
+                cipher = new AES256Cipher(Cipher.DECRYPT_MODE);
+            }
+
             ctx.fireChannelRead(fs);
             return;
         }
