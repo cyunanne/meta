@@ -36,7 +36,7 @@ public class TransferData {
     }
 
     public ByteBuf getData() {
-        return data;
+        return data.resetReaderIndex();
     }
 
     public void delete() {
