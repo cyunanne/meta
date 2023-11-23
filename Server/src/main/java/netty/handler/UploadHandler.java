@@ -7,7 +7,6 @@ import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
@@ -19,7 +18,7 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
     private long received = 0L;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws FileNotFoundException {
+    public void channelActive(ChannelHandlerContext ctx) {
         System.out.println("File Channel Connected : " + ctx.channel().remoteAddress());
     }
 
@@ -40,8 +39,10 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
                 // upload
                 case Header.CMD_PUT:
-                    fos = new FileOutputStream(filePath);
-                    new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
+                    if(fos == null) { // 최초로 수신된 메타 데이터만 활용 & 기록
+                        fos = new FileOutputStream(filePath);
+                        new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
+                    }
                     break;
 
                 // download

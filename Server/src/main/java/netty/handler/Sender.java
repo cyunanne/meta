@@ -9,7 +9,7 @@ import java.util.List;
 public class Sender extends MessageToMessageEncoder<TransferData> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, TransferData dt, List<Object> list) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, TransferData dt, List<Object> list) {
         list.add(dt.getHeader().toByteBuf());
         list.add(dt.getData());
     }

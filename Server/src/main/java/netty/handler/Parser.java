@@ -11,7 +11,7 @@ import java.util.List;
 public class Parser extends ReplayingDecoder<ByteBuf> {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) {
 
         // 헤더가 모두 들어올 때 까지 대기
         if(byteBuf.readableBytes() < Header.HEADER_SIZE) {
