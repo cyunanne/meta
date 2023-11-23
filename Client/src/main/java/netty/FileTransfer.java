@@ -26,7 +26,7 @@ public class FileTransfer {
         bootstrap.channel(NioSocketChannel.class);
     }
 
-    public void upload(String filePath, boolean doEncrypt) {
+    public void upload(String filePath, boolean doEncrypt, boolean doCompress) {
         Channel channel = null;
 
         try {
@@ -36,7 +36,7 @@ public class FileTransfer {
 
             // 파일 정보 전송
             FileSpec fs = new FileSpec(filePath);
-            fs.setEncrypted(doEncrypt);
+            fs.setEncrypted(doEncrypt).setCompressed(doCompress);
             channel.writeAndFlush(fs);
 
             // 파일 전송 (전송완료 후 서버에서 채널 종료)

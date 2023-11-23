@@ -11,6 +11,7 @@ public class Client {
     private static final int SIG_GET = 2;
 
     private static boolean doEncrypt = false;
+    private static boolean doCompress = true;
     private static String filePath = null;
 
     public static void main(String[] args) {
@@ -28,7 +29,7 @@ public class Client {
             if(command == SIG_QUIT) break;
 
             switch (command) {
-                case SIG_PUT: ft.upload(filePath, doEncrypt); break;
+                case SIG_PUT: ft.upload(filePath, doEncrypt, doCompress); break;
                 case SIG_GET: ft.download(filePath); break;
                 case SIG_IGNORE: continue;
                 default: System.out.println("메시지 파싱 오류");
