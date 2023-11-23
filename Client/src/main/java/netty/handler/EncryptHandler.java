@@ -32,7 +32,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             fileSize = fs.getSize();
             doEncrypt = fs.isEncrypted();
 
-            if(doEncrypt) {
+            if(doEncrypt && cipher == null) {
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey());
                 fs.setIv(cipher.getIv());
@@ -41,7 +41,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         }
 
         // 파일 데이터 암호화
-        else if (doEncrypt && header.getType() == Header.TYPE_DATA) {
+        if (doEncrypt && header.getType() == Header.TYPE_DATA) {
             int len = header.getLength();
             transferred += len;
 

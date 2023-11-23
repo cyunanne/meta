@@ -27,7 +27,7 @@ public class Header {
 
     private int type; // 0 : message / 1 : meta-data / 2 : data
     private int cmd; // 0 : put / 1 : get
-    private boolean eof; // true : eof
+    private boolean eof;
     private boolean ok;
     private int length;
 

@@ -2,8 +2,6 @@ package netty.handler;
 
 import com.github.luben.zstd.Zstd;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -33,17 +31,20 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             fs = new FileSpec(data);
             doCompress = fs.isCompressed();
 
-            if(doCompress) System.out.println("Compress Started.");
+            if(doCompress) System.out.println("Compressing...");
         }
 
         // 데이터 압축
         else if(doCompress && header.getType() == Header.TYPE_DATA) {
-            // TODO 데이터 압축 & TransferData 갱신
+            int len = header.getLength();
+            compressedLength += len;
 
-            compressedLength += header.getLength();
-            td.setDataAndLength(compress(data));
+            ByteBuf buffer = ctx.alloc().directBuffer(len);
+            finalLength += compress(data, buffer);
+            td.setDataAndLength(buffer);
+            buffer.release();
 
-            // 압축 결과 파일 크기 서버에 알리기
+            // 마지막 블록 압축 후 압축 결과 서버에 알리기
             if(fs.getSize() == compressedLength) {
                 fs.setSize(finalLength);
                 ctx.writeAndFlush(getNewFileSpec());
@@ -53,8 +54,16 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         ctx.writeAndFlush(td);
     }
 
-    private ByteBuf compress(ByteBuf origin) {
-        return Unpooled.wrappedBuffer(Zstd.compress(origin.nioBuffer(), origin.readableBytes()));
+    /**
+     * 압축
+     * @param origin before compression
+     * @param target result of compression
+     * @return length of compressed data
+     */
+    private int compress(ByteBuf origin, ByteBuf target) {
+        ByteBuffer originNio = origin.internalNioBuffer(0, origin.readableBytes());
+        target.writeBytes(Zstd.compress(originNio, compressionLevel));
+        return target.readableBytes();
     }
 
     private TransferData getNewFileSpec() {
