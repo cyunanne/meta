@@ -11,7 +11,7 @@ public class Client {
     private static final int SIG_GET = 2;
 
     private static boolean doEncrypt = false;
-    private static boolean doCompress = true;
+    private static boolean doCompress = false;
     private static String filePath = null;
 
     public static void main(String[] args) {
@@ -60,8 +60,13 @@ public class Client {
             if (commands[0].equals("get")) return SIG_GET;
             if (commands[0].equals("put")) {
 
-                doEncrypt = commands[1].equals("-e");
-                filePath = doEncrypt ? commands[2] : commands[1];
+                boolean hasOptions = commands[1].startsWith("-");
+                String options = hasOptions ? commands[1].substring(1) : "";
+
+                doEncrypt = options.contains("e");
+                doCompress = options.contains("c");
+                filePath = hasOptions ? commands[2] : commands[1];
+
                 if (isFileExist(filePath)) return SIG_PUT;
             }
 

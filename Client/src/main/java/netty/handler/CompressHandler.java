@@ -47,7 +47,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             // 마지막 블록 압축 후 압축 결과 서버에 알리기
             if(fs.getSize() == compressedLength) {
                 fs.setSize(finalLength);
-                ctx.writeAndFlush(getNewFileSpec());
+                ctx.writeAndFlush(new TransferData(fs));
             }
         }
 
@@ -64,12 +64,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         ByteBuffer originNio = origin.internalNioBuffer(0, origin.readableBytes());
         target.writeBytes(Zstd.compress(originNio, compressionLevel));
         return target.readableBytes();
-    }
-
-    private TransferData getNewFileSpec() {
-        Header header = new Header(Header.TYPE_META);
-        fs.setSize(compressedLength);
-        return new TransferData(header, fs.toByteBuf());
     }
 
 }
