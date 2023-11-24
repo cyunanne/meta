@@ -41,10 +41,9 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
         // 파일 데이터 복호화
         else if (doDecrypt && header.getType() == Header.TYPE_DATA) {
             int len = byteBuf.readableBytes();
-            received += len;
-
             byte[] enc = new byte[len];
             byteBuf.readBytes(enc);
+            received += len;
 
             // padded data 가 없는 경우 doFinal() 오류 발생
             // = 데이터 크기가 암호화 블록 크기와 일치(128-bit 배수)

@@ -56,8 +56,13 @@ public class Client {
             if(commands.length < 2)
                 throw new ArrayIndexOutOfBoundsException();
 
-            // file transfer
-            if (commands[0].equals("get")) return SIG_GET;
+            // file transfer : download
+            if (commands[0].equals("get")) {
+                filePath = commands[1];
+                return SIG_GET;
+            }
+
+            // file transfer : upload
             if (commands[0].equals("put")) {
 
                 boolean hasOptions = commands[1].startsWith("-");
