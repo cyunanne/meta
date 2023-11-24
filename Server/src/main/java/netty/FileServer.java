@@ -9,12 +9,12 @@ import netty.initializer.FileInitializer;
 
 import java.net.InetSocketAddress;
 
-public class FileServer implements Runnable {
+public class FileServer {
 
-    private int port;
-    private EventLoopGroup bossEventLoopGroup; // Listen ServerSocket
-    private EventLoopGroup workerEventLoopGroup;
-    private ServerBootstrap bootstrap;
+    private final int port;
+    private final EventLoopGroup bossEventLoopGroup; // Listen ServerSocket
+    private final EventLoopGroup workerEventLoopGroup;
+    private final ServerBootstrap bootstrap;
 
     public FileServer(int port) {
         this.port = port;
@@ -29,7 +29,6 @@ public class FileServer implements Runnable {
         bootstrap.childHandler(new FileInitializer());
     }
 
-    @Override
     public void run() {
         try {
             // 채널 연결 대기
