@@ -55,7 +55,9 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         // 파일 수신
         if(fos != null) {
             received += fos.getChannel().write(byteBuf.nioBuffer());
-            if (received >= fileSize) ctx.close();
+            if (received >= fileSize) {
+                ctx.close();
+            }
         }
 
         byteBuf.release();
