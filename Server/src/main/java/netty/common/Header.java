@@ -5,8 +5,8 @@ import io.netty.buffer.Unpooled;
 
 public class Header {
 
-    public static final int HEADER_SIZE = 3;
-    public static final int CHUNK_SIZE = 64_000;
+    public static final int HEADER_SIZE = 5;
+//    public static final int CHUNK_SIZE = 64_000;
 
     public static final int TYPE_SIG = 0x00;
     public static final int TYPE_META = 0x01;
@@ -27,7 +27,7 @@ public class Header {
 
     private int type; // 0 : message / 1 : meta-data / 2 : data
     private int cmd; // 0 : put / 1 : get
-    private boolean eof; // true : eof
+    private boolean eof;
     private boolean ok;
     private int length;
 
@@ -71,7 +71,7 @@ public class Header {
         this.cmd = (data & CMD_BIT) >> CMD_OFFSET;
         this.eof = ((data & EOF_BIT) >> EOF_OFFSET) == 1;
         this.ok = ((data & OK_BIT) >> OK_OFFSET) == 1;
-        this.length = buf.readUnsignedShort();
+        this.length = buf.readInt();
         buf.release();
     }
 
@@ -80,7 +80,7 @@ public class Header {
                 ( this.cmd << CMD_OFFSET) |
                 ( (this.eof ? 1 : 0) << EOF_OFFSET) |
                 ( (this.ok ? 1 : 0) << OK_OFFSET);
-        return Unpooled.buffer().writeByte(data).writeShort(this.length);
+        return Unpooled.buffer().writeByte(data).writeInt(this.length);
     }
 
     public int getType() {
