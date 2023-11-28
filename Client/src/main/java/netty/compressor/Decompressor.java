@@ -41,36 +41,39 @@ public class Decompressor extends ZstdDirectBufferDecompressingStream {
 //        return buf.retain();
 //    }
 
-/*    public int decompress(ByteBuf src, ByteBuf dst) throws IOException {
+    /**
+     * 됨 3
+     * @param src
+     * @param dst
+     * @return
+     * @throws IOException
+     */
+    public int decompress(ByteBuf src, ByteBuf dst) throws IOException {
         source = src.internalNioBuffer(0, src.readableBytes());
-
-
-//        buf = Unpooled.directBuffer(recommendedTargetBufferSize());
-//        bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
         ByteBuffer dstNio = dst.internalNioBuffer(0, dst.writableBytes());
 
         int idx = 0;
         while( (idx = this.read(dstNio)) == 0);
-//        dst.writerIndex(idx);
-//
-////        buf.writerIndex(idx);
+        dst.writerIndex(idx);
 
         return idx;
-    }*/
+    }
 
-/*    public int decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
+    /**
+     * 되는 애 2
+     * @param src
+     * @param bufNio
+     * @return
+     * @throws IOException
+     */
+    public int decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
         source = src.internalNioBuffer(0, src.readableBytes());
 
-        bufNio.put(source);
-        return 0;
-
-
-
-//        int idx = 0;
-//        while( (idx = this.read(bufNio)) == 0 );
-//        return idx;
-    }*/
+        int idx = 0;
+        while( (idx = this.read(bufNio)) == 0 );
+        return idx;
+    }
 
     public ByteBuffer decompress(ByteBuf src) throws IOException {
         source = src.nioBuffer(0, src.readableBytes());
@@ -83,20 +86,6 @@ public class Decompressor extends ZstdDirectBufferDecompressingStream {
         return bufNio;
     }
 
-    public int decompress(ByteBuf src, ByteBuf buf) throws IOException {
-        source = src.nioBuffer(0, src.readableBytes());
-
-        ByteBuffer bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-        bufNio.position(0);
-
-        int idx = 0;
-        while( (idx = this.read(bufNio)) == 0 );
-
-        buf.writerIndex(bufNio.position());
-
-        return idx;
-    }
-
 
     /**
      * 잘 되는 소중한 아이
@@ -105,13 +94,13 @@ public class Decompressor extends ZstdDirectBufferDecompressingStream {
      * @return
      * @throws IOException
      */
-    public ByteBuffer decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
-        source = src.nioBuffer(0, src.readableBytes());
-
-        int idx = 0;
-        while( (idx = this.read(bufNio)) == 0 );
-
-        return bufNio;
-    }
+//    public ByteBuffer decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
+//        source = src.nioBuffer(0, src.readableBytes());
+//
+//        int idx = 0;
+//        while( (idx = this.read(bufNio)) == 0 );
+//
+//        return bufNio;
+//    }
 
 }

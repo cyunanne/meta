@@ -48,7 +48,8 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Decompressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
-                buf = ctx.alloc().directBuffer(bufferSize);
+//                buf = ctx.alloc().directBuffer(bufferSize);
+                buf = Unpooled.directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 decomp = new Decompressor();
             }
@@ -73,11 +74,11 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 //            finalLength += buf.readableBytes();
 //            td.setDataAndLength(buf.copy());
 
-            // 데이터는 다 들어오는데 파일이 안열림 => 다 null로 저장됨
-//            int cnt = decomp.decompress(data, bufNio);
-//            buf.writerIndex(bufNio.position());
-//            finalLength += buf.readableBytes();
-//            td.setDataAndLength(buf.retain());
+            // 됨..222 이게 젤 빠른듯
+            decomp.decompress(data, bufNio);
+            buf.writerIndex(bufNio.position());
+            finalLength += buf.readableBytes();
+            td.setDataAndLength(buf);
 
             // 작은파일은 되고 큰파일은 안됨
 //            ByteBuffer buffer = decomp.decompress(data);
@@ -86,15 +87,15 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 //            td.setDataAndLength(Unpooled.wrappedBuffer(buffer));
 
             // 됨...ㅠㅠ
-            ByteBuffer buffer = decomp.decompress(data, bufNio);
-            finalLength += buffer.position();
-            buffer.flip();
-            td.setDataAndLength(Unpooled.wrappedBuffer(buffer));
+//            ByteBuffer buffer = decomp.decompress(data, bufNio);
+//            finalLength += buffer.position();
+//            buffer.flip();
+//            td.setDataAndLength(Unpooled.wrappedBuffer(buffer));
 
-//            decomp.decompress(data, bufNio);
-//            buf.writerIndex(bufNio.position());
+            // 이것도 된다 ㅠㅠㅠ33
+//            decomp.decompress(data, buf);
 //            finalLength += buf.readableBytes();
-//            td.setDataAndLength(buf);
+//            td.setDataAndLength(buf.duplicate());
 
 //            System.out.println("r : " + received);
 //            System.out.println("f : " + finalLength);
