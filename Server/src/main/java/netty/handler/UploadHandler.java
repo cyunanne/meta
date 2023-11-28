@@ -9,6 +9,7 @@ import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.File;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
@@ -34,6 +35,9 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getName();
             fileSize = filespec.getSize();
+
+//            if(filespec.isCompressed())
+//                filePath += ".zst";
 
             switch (header.getCmd()) {
 

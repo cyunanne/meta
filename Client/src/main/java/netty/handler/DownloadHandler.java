@@ -34,11 +34,15 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
         // 파일 데이터
         TransferData td = (TransferData) msg;
+        Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
         if (fos != null) {
             received += fos.getChannel().write(byteBuf.nioBuffer());
-            if (received == fileSize) ctx.close(); // 채널종료
+
+            if (received == fileSize || header.isEof()) {
+                ctx.close(); // 채널종료
+            }
         }
 
         byteBuf.release();
@@ -46,7 +50,10 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if(fos != null) fos.close();
+        if(fos != null) {
+            fos.getChannel().close();
+            fos.close();
+        }
     }
 
     @Override

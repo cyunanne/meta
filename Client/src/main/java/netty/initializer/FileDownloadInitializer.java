@@ -18,7 +18,7 @@ public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
         // inbound
         pipeline.addLast(new Parser());
         pipeline.addLast(new DecryptHandler());  // decrypt
-//        pipeline.addLast(new DecompressHandler()); // decompress
+        pipeline.addLast(new DecompressHandler()); // decompress
         pipeline.addLast(new DownloadHandler());
     }
 }

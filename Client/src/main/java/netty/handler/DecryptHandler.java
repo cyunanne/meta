@@ -1,6 +1,7 @@
 package netty.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.cipher.AES256Cipher;
@@ -49,7 +50,9 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             // = 데이터 크기가 암호화 블록 크기와 일치(128-bit 배수)
             // = received(암호화 된 파일 크기) == fileSize(파일 원래 크기)
             byte[] plain = received > fileSize ? cipher.doFinal(enc) : cipher.update(enc);
-            td.setDataAndLength(plain);
+            ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(plain);
+            td.setDataAndLength(buf);
+            buf.release();
         }
 
         ctx.fireChannelRead(td);

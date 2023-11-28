@@ -1,18 +1,15 @@
 package netty.handler;
 
-import com.github.luben.zstd.Zstd;
-import com.github.luben.zstd.ZstdInputStream;
+import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
+import netty.compressor.Decompressor;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -22,7 +19,21 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     private long fileSize = 0L;
     private long finalLength = 0L;
     private int compressionLevel = 3;
+
+    long received = 0L;
     private FileSpec fs;
+
+//    ByteArrayInputStream byteArrayInputStream;
+//    ZstdInputStream zstdInputStream;
+//    ByteArrayOutputStream byteArrayOutputStream;
+
+//    private ZstdDirectBufferDecompressingStream stream;
+//    ByteBuf buf;
+//    ByteBuffer bufNio;
+
+    private Decompressor decomp;
+    ByteBuf buf;
+    ByteBuffer bufNio;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -33,7 +44,14 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             fileSize = fs.getSize();
             doCompress = fs.isCompressed();
 
-            if(doCompress) System.out.println("Decompressing...");
+            if(doCompress) {
+                System.out.println("Decompressing...");
+
+                int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
+                buf = ctx.alloc().directBuffer(bufferSize);
+                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+                decomp = new Decompressor();
+            }
 
             ctx.fireChannelRead(fs);
             return;
@@ -44,18 +62,50 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         Header header = td.getHeader();
         ByteBuf data = td.getData();
 
+        received += header.getLength();
+
         if (doCompress && header.getType() == Header.TYPE_DATA) {
-//            int len = header.getLength();
-//
-//            ByteBuf buffer = ctx.alloc().directBuffer(len * 2);
-//            finalLength += decompress(data, buffer);
-//            td.setDataAndLength(buffer);
-//            buffer.release();
+            buf.clear();
+            bufNio.clear();
 
-            td.setDataAndLength(decompress(data));
+            // 원래 파일 크기 이상으로 들어옴, 큰파일 안댐
+//            decomp.decompress(data, buf);
+//            finalLength += buf.readableBytes();
+//            td.setDataAndLength(buf.copy());
+
+            // 데이터는 다 들어오는데 파일이 안열림 => 다 null로 저장됨
+//            int cnt = decomp.decompress(data, bufNio);
+//            buf.writerIndex(bufNio.position());
+//            finalLength += buf.readableBytes();
+//            td.setDataAndLength(buf.retain());
+
+            // 작은파일은 되고 큰파일은 안됨
+//            ByteBuffer buffer = decomp.decompress(data);
+//            finalLength += buffer.position();
+//            buffer.flip();
+//            td.setDataAndLength(Unpooled.wrappedBuffer(buffer));
+
+            // 됨...ㅠㅠ
+            ByteBuffer buffer = decomp.decompress(data, bufNio);
+            finalLength += buffer.position();
+            buffer.flip();
+            td.setDataAndLength(Unpooled.wrappedBuffer(buffer));
+
+//            decomp.decompress(data, bufNio);
+//            buf.writerIndex(bufNio.position());
+//            finalLength += buf.readableBytes();
+//            td.setDataAndLength(buf);
+
+//            System.out.println("r : " + received);
+//            System.out.println("f : " + finalLength);
+
+            if(finalLength == fileSize) {
+                buf.release();
+                decomp.setFinalize(true);
+            }
         }
-
         ctx.fireChannelRead(td);
+
     }
 
     /**
@@ -64,30 +114,45 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
      * @param target result of decompression
      * @return length of decompressed data
      */
+/*
     private int decompress(ByteBuf origin, ByteBuf target) {
-
-//
-
-//        boolean test1 = origin.isDirect();
-//        boolean test2 = testBuf.isDirect();
-//        boolean test3 = target.isDirect();
-
         int len = origin.readableBytes();
-
 
         ByteBuf directBuf = origin.alloc().directBuffer(len);
         ByteBuffer originNio = directBuf.internalNioBuffer(0, len); // src
-        ByteBuffer directBuffer = ByteBuffer.allocateDirect(len * 2); // des
+        ByteBuffer targetNio = target.internalNioBuffer(0, target.writableBytes());
+//        ByteBuffer directBuffer = ByteBuffer.allocateDirect(len * 2); // des
 
         boolean test4 = originNio.isDirect();
 
-        int result = Zstd.decompress(directBuffer, originNio);
+        int result = Zstd.decompress(targetNio, originNio);
 
         directBuf.release();
         return result;
     }
+*/
 
-    public static ByteBuf decompress(ByteBuf compressedData) throws IOException {
+/*    public byte[] decompress(ByteBuf compressedData) throws IOException {
+        // 압축 해제된 데이터를 저장할 ByteArrayOutputStream 생성
+
+        // direct memory -> heap memory
+        int len = compressedData.readableBytes();
+        byte[] compData = new byte[len];
+        compressedData.readBytes(compData);
+
+        // 압축 해제를 위한 입력 스트림 생성
+        byteArrayInputStream = new ByteArrayInputStream(compData);
+//        byteArrayInputStream.read(compData);
+        zstdInputStream = new ZstdInputStream(byteArrayInputStream);
+
+        byte[] buffer = new byte[len];
+        zstdInputStream.read(buffer);
+        byteArrayOutputStream.write(buffer);
+
+        return byteArrayOutputStream.toByteArray();
+    }*/
+
+/*    public static ByteBuf decompress(ByteBuf compressedData) throws IOException {
         // 압축 해제된 데이터를 저장할 ByteArrayOutputStream 생성
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -106,7 +171,22 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
         // 압축 해제된 데이터를 ByteBuf로 변환하여 반환
         return Unpooled.wrappedBuffer(byteArrayOutputStream.toByteArray());
-    }
+    }*/
+
+//    private ByteBuf decompress(ByteBuf compressedData) throws IOException {
+//
+//
+//        int result = stream.read(bufNio);
+//        buf.setIndex(result, result);
+////        buf.writerIndex(result);
+////        buf.readerIndex(result);
+////        stream.flush();
+//
+////        buf.writerIndex(bufNio.position());
+////        return buf.retain();
+//
+//        return buf.retain();
+//    }
 
 
 }
