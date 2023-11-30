@@ -16,7 +16,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
     private boolean doCompress = false;
     private long compressedLength = 0L;
-    private long finalLength = 0L;
+//    private long finalLength = 0L;
     private int compressionLevel = 3;
     private FileSpec fs;
 
@@ -44,7 +44,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
                 buf = ctx.alloc().directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-
                 comp = new Compressor(bufNio, compressionLevel);
             }
         }
@@ -60,13 +59,11 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             comp.compress(data);
             buf.writerIndex(bufNio.position());
             td.setDataAndLength(buf);
-            finalLength += header.getLength();
 
-            // 마지막 블록 압축 후 압축 결과 서버에 알리기
-            if(fs.getSize() == compressedLength) {
+            // 마지막 블록 압축 후 압축 결과 서버에 알리기 -> 마지막 블록 eof 설정
+            if(fs.getOriginalFileSize() == compressedLength) {
+                header.setEof(true);
                 buf.release();
-                fs.setSize(finalLength);
-                ctx.writeAndFlush(new TransferData(fs));
             }
         }
 

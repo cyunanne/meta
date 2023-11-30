@@ -10,8 +10,9 @@ public class FileSpec implements Serializable {
 
     private static final long serialVersionUID = 123L;
 
-    private String name = "";
-    private long size = 0L;
+    private String filePath = "";
+    private long originalFileSize = 0L;
+    private long currentFileSize = 0L;
     private byte[] key;
     private byte[] iv;
     private boolean endOfFileList = true;
@@ -21,8 +22,9 @@ public class FileSpec implements Serializable {
     public FileSpec() {}
 
     public FileSpec(FileSpec fs) {
-        this.name = fs.name;
-        this.size = fs.size;
+        this.filePath = fs.filePath;
+        this.originalFileSize = fs.originalFileSize;
+        this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
         this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
@@ -30,9 +32,10 @@ public class FileSpec implements Serializable {
         this.compressed = fs.compressed;
     }
 
-    public FileSpec(String filename) {
-        this.name = filename;
-        this.size = new File(filename).length();
+    public FileSpec(String filePath) {
+        this.filePath = filePath;
+        this.originalFileSize = new File(filePath).length();
+        this.currentFileSize = this.originalFileSize;
     }
 
     public FileSpec(ByteBuf byteBuf) {
@@ -47,8 +50,9 @@ public class FileSpec implements Serializable {
             e.printStackTrace();
         }
 
-        this.name = fs.name;
-        this.size = fs.size;
+        this.filePath = fs.filePath;
+        this.originalFileSize = fs.originalFileSize;
+        this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
         this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
@@ -67,11 +71,12 @@ public class FileSpec implements Serializable {
             fs = (FileSpec) ois.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        this.name = fs.name;
-        this.size = fs.size;
+        this.filePath = fs.filePath;
+        this.originalFileSize = fs.originalFileSize;
+        this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
         this.iv = fs.iv;
         this.endOfFileList = fs.endOfFileList;
@@ -81,33 +86,33 @@ public class FileSpec implements Serializable {
         byteBuf.release();
     }
 
-    public FileSpec setName(String name) {
-        this.name = name;
+    public FileSpec setFilePath(String filePath) {
+        this.filePath = filePath;
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public Long getSize() {
-        return size;
+    public long getOriginalFileSize() {
+        return originalFileSize;
     }
 
-    public Boolean isEndOfFileList() {
+    public boolean isEndOfFileList() {
         return endOfFileList;
     }
 
-    public Boolean isEncrypted() {
+    public boolean isEncrypted() {
         return encrypted;
     }
 
-    public Boolean isCompressed() {
+    public boolean isCompressed() {
         return compressed;
     }
 
-    public FileSpec setSize(Long size) {
-        this.size = size;
+    public FileSpec setOriginalFileSize(Long originalFileSize) {
+        this.originalFileSize = originalFileSize;
         return this;
     }
 
@@ -160,5 +165,13 @@ public class FileSpec implements Serializable {
     public FileSpec setIv(byte[] iv) {
         this.iv = iv;
         return this;
+    }
+
+    public long getCurrentFileSize() {
+        return currentFileSize;
+    }
+
+    public void setCurrentFileSize(long currentFileSize) {
+        this.currentFileSize = currentFileSize;
     }
 }

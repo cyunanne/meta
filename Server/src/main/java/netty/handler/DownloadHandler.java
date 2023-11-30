@@ -6,6 +6,7 @@ import io.netty.channel.ChannelPromise;
 import io.netty.handler.stream.ChunkedStream;
 import netty.common.FileSpec;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
             // 메타 데이터 전송
             ObjectInputStream ois = new ObjectInputStream(fis);
             FileSpec fs = (FileSpec) ois.readObject();
+            fs.setCurrentFileSize(new File(filePath).length());
             ctx.writeAndFlush(fs);
 
             // 파일 데이터 전송

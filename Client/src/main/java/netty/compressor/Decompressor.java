@@ -8,22 +8,22 @@ import java.nio.ByteBuffer;
 
 public class Decompressor extends ZstdDirectBufferDecompressingStream {
 
-    private ByteBuffer source;
-
+    private ByteBuffer buffer;
     public Decompressor() {
         super(ByteBuffer.allocateDirect(0));
     }
 
     @Override
     protected ByteBuffer refill(ByteBuffer byteBuffer) {
-        return source;
+        return buffer;
     }
 
     public int decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
-        source = src.internalNioBuffer(0, src.readableBytes());
+        buffer = src.internalNioBuffer(0, src.readableBytes());
 
         int idx = 0;
         while( (idx = this.read(bufNio)) == 0 );
+
         return idx;
     }
 

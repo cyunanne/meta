@@ -10,32 +10,27 @@ import netty.common.TransferData;
 
 public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
 
-//    private long filelength = 0L;
-//    private long transferred = 0L;
-
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
 
-        // 파일 데이터
-        if(msg instanceof ByteBuf) {
-            ByteBuf buf = (ByteBuf) msg;
-            Header header = new Header(Header.TYPE_DATA, Header.CMD_GET, false, buf.readableBytes());
-
-//            transferred += header.getLength();
-//            if( transferred == filelength ) {
-//                header.setEof(true);
-//            }
+        // 메타 데이터
+        if(msg instanceof FileSpec) {
+            FileSpec fs = (FileSpec) msg;
+            ByteBuf buf = fs.toByteBuf();
+            Header header = new Header(Header.TYPE_META)
+                                .setCmd(Header.CMD_GET)
+                                .setLength(buf.readableBytes());
 
             TransferData td = new TransferData(header, buf);
             ctx.writeAndFlush(td);
 
-        // 메타 데이터
-        } else if(msg instanceof FileSpec) {
-            FileSpec fs = (FileSpec) msg;
-//            filelength = fs.getSize();
+        // 파일 데이터
+        } else if(msg instanceof ByteBuf) {
+            ByteBuf buf = (ByteBuf) msg;
+            Header header = new Header(Header.TYPE_DATA)
+                                .setCmd(Header.CMD_GET)
+                                .setLength(buf.readableBytes());
 
-            ByteBuf buf = fs.toByteBuf();
-            Header header = new Header(Header.TYPE_META, Header.CMD_GET, true, buf.readableBytes());
             TransferData td = new TransferData(header, buf);
             ctx.writeAndFlush(td);
 

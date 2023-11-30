@@ -9,7 +9,6 @@ import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.File;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
@@ -33,20 +32,14 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         // 파일 정보 수신
         if(header.getType() == Header.TYPE_META) {
             FileSpec filespec = new FileSpec(byteBuf);
-            String filePath = filespec.getName();
-            fileSize = filespec.getSize();
-
-//            if(filespec.isCompressed())
-//                filePath += ".zst";
+            String filePath = filespec.getFilePath();
 
             switch (header.getCmd()) {
 
                 // upload
                 case Header.CMD_PUT:
-                    if(fos == null) { // 최초로 수신된 메타 데이터만 활용 & 기록
-                        fos = new FileOutputStream(filePath);
-                        new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
-                    }
+                    fos = new FileOutputStream(filePath);
+                    new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
                     break;
 
                 // download
@@ -58,8 +51,9 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
         // 파일 수신
         if(fos != null) {
-            received += fos.getChannel().write(byteBuf.nioBuffer());
-            if (received >= fileSize) {
+            fos.getChannel().write(byteBuf.nioBuffer());
+
+            if(header.isEof()) {
                 ctx.close();
             }
         }

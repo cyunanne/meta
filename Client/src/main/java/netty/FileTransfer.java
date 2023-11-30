@@ -63,7 +63,7 @@ public class FileTransfer {
             System.out.println("Download Started.");
 
             // 파일 정보(파일명) 전송
-            channel.writeAndFlush(new FileSpec().setName(filePath));
+            channel.writeAndFlush(new FileSpec().setFilePath(filePath));
             channel.closeFuture().sync();
 
             System.out.println("Download Complete.");

@@ -47,4 +47,9 @@ public class TransferData {
     public TransferData setDataAndLength(byte[] data) {
         return this.setDataAndLength(Unpooled.wrappedBuffer(data));
     }
+
+    public TransferData setHeader(Header header) {
+        this.header = header;
+        return this;
+    }
 }

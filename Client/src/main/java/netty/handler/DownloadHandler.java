@@ -12,8 +12,6 @@ import java.io.FileOutputStream;
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
-    private long fileSize = 0L;
-    private long received = 0L;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -27,8 +25,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
         // 메타 데이터
         if(msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
-            fileSize = fs.getSize();
-            fos = new FileOutputStream(fs.getName());
+            fos = new FileOutputStream(fs.getFilePath());
             return;
         }
 
@@ -38,9 +35,9 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         if (fos != null) {
-            received += fos.getChannel().write(byteBuf.nioBuffer());
+            fos.getChannel().write(byteBuf.nioBuffer());
 
-            if (received == fileSize || header.isEof()) {
+            if( header.isEof() ) {
                 ctx.close(); // 채널종료
             }
         }
@@ -50,10 +47,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if(fos != null) {
-            fos.getChannel().close();
-            fos.close();
-        }
+        if(fos != null) fos.close();
     }
 
     @Override

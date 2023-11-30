@@ -30,7 +30,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         // 메타 데이터
         if (header.getType() == Header.TYPE_META) {
             FileSpec fs = new FileSpec(data);
-            fileSize = fs.getSize();
+            fileSize = fs.getOriginalFileSize();
             doEncrypt = fs.isEncrypted();
 
             if(doEncrypt && cipher == null) {
@@ -49,7 +49,14 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             byte[] plain = new byte[len];
             data.readBytes(plain);
 
-            byte[] enc = transferred == fileSize ? cipher.doFinal(plain) : cipher.update(plain);
+            byte[] enc;
+            if( header.isEof() || transferred == fileSize ) {
+                enc = cipher.doFinal(plain);
+                header.setEof(true);
+            } else {
+                enc = cipher.update(plain);
+            }
+
             ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(enc);
             td.setDataAndLength(buf); // 암호화 후 데이터 길이가 달라질 수 있음
             buf.release();

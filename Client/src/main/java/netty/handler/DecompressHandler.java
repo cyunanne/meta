@@ -16,10 +16,6 @@ import java.nio.ByteBuffer;
 public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
     private boolean doCompress = false;
-    private long fileSize = 0L;
-    private long finalLength = 0L;
-    private int compressionLevel = 3;
-
     private Decompressor decomp;
     private ByteBuf buf;
     private ByteBuffer bufNio;
@@ -30,7 +26,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         // 메타 데이터
         if(msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
-            fileSize = fs.getSize();
             doCompress = fs.isCompressed();
 
             // init decompressor
@@ -40,7 +35,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
                 buf = Unpooled.directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-
                 decomp = new Decompressor();
             }
 
@@ -57,13 +51,15 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             buf.clear();
             bufNio.clear();
 
-            // 됨..222 이게 젤 빠른듯
-            decomp.decompress(data, bufNio);
-            buf.writerIndex(bufNio.position());
-            finalLength += buf.readableBytes();
+            int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
+            buf.ensureWritable(writableLength);
+            bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+
+            int idx = decomp.decompress(data, bufNio);
+            buf.writerIndex(idx);
             td.setDataAndLength(buf);
 
-            if(finalLength == fileSize) {
+            if(header.isEof()) {
                 buf.release();
                 decomp.setFinalize(true);
             }

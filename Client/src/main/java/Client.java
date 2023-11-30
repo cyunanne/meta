@@ -38,7 +38,7 @@ public class Client {
 
         ft.close();
         scanner.close();
-        System.out.println("Shutdown Program...");
+        System.out.println("Shutdown...");
     }
 
     private static boolean isFileExist(String filePath) {

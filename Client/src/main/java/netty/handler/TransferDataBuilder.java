@@ -15,13 +15,15 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
 
         // 메타 데이터
         if(msg instanceof FileSpec) {
-            FileSpec sf = (FileSpec) msg;
-            ByteBuf buf = sf.toByteBuf();
+            FileSpec fs = (FileSpec) msg;
+            ByteBuf buf = fs.toByteBuf();
 
-            int headerType = sf.getSize() > 0 ? Header.CMD_PUT : Header.CMD_GET;
-            Header header = new Header(Header.TYPE_META, headerType, false, buf.readableBytes());
+            int headerCmd = fs.getOriginalFileSize() > 0 ? Header.CMD_PUT : Header.CMD_GET;
+            Header header = new Header(Header.TYPE_META)
+                                .setCmd(headerCmd)
+                                .setLength(buf.readableBytes());
+
             TransferData td = new TransferData(header, buf);
-
             ctx.writeAndFlush(td);
         }
 
