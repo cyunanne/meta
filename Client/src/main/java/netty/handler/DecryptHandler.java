@@ -24,11 +24,12 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         // 메타 데이터 FileSpec 생성 및 전달
-        if(header.getType() == Header.TYPE_META) {
+        if (header.getType() == Header.TYPE_META) {
             FileSpec fs = new FileSpec(byteBuf);
             doDecrypt = fs.isEncrypted();
 
-            if(doDecrypt) {
+            if (doDecrypt) {
+                System.out.println("Decrypting...");
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
             }
 
@@ -42,7 +43,12 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             byte[] enc = new byte[len];
             byteBuf.readBytes(enc);
 
-            byte[] plain = header.isEof() ? cipher.doFinal(enc) : cipher.update(enc);
+            byte[] plain;
+            if (header.isEof()) {
+                plain = cipher.doFinal(enc);
+            } else {
+                plain = cipher.update(enc);
+            }
             ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(plain);
             td.setDataAndLength(buf);
             buf.release();

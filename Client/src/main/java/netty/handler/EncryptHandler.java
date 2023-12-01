@@ -33,7 +33,8 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             fileSize = fs.getOriginalFileSize();
             doEncrypt = fs.isEncrypted();
 
-            if(doEncrypt && cipher == null) {
+            if (doEncrypt && cipher == null) {
+                System.out.println("Encrypting...");
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey());
                 fs.setIv(cipher.getIv());
@@ -50,7 +51,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             data.readBytes(plain);
 
             byte[] enc;
-            if( header.isEof() || transferred == fileSize ) {
+            if (header.isEof() || transferred == fileSize) {
                 enc = cipher.doFinal(plain);
                 header.setEof(true);
             } else {

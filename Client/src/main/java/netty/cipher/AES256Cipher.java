@@ -31,8 +31,6 @@ public class AES256Cipher {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("cipher created");
     }
 
     public byte[] update(byte[] bytes) {
