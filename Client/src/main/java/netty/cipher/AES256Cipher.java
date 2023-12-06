@@ -1,11 +1,9 @@
 package netty.cipher;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -85,5 +83,13 @@ public class AES256Cipher {
 
     public void setIv(byte[] iv) {
         this.iv = iv;
+    }
+
+    public void doFinal(ByteBuffer in, ByteBuffer out) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+        cipher.doFinal(in, out);
+    }
+
+    public void update(ByteBuffer in, ByteBuffer out) throws ShortBufferException {
+        cipher.update(in, out);
     }
 }

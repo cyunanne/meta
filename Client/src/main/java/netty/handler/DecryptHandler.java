@@ -10,9 +10,11 @@ import netty.common.Header;
 import netty.common.TransferData;
 
 import javax.crypto.Cipher;
+import java.nio.ByteBuffer;
 
 public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
+    private ByteBuf plain;
     private boolean doDecrypt = false;
     private AES256Cipher cipher;
 
@@ -21,16 +23,17 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
-        ByteBuf byteBuf = td.getData();
+        ByteBuf data = td.getData();
 
         // 메타 데이터 FileSpec 생성 및 전달
         if (header.getType() == Header.TYPE_META) {
-            FileSpec fs = new FileSpec(byteBuf);
+            FileSpec fs = new FileSpec(data);
             doDecrypt = fs.isEncrypted();
 
-            if (doDecrypt) {
+            if (doDecrypt && cipher == null) {
                 System.out.println("Decrypting...");
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
+                plain = Unpooled.directBuffer(Short.MAX_VALUE);
             }
 
             ctx.fireChannelRead(fs);
@@ -39,19 +42,22 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
         // 파일 데이터 복호화
         else if (doDecrypt && header.getType() == Header.TYPE_DATA) {
-            int len = byteBuf.readableBytes();
-            byte[] enc = new byte[len];
-            byteBuf.readBytes(enc);
+            int len = header.getLength();
 
-            byte[] plain;
+            plain.clear();
+            plain.ensureWritable(len + 16);
+            ByteBuffer pNio = plain.internalNioBuffer(0, plain.writableBytes());
+
             if (header.isEof()) {
-                plain = cipher.doFinal(enc);
+                cipher.doFinal(data.nioBuffer(), pNio);
+                header.setEof(true);
+                cipher = null;
             } else {
-                plain = cipher.update(enc);
+                cipher.update(data.nioBuffer(), pNio);
             }
-            ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(plain);
-            td.setDataAndLength(buf);
-            buf.release();
+
+            plain.writerIndex(pNio.position());
+            td.setDataAndLength(plain);
         }
 
         ctx.fireChannelRead(td);

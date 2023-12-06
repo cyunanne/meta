@@ -5,20 +5,20 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import io.netty.util.ReferenceCountUtil;
 import netty.cipher.AES256Cipher;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import javax.crypto.Cipher;
+import java.nio.ByteBuffer;
 
 public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
     private long fileSize = 0L;
     private long transferred = 0L;
     private boolean doEncrypt = false;
-
+    private ByteBuf enc;
     private AES256Cipher cipher;
 
     @Override
@@ -34,8 +34,9 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             fileSize = fs.getOriginalFileSize();
             doEncrypt = fs.isEncrypted();
 
-            if (doEncrypt) {
+            if (doEncrypt && cipher == null) {
                 System.out.println("Encrypting...");
+                enc = Unpooled.directBuffer(Short.MAX_VALUE);
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey());
                 fs.setIv(cipher.getIv());
@@ -48,25 +49,29 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             int len = header.getLength();
             transferred += len;
 
-            byte[] plain = new byte[len];
-            data.readBytes(plain);
+            enc.clear();
+            enc.ensureWritable(len + 16);
+            ByteBuffer encNio = enc.internalNioBuffer(0, enc.writableBytes());
 
-            byte[] enc;
             if (header.isEof() || transferred == fileSize) {
-                enc = cipher.doFinal(plain);
                 header.setEof(true);
-                transferred = 0L;
+                cipher.doFinal(data.nioBuffer(), encNio);
+                clearVariables();
             } else {
-                enc = cipher.update(plain);
+                cipher.update(data.nioBuffer(), encNio);
             }
 
-            ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(enc);
-            td.setDataAndLength(buf); // 암호화 후 데이터 길이가 달라질 수 있음
-            ReferenceCountUtil.release(buf);
+            enc.writerIndex(encNio.position());
+            td.setDataAndLength(enc);
         }
 
         ctx.writeAndFlush(td);
     }
 
-}
+    private void clearVariables() {
+        cipher = null;
+        doEncrypt = false;
+        transferred = 0L;
+    }
 
+}
