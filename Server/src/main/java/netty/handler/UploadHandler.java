@@ -4,11 +4,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
+import netty.common.FileUtils;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
@@ -38,13 +40,18 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
                 // upload
                 case Header.CMD_PUT:
+                    FileUtils.mkdir(filePath);
                     fos = new FileOutputStream(filePath);
                     new ObjectOutputStream(fos).writeObject(filespec); // 메타 데이터 저장
                     break;
 
                 // download
                 case Header.CMD_GET:
-                    ctx.writeAndFlush(filePath);
+                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
+                    for(int i=0; i<list.size(); i++) {
+                        String curFile = list.get(i);
+                        ctx.writeAndFlush(curFile);
+                    }
                     break;
             }
         }

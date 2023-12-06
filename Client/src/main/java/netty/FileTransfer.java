@@ -32,7 +32,6 @@ public class FileTransfer {
         try {
             bootstrap.handler(new FileUploadInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
-            System.out.println("Upload Started.");
 
             // 파일 정보 전송
             FileSpec fs = new FileSpec(filePath);
@@ -42,8 +41,6 @@ public class FileTransfer {
             // 파일 전송 (전송완료 후 서버에서 채널 종료)
             channel.writeAndFlush(filePath).addListener(ChannelFutureListener.CLOSE);
             channel.closeFuture().sync();
-
-            System.out.println("Upload Succeed.");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -60,13 +57,9 @@ public class FileTransfer {
             bootstrap.handler(new FileDownloadInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
 
-            System.out.println("Download Started.");
-
             // 파일 정보(파일명) 전송
             channel.writeAndFlush(new FileSpec().setFilePath(filePath));
             channel.closeFuture().sync();
-
-            System.out.println("Download Complete.");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

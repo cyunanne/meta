@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
+import netty.common.FileUtils;
 import netty.common.Header;
 import netty.common.TransferData;
 
@@ -25,7 +26,9 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
         // 메타 데이터
         if(msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
-            fos = new FileOutputStream(fs.getFilePath());
+            String filePath = fs.getFilePath();
+            FileUtils.mkdir(filePath);
+            fos = new FileOutputStream(filePath);
             return;
         }
 
@@ -38,6 +41,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             fos.getChannel().write(byteBuf.nioBuffer());
 
             if( header.isEof() ) {
+                fos.close();
                 ctx.close(); // 채널종료
             }
         }

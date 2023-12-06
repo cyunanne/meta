@@ -1,6 +1,9 @@
 import netty.FileTransfer;
+import netty.common.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client {
@@ -14,7 +17,7 @@ public class Client {
     private static boolean doCompress = false;
     private static String filePath = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FileTransfer ft = new FileTransfer("localhost", 8889);
         Scanner scanner = new Scanner(System.in);
 
@@ -29,8 +32,26 @@ public class Client {
             if(command == SIG_QUIT) break;
 
             switch (command) {
-                case SIG_PUT: ft.upload(filePath, doEncrypt, doCompress); break;
-                case SIG_GET: ft.download(filePath); break;
+                case SIG_PUT:
+                    System.out.println("Upload Started.");
+
+                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
+                    for(int i=0; i<list.size(); i++) {
+                        String curFile = list.get(i);
+                        System.out.println("[" + (i+1) + "/" + list.size() + "]" + curFile + " 업로드 중");
+                        ft.upload(curFile, doEncrypt, doCompress);
+                    }
+                    
+                    System.out.println("Upload Succeed.");
+                    break;
+
+                case SIG_GET:
+                    System.out.println("Download Started.");
+
+                    ft.download(filePath);
+
+                    System.out.println("Download Complete.");
+                    break;
                 case SIG_IGNORE: continue;
                 default: System.out.println("메시지 파싱 오류");
             }

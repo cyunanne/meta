@@ -18,6 +18,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
 
         try {
+
             String filePath = (String) msg;
             FileInputStream fis = new FileInputStream(filePath);
 

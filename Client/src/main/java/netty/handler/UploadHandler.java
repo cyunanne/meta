@@ -15,7 +15,7 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
         super.connect(ctx, remoteAddress, localAddress, promise);
-        System.out.println("Channel Connected.");
+//        System.out.println("Channel Connected.");
     }
 
     @Override
