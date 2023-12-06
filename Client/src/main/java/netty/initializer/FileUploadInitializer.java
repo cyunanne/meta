@@ -3,12 +3,8 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.compression.ZstdEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import netty.handler.*;
-import netty.test.SenderTest;
-import netty.test.Td2Tdc;
-import netty.test.TestHandler;
 
 public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
 
