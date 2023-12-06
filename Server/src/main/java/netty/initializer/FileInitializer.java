@@ -20,6 +20,7 @@ public class FileInitializer extends ChannelInitializer<SocketChannel> {
 
         // Upload (inbound)
         pipeline.addLast(new Parser());
+        pipeline.addLast(new Distributor());
         pipeline.addLast(new UploadHandler());    // file save
 
     }
