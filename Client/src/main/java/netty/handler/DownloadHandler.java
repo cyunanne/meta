@@ -30,6 +30,9 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             String filePath = fs.getFilePath();
             FileUtils.mkdir(filePath);
 
+            System.out.println("donwload : " + filePath +
+                    " (" + fs.getOriginalFileSize() + " bytes)");
+
             fos = new FileOutputStream(filePath);
             isFinalFile = fs.isEndOfFileList();
 
