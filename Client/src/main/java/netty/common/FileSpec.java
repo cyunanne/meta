@@ -15,7 +15,7 @@ public class FileSpec implements Serializable {
     private long currentFileSize = 0L;
     private byte[] key;
     private byte[] iv;
-    private boolean endOfFileList = true;
+    private boolean endOfFileList = false;
     private boolean encrypted = false;
     private boolean compressed = false;
 
