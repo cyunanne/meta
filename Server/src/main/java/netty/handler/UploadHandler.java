@@ -3,6 +3,7 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
@@ -47,11 +48,7 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
                 // download
                 case Header.CMD_GET:
-//                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
-//                    for(int i=0; i<list.size(); i++) {
-//                        String curFile = list.get(i);
-                        ctx.writeAndFlush(filePath);
-//                    }
+                    ctx.writeAndFlush(filePath);
                     break;
             }
         }
@@ -61,11 +58,13 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
             fos.getChannel().write(byteBuf.nioBuffer());
 
             if(header.isEof()) {
+                fos.close();
                 ctx.close();
             }
         }
 
-        byteBuf.release();
+        ReferenceCountUtil.release(byteBuf);
+        ReferenceCountUtil.release(msg);
     }
 
     @Override

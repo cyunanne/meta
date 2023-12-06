@@ -2,6 +2,7 @@ package netty.handler;
 
 import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -42,7 +43,8 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 System.out.println("Compressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
-                buf = ctx.alloc().directBuffer(bufferSize);
+                buf = Unpooled.directBuffer(bufferSize);
+//                buf = ctx.alloc().directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 comp = new Compressor(bufNio, compressionLevel);
             }
@@ -64,6 +66,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             if(fs.getOriginalFileSize() == compressedLength) {
                 header.setEof(true);
                 buf.release();
+                compressedLength = 0L;
             }
         }
 

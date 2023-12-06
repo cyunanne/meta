@@ -3,6 +3,7 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
@@ -56,7 +57,8 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
-        byteBuf.release();
+        ReferenceCountUtil.release(byteBuf);
+        ReferenceCountUtil.release(msg);
     }
 
     @Override

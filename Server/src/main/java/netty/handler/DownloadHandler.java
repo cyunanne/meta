@@ -30,7 +30,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
                 // 메타 데이터 전송
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 FileSpec fs = (FileSpec) ois.readObject();
-                fs.setCurrentFileSize(new File(curFile).length());
+                fs.setCurrentFileSize(FileUtils.getSize(curFile));
 
                 // 마지막 파일 확인
                 boolean isLastFile = (i == list.size() - 1);
