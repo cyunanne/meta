@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
+    private boolean isFinalFile = false;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -28,7 +29,10 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             FileSpec fs = (FileSpec) msg;
             String filePath = fs.getFilePath();
             FileUtils.mkdir(filePath);
+
             fos = new FileOutputStream(filePath);
+            isFinalFile = fs.isEndOfFileList();
+
             return;
         }
 
@@ -42,7 +46,10 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
             if( header.isEof() ) {
                 fos.close();
-                ctx.close(); // 채널종료
+
+                if( isFinalFile ) {
+                    ctx.close(); // 채널종료
+                }
             }
         }
 

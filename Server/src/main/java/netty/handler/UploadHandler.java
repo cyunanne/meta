@@ -47,11 +47,11 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
                 // download
                 case Header.CMD_GET:
-                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
-                    for(int i=0; i<list.size(); i++) {
-                        String curFile = list.get(i);
-                        ctx.writeAndFlush(curFile);
-                    }
+//                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
+//                    for(int i=0; i<list.size(); i++) {
+//                        String curFile = list.get(i);
+                        ctx.writeAndFlush(filePath);
+//                    }
                     break;
             }
         }

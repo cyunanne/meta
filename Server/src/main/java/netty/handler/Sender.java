@@ -25,6 +25,7 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
         } else if(header.getType() == Header.TYPE_DATA) {
             if( transferred == fileSize ) {
                 header.setEof(true);
+                transferred = 0L;
             }
         }
 
