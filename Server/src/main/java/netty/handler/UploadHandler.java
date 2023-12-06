@@ -11,14 +11,10 @@ import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
-
-    private long fileSize = 0L;
-    private long received = 0L;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

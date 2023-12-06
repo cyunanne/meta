@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
+import io.netty.util.ReferenceCountUtil;
 import netty.cipher.AES256Cipher;
 import netty.common.FileSpec;
 import netty.common.Header;
@@ -61,7 +62,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
             ByteBuf buf = Unpooled.directBuffer(plain.length).writeBytes(enc);
             td.setDataAndLength(buf); // 암호화 후 데이터 길이가 달라질 수 있음
-            buf.release();
+            ReferenceCountUtil.release(buf);
         }
 
         ctx.writeAndFlush(td);
