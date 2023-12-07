@@ -15,7 +15,6 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
         super.connect(ctx, remoteAddress, localAddress, promise);
-//        System.out.println("Channel Connected.");
     }
 
     @Override
@@ -35,6 +34,8 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
                 ChunkedStream chunkedStream = new ChunkedStream(fis);
                 ctx.writeAndFlush(chunkedStream);
 
+                fis.close();
+                chunkedStream.close();
             } catch (FileNotFoundException e) {
                 System.out.println("파일을 찾을 수 없습니다.");
                 ctx.close();
@@ -43,11 +44,6 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
             }
         }
 
-    }
-
-    @Override
-    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-        System.out.println("File Channel Closed.");
     }
 
 }

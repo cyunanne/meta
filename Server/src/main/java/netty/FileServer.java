@@ -6,6 +6,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import netty.initializer.FileInitializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 
@@ -15,6 +17,8 @@ public class FileServer {
     private final EventLoopGroup bossEventLoopGroup; // Listen ServerSocket
     private final EventLoopGroup workerEventLoopGroup;
     private final ServerBootstrap bootstrap;
+
+    private static final Logger logger = LogManager.getLogger(FileServer.class);
 
     public FileServer(int port) {
         this.port = port;
@@ -33,7 +37,7 @@ public class FileServer {
         try {
             // 채널 연결 대기
             Channel channel = bootstrap.bind(new InetSocketAddress(port)).sync().channel();
-            System.out.println("Server Started.");
+            logger.info("Server Started. Listening port: " + port);
 
             channel.closeFuture().sync();
 

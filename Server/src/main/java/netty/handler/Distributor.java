@@ -4,21 +4,26 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import netty.FileServer;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileOutputStream;
 
 public class Distributor extends ChannelInboundHandlerAdapter {
 
+    private static final Logger logger = LogManager.getLogger(Distributor.class);
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("File Channel Connected : " + ctx.channel().remoteAddress());
+        logger.info("File Channel Connected : " + ctx.channel().remoteAddress());
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
@@ -50,8 +55,8 @@ public class Distributor extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Channel Closed : " + ctx.channel().remoteAddress());
+    public void channelInactive(ChannelHandlerContext ctx) {
+        logger.info("Channel Closed : " + ctx.channel().remoteAddress());
     }
 
     @Override
