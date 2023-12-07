@@ -24,7 +24,7 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         // 파일 정보 수신
-        if(header.getType() == Header.TYPE_META) {
+        if(header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
             FileUtils.mkdir(filePath);

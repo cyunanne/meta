@@ -25,7 +25,8 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
 
         try {
 
-            List<String> list = FileUtils.getFilePathList((String) msg); // 파일 목록
+            String filePath = (String) msg;
+            List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
             for(int i=0; i<list.size(); i++) {
                 String curFile = list.get(i);
                 FileInputStream fis = new FileInputStream(curFile);

@@ -18,12 +18,12 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
         Header header = td.getHeader();
         transferred += header.getLength();
 
-        if(header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             FileSpec fs = new FileSpec(td.getData());
             this.fileSize = fs.getCurrentFileSize();
 
-        } else if(header.getType() == Header.TYPE_DATA) {
-            if( transferred == fileSize ) {
+        } else if (header.isData()) {
+            if (transferred == fileSize) {
                 header.setEof(true);
                 transferred = 0L;
             }

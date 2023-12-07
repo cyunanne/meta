@@ -30,7 +30,7 @@ public class Distributor extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         // 파일 정보 수신
-        if(header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
 
@@ -49,7 +49,7 @@ public class Distributor extends ChannelInboundHandlerAdapter {
         }
         
         // 파일 데이터 전달
-        else if(header.getType() == Header.TYPE_DATA) {
+        else if (header.isData()) {
             ctx.fireChannelRead(msg);
         }
     }
