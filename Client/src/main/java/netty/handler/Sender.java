@@ -17,13 +17,13 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
     protected void encode(ChannelHandlerContext ctx, TransferData td, List<Object> list) {
         Header header = td.getHeader();
 
-        if(header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             FileSpec fs = new FileSpec(td.getData());
             this.fileSize = fs.getOriginalFileSize();
 
-        } else if(header.getType() == Header.TYPE_DATA) {
+        } else if (header.isData()) {
             transferred += header.getLength();
-            if( transferred == fileSize ) {
+            if (transferred == fileSize) {
                 header.setEof(true);
                 transferred = 0L;
             }

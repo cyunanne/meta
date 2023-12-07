@@ -47,7 +47,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         Header header = td.getHeader();
         ByteBuf data = td.getData();
 
-        if (doCompress && header.getType() == Header.TYPE_DATA) {
+        if (doCompress && header.isData()) {
             buf.clear();
             bufNio.clear();
 

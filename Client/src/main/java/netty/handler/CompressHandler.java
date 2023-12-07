@@ -34,7 +34,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         ByteBuf data = td.getData();
 
         // 메타 데이터
-        if (header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             fs = new FileSpec(data);
             doCompress = fs.isCompressed();
 
@@ -51,7 +51,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         }
 
         // 데이터 압축
-        else if(doCompress && header.getType() == Header.TYPE_DATA) {
+        else if (doCompress && header.isData()) {
             int len = header.getLength();
             compressedLength += len;
 

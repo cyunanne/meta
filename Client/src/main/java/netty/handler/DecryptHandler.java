@@ -26,7 +26,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
         ByteBuf data = td.getData();
 
         // 메타 데이터 FileSpec 생성 및 전달
-        if (header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             FileSpec fs = new FileSpec(data);
             doDecrypt = fs.isEncrypted();
 
@@ -41,7 +41,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
         }
 
         // 파일 데이터 복호화
-        else if (doDecrypt && header.getType() == Header.TYPE_DATA) {
+        else if (doDecrypt && header.isData()) {
             int len = header.getLength();
 
             plain.clear();

@@ -29,7 +29,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         ByteBuf data = td.getData();
 
         // 메타 데이터
-        if (header.getType() == Header.TYPE_META) {
+        if (header.isMetadata()) {
             FileSpec fs = new FileSpec(data);
             fileSize = fs.getOriginalFileSize();
             doEncrypt = fs.isEncrypted();
@@ -45,7 +45,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         }
 
         // 파일 데이터 암호화
-        if (doEncrypt && header.getType() == Header.TYPE_DATA) {
+        if (doEncrypt && header.isData()) {
             int len = header.getLength();
             transferred += len;
 
