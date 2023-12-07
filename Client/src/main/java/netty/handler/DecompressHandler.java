@@ -18,7 +18,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     private boolean doCompress = false;
     private Decompressor decomp;
     private ByteBuf buf;
-    private ByteBuffer bufNio;
+//    private ByteBuffer bufNio;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -34,7 +34,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
                 buf = Unpooled.directBuffer(bufferSize);
-                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+//                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 decomp = new Decompressor();
             }
 
@@ -49,19 +49,20 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
         if (doCompress && header.isData()) {
             buf.clear();
-            bufNio.clear();
+//            bufNio.clear();
 
             int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
             buf.ensureWritable(writableLength);
-            bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+            ByteBuffer bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
             int idx = decomp.decompress(data, bufNio);
             buf.writerIndex(idx);
-            td.setDataAndLength(buf);
+            td.setDataAndLength(buf.duplicate());
 
             if(header.isEof()) {
                 buf.release();
                 decomp.setFinalize(true);
+                decomp = null;
             }
         }
         ctx.fireChannelRead(td);

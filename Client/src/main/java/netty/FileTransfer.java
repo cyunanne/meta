@@ -20,17 +20,16 @@ public class FileTransfer {
     public FileTransfer(String host, int port) {
         this.host = host;
         this.port = port;
-
-        eventLoopGroup = new NioEventLoopGroup();
-        bootstrap = new Bootstrap().group(eventLoopGroup);
-        bootstrap.channel(NioSocketChannel.class);
     }
 
     public void upload(String filePath, boolean doEncrypt, boolean doCompress) {
+        eventLoopGroup = new NioEventLoopGroup();
+        bootstrap = new Bootstrap().group(eventLoopGroup);
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.handler(new FileUploadInitializer());
         Channel channel = null;
 
         try {
-            bootstrap.handler(new FileUploadInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
 
             // 파일 정보 전송
@@ -47,15 +46,19 @@ public class FileTransfer {
 
         } finally {
             if(channel != null) channel.close();
+            eventLoopGroup.shutdownGracefully();
         }
     }
 
     public void download(String filePath) {
-        Channel channel = null;
+        eventLoopGroup = new NioEventLoopGroup();
+        bootstrap = new Bootstrap().group(eventLoopGroup);
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.handler(new FileDownloadInitializer());
+//        Channel channel = null;
 
         try {
-            bootstrap.handler(new FileDownloadInitializer());
-            channel = bootstrap.connect(host, port).sync().channel();
+            Channel channel = bootstrap.connect(host, port).sync().channel();
 
             // 파일 정보(파일명) 전송
             channel.writeAndFlush(new FileSpec().setFilePath(filePath));
@@ -65,7 +68,8 @@ public class FileTransfer {
             System.out.println(e.getMessage());
 
         } finally {
-            if(channel != null) channel.close();
+//            if(channel != null) channel.close();
+            eventLoopGroup.shutdownGracefully();
         }
     }
 

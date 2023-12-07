@@ -57,7 +57,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             }
 
             plain.writerIndex(pNio.position());
-            td.setDataAndLength(plain);
+            td.setDataAndLength(plain.duplicate());
         }
 
         ctx.fireChannelRead(td);

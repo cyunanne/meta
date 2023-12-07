@@ -2,6 +2,8 @@ package netty.handler;
 
 import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
@@ -45,6 +47,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
                 buf = Unpooled.directBuffer(bufferSize);
 //                buf = ctx.alloc().directBuffer(bufferSize);
+//                buf = PooledByteBufAllocator.DEFAULT.directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 comp = new Compressor(bufNio, compressionLevel);
             }
@@ -60,13 +63,13 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
             comp.compress(data);
             buf.writerIndex(bufNio.position());
-            td.setDataAndLength(buf);
+            td.setDataAndLength(buf.duplicate());
 
             // 마지막 블록 압축 후 압축 결과 서버에 알리기 -> 마지막 블록 eof 설정
             if(fs.getOriginalFileSize() == compressedLength) {
                 header.setEof(true);
-                buf.release();
                 compressedLength = 0L;
+                buf.release();
             }
         }
 

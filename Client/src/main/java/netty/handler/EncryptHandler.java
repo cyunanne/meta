@@ -62,7 +62,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             }
 
             enc.writerIndex(encNio.position());
-            td.setDataAndLength(enc);
+            td.setDataAndLength(enc.duplicate());
         }
 
         ctx.writeAndFlush(td);
