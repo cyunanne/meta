@@ -9,16 +9,14 @@ import netty.common.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.List;
 
 public class DownloadHandler extends ChannelOutboundHandlerAdapter {
 
-    private static final Logger logger = LogManager.getLogger(Distributor.class);
+    private static final Logger logger = LogManager.getLogger(DownloadHandler.class);
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
@@ -46,23 +44,19 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
                 ChunkedStream chunkedStream = new ChunkedStream(fis);
                 ctx.writeAndFlush(chunkedStream);
 
-                // 스트림 닫기
-                fis.close();
-                ois.close();
-                chunkedStream.close();
             }
 
         } catch (FileNotFoundException e) {
+            logger.warn("No such file or directory");
+            ctx.writeAndFlush("파일 또는 폴더를 찾을 수 없습니다.");
             ctx.close();
-            logger.warn("파일을 찾을 수 없습니다.");
-        } catch (IOException e) {
-            ctx.close();
-            throw new RuntimeException(e);
+
         } catch (ClassNotFoundException e) {
+            logger.warn("Can not found class");
             ctx.close();
-            logger.warn("클래스를 찾을 수 없습니다.");
-            throw new RuntimeException(e);
+
         } catch (Exception e) {
+            ctx.close();
             throw new RuntimeException(e);
         }
 

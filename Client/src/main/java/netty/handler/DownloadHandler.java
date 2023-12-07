@@ -3,13 +3,13 @@ package netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
 import netty.common.TransferData;
 
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
@@ -25,13 +25,13 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        // 메타 데이터
+        /* 메타 데이터 */
         if(msg instanceof FileSpec) {
             FileSpec fs = (FileSpec) msg;
             String filePath = fs.getFilePath();
             FileUtils.mkdir(filePath);
 
-            System.out.println("donwload : " + filePath +
+            System.out.println("donwload: " + filePath +
                     " (" + fs.getOriginalFileSize() + " bytes)");
 
             fos = new FileOutputStream(filePath);
@@ -40,12 +40,18 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        // 파일 데이터
+        /* 일반 데이터 */
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
-        if (fos != null) {
+        // 메세지
+        if (header.isMessage()) {
+            String message = byteBuf.toString(Charset.defaultCharset());
+            System.out.println("Server: " + message);
+
+        // 파일
+        } else if (fos != null && header.isData()) {
             fos.getChannel().write(byteBuf.nioBuffer());
 
             if( header.isEof() ) {
@@ -57,8 +63,9 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
-        ReferenceCountUtil.release(byteBuf);
-        ReferenceCountUtil.release(msg);
+//        ReferenceCountUtil.release(byteBuf);
+//        ReferenceCountUtil.release(msg);
+        td.destory();
     }
 
     @Override
