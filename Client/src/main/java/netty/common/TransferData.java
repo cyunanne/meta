@@ -2,6 +2,7 @@ package netty.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.ReferenceCountUtil;
 
 public class TransferData {
     private Header header;
@@ -11,6 +12,10 @@ public class TransferData {
         this.header = header;
         this.data = byteBuf;
         this.header.setLength(byteBuf.readableBytes());
+    }
+
+    public TransferData(Header header, String msg) {
+        this(header, Unpooled.wrappedBuffer(msg.getBytes()));
     }
 
     public TransferData(FileSpec fs) {

@@ -13,6 +13,10 @@ public class TransferData {
         this.header.setLength(byteBuf.readableBytes());
     }
 
+    public TransferData(Header header, String msg) {
+        this(header, Unpooled.wrappedBuffer(msg.getBytes()));
+    }
+
     public TransferData(FileSpec fs) {
         this(new Header(Header.TYPE_META), fs.toByteBuf());
     }
