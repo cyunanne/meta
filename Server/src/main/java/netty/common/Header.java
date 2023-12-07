@@ -11,6 +11,7 @@ public class Header {
     public static final int TYPE_SIG = 0x00;
     public static final int TYPE_META = 0x01;
     public static final int TYPE_DATA = 0x02;
+    public static final int TYPE_MSG = 0x03;
 
     public static final int CMD_PUT = 0x00;
     public static final int CMD_GET = 0x01;
@@ -134,5 +135,17 @@ public class Header {
     public Header setOk(boolean ok) {
         this.ok = ok;
         return this;
+    }
+
+    public boolean isMetadata() {
+        return this.type == TYPE_META;
+    }
+
+    public boolean isData() {
+        return this.type == TYPE_DATA;
+    }
+
+    public boolean isMessage() {
+        return this.type == TYPE_MSG;
     }
 }
