@@ -7,8 +7,12 @@ import io.netty.channel.ChannelPromise;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
+
+    private static final Logger logger = LogManager.getLogger(TransferDataBuilder.class);
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
@@ -34,9 +38,18 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
             TransferData td = new TransferData(header, buf);
             ctx.writeAndFlush(td);
 
-        // 그 외
+        // 메시지
+        } else if(msg instanceof String){
+            String message = (String) msg;
+            Header header = new Header(Header.TYPE_MSG)
+                                .setCmd(Header.CMD_GET)
+                                .setLength(message.length());
+
+            TransferData td = new TransferData(header, message);
+            ctx.writeAndFlush(td);
+
         } else {
-            ctx.writeAndFlush(msg);
+            logger.warn("알 수 없는 데이터 타입");
         }
 
     }
