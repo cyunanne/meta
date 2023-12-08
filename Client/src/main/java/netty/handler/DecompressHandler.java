@@ -2,7 +2,6 @@ package netty.handler;
 
 import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
@@ -18,7 +17,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     private boolean doCompress = false;
     private Decompressor decomp;
     private ByteBuf buf;
-//    private ByteBuffer bufNio;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -33,8 +31,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Decompressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
-                buf = Unpooled.directBuffer(bufferSize);
-//                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+                buf = ctx.alloc().directBuffer(bufferSize);
                 decomp = new Decompressor();
             }
 
@@ -49,7 +46,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
         if (doCompress && header.isData()) {
             buf.clear();
-//            bufNio.clear();
 
             int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
             buf.ensureWritable(writableLength);
@@ -62,7 +58,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             if(header.isEof()) {
                 buf.release();
                 decomp.setFinalize(true);
-                decomp = null;
             }
         }
         ctx.fireChannelRead(td);
