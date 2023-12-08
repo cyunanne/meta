@@ -45,7 +45,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
                 buf = Unpooled.directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-//                bufNio = ByteBuffer.allocateDirect(bufferSize);
                 comp = new Compressor(bufNio, compressionLevel);
             }
         }
@@ -57,25 +56,14 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
             buf.clear();
             bufNio.clear();
-//            bufNio = ByteBuffer.allocateDirect(len);
 
             comp.compress(data);
 
             buf.writerIndex(bufNio.position());
-            td.setDataAndLength(buf.retain());
-
-            finalLen += bufNio.position();
-
-//            bufNio.flip();
-//            ByteBuf buf = Unpooled.wrappedBuffer(bufNio);
-//            td.setDataAndLength(buf);
-
-            System.out.println("compressed: " + compressed);
-            System.out.println("final: " + finalLen);
+            td.setDataAndLength(buf.duplicate());
 
             // 마지막 블록 압축 후 압축 결과 서버에 알리기 -> 마지막 블록 eof 설정
             if(fs.getOriginalFileSize() == compressed) {
-//                comp.setFinalize(true);
                 header.setEof(true);
                 compressed = 0L;
                 finalLen = 0L;

@@ -57,7 +57,6 @@ public class Client {
             }
         }
 
-//        ft.close();
         scanner.close();
         System.out.println("Shutdown...");
     }
