@@ -29,7 +29,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             doCompress = fs.isCompressed();
 
             // init decompressor
-            if(doCompress) {
+            if(doCompress && decomp == null) {
                 System.out.println("Decompressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
@@ -65,6 +65,14 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 ctx.fireChannelRead(td);
 
             }
+
+            if(header.isEof()) {
+                decomp = null;
+            }
+        }
+
+        else {
+            ctx.fireChannelRead(td);
         }
 
     }

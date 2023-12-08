@@ -19,6 +19,7 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
             ByteBuf buf = fs.toByteBuf();
 
             int headerCmd = fs.getOriginalFileSize() > 0 ? Header.CMD_PUT : Header.CMD_GET;
+            if (fs.isCompressed()) headerCmd = Header.CMD_PUT;
             Header header = new Header(Header.TYPE_META)
                                 .setCmd(headerCmd)
                                 .setLength(buf.readableBytes());

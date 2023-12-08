@@ -40,10 +40,6 @@ public class Header {
         this.length = length;
     }
 
-    public Header(Header header) {
-        this(header.type, header.cmd, header.eof, header.ok, header.length);
-    }
-
     public Header(int type, int cmd, boolean eof, int length) {
         this(type, cmd, eof, true, length);
     }

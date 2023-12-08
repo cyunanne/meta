@@ -35,12 +35,14 @@ public class Client {
                 case SIG_PUT:
                     System.out.println("Upload Started.");
 
-                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
-                    for(int i=0; i<list.size(); i++) {
-                        String curFile = list.get(i);
-                        System.out.println("[" + (i+1) + "/" + list.size() + "]" + curFile + " 업로드 중");
-                        ft.upload(curFile, doEncrypt, doCompress);
-                    }
+//                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
+//                    for(int i=0; i<list.size(); i++) {
+//                        String curFile = list.get(i);
+//                        System.out.println("[" + (i+1) + "/" + list.size() + "]" + curFile + " 업로드 중");
+//                        ft.upload(curFile, doEncrypt, doCompress);
+//                    }
+
+                    ft.upload(filePath, doEncrypt, doCompress);
                     
                     System.out.println("Upload Succeed.");
                     break;

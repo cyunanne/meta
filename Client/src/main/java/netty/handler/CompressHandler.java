@@ -24,8 +24,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
     private ByteBuf buf;
     private ByteBuffer bufNio;
 
-    private long finalLen = 0L;
-
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
 
@@ -39,7 +37,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             doCompress = fs.isCompressed();
 
             // init compressor
-            if(doCompress) {
+            if(doCompress && comp == null) {
                 System.out.println("Compressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
@@ -66,7 +64,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             if(fs.getOriginalFileSize() == compressed) {
                 header.setEof(true);
                 compressed = 0L;
-                finalLen = 0L;
             }
         }
 

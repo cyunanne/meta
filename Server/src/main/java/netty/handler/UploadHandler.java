@@ -11,11 +11,14 @@ import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
     private ObjectOutputStream oos;
+    private boolean isFinalFile = false;
+    private boolean isCompressed = false;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -28,19 +31,39 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         if(header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
-            FileUtils.mkdir(filePath);
-            fos = new FileOutputStream(filePath);
+            isFinalFile = filespec.isEndOfFileList();
+            isCompressed = filespec.isCompressed();
+
+            if(isCompressed) {
+                filePath += ".zst";
+            } else {
+                FileUtils.mkdir(filePath);
+            }
+
+            if(fos == null) {
+                fos = new FileOutputStream(filePath);
+            }
+
+            // 메타 데이터 저장
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(filespec); // 메타 데이터 저장
+            oos.writeObject(filespec);
         }
 
         // 파일 수신
         if(fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
             if(header.isEof()) {
-                oos.close();
-                fos.close();
-                ctx.close();
+
+                if( !isCompressed ) {
+                    fos.close();
+                    fos = null;
+                }
+
+                if( isFinalFile ) {
+                    oos.close();
+                    ctx.close(); // 채널종료
+                    if(fos != null) fos.close();
+                }
             }
         }
 

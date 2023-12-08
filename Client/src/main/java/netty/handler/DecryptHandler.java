@@ -30,7 +30,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             FileSpec fs = new FileSpec(data);
             doDecrypt = fs.isEncrypted();
 
-            if (doDecrypt && cipher == null) {
+            if (doDecrypt) {
                 System.out.println("Decrypting...");
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
                 plain = Unpooled.directBuffer(Short.MAX_VALUE);
