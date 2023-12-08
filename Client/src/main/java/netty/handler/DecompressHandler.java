@@ -2,6 +2,8 @@ package netty.handler;
 
 import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.buffer.UnpooledDirectByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import netty.common.FileSpec;
@@ -17,6 +19,10 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     private boolean doCompress = false;
     private Decompressor decomp;
     private ByteBuf buf;
+    private ByteBuffer bufNio;
+
+    long before = 0L;
+    long decompressed = 0L;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -31,7 +37,8 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Decompressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
-                buf = ctx.alloc().directBuffer(bufferSize);
+                buf = Unpooled.directBuffer(bufferSize);
+                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 decomp = new Decompressor();
             }
 
@@ -45,20 +52,28 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         ByteBuf data = td.getData();
 
         if (doCompress && header.isData()) {
+
             buf.clear();
+            bufNio.clear();
+
+            before = header.getLength();
+            System.out.println("before: " + before);
 
             int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
             buf.ensureWritable(writableLength);
-            ByteBuffer bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+            bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
-            int idx = decomp.decompress(data, bufNio);
-            buf.writerIndex(idx);
-            td.setDataAndLength(buf.duplicate());
+            decomp.decompress(data, bufNio);
+            buf.writerIndex(bufNio.position());
+            td.setDataAndLength(buf.retain());
 
-            if(header.isEof()) {
-                buf.release();
-                decomp.setFinalize(true);
-            }
+            decompressed += buf.readableBytes();
+            System.out.println("after: " + buf.readableBytes());
+            System.out.println("decompressed: " + decompressed);
+
+//            if(header.isEof()) {
+//                buf.release();
+//            }
         }
         ctx.fireChannelRead(td);
 

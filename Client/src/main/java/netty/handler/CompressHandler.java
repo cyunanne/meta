@@ -2,6 +2,7 @@ package netty.handler;
 
 import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -15,7 +16,7 @@ import java.nio.ByteBuffer;
 public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
     private boolean doCompress = false;
-    private long compressedLength = 0L;
+    private long compressed = 0L;
     private int compressionLevel = 3;
     private FileSpec fs;
 
@@ -23,6 +24,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
     private ByteBuf buf;
     private ByteBuffer bufNio;
 
+    private long finalLen = 0L;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -41,8 +43,9 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 System.out.println("Compressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
-                buf = ctx.alloc().directBuffer(bufferSize);
+                buf = Unpooled.directBuffer(bufferSize);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+//                bufNio = ByteBuffer.allocateDirect(bufferSize);
                 comp = new Compressor(bufNio, compressionLevel);
             }
         }
@@ -50,21 +53,32 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         // 데이터 압축
         else if (doCompress && header.isData()) {
             int len = header.getLength();
-            compressedLength += len;
+            compressed += len;
 
             buf.clear();
             bufNio.clear();
+//            bufNio = ByteBuffer.allocateDirect(len);
 
             comp.compress(data);
+
             buf.writerIndex(bufNio.position());
-            td.setDataAndLength(buf.duplicate());
+            td.setDataAndLength(buf.retain());
+
+            finalLen += bufNio.position();
+
+//            bufNio.flip();
+//            ByteBuf buf = Unpooled.wrappedBuffer(bufNio);
+//            td.setDataAndLength(buf);
+
+            System.out.println("compressed: " + compressed);
+            System.out.println("final: " + finalLen);
 
             // 마지막 블록 압축 후 압축 결과 서버에 알리기 -> 마지막 블록 eof 설정
-            if(fs.getOriginalFileSize() == compressedLength) {
-                comp.setFinalize(true);
+            if(fs.getOriginalFileSize() == compressed) {
+//                comp.setFinalize(true);
                 header.setEof(true);
-                compressedLength = 0L;
-                buf.release();
+                compressed = 0L;
+                finalLen = 0L;
             }
         }
 

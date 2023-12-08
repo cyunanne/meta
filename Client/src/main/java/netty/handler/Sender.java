@@ -29,6 +29,8 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
             }
         }
 
+        System.out.println("Sender transferred: " + transferred);
+
         list.add(header.toByteBuf());
         list.add(td.getData());
     }

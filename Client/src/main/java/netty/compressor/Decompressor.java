@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 public class Decompressor extends ZstdDirectBufferDecompressingStream {
 
     private ByteBuffer buffer;
+//    private boolean isFirstBlock = true;
     public Decompressor() {
         super(ByteBuffer.allocateDirect(0));
     }
@@ -21,10 +22,14 @@ public class Decompressor extends ZstdDirectBufferDecompressingStream {
     public int decompress(ByteBuf src, ByteBuffer bufNio) throws IOException {
         buffer = src.internalNioBuffer(0, src.readableBytes());
 
-        int idx = 0;
-        while( (idx = this.read(bufNio)) == 0 );
+//        if(isFirstBlock) {
+//            isFirstBlock = false;
+//            this.read(bufNio);
+//        }
 
-        return idx;
+        while( this.read(bufNio) != 0 );
+
+        return this.read(bufNio);
     }
 
 }
