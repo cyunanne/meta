@@ -37,7 +37,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             doCompress = fs.isCompressed();
 
             // init compressor
-            if(doCompress && comp == null) {
+            if (doCompress && comp == null) {
                 System.out.println("Compressing...");
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
@@ -60,10 +60,11 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             buf.writerIndex(bufNio.position());
             td.setDataAndLength(buf.duplicate());
 
-            // 마지막 블록 압축 후 압축 결과 서버에 알리기 -> 마지막 블록 eof 설정
-            if(fs.getOriginalFileSize() == compressed) {
+            // 마지막 블록 eof 설정
+            if (fs.getOriginalFileSize() == compressed) {
                 header.setEof(true);
                 compressed = 0L;
+                comp = null;
             }
         }
 

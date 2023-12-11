@@ -19,6 +19,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     private Decompressor decomp;
     private ByteBuf buf;
     private ByteBuffer bufNio;
+    private FileSpec fs;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -55,7 +56,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
             buf.ensureWritable(writableLength);
             bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-
 
             decomp.setBuffer(data);
             while( decomp.decompress(bufNio) ) {

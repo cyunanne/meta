@@ -11,14 +11,13 @@ import netty.common.TransferData;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Path;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
     private ObjectOutputStream oos;
     private boolean isFinalFile = false;
-    private boolean isCompressed = false;
+//    private boolean isCompressed = false;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -28,19 +27,19 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = td.getData();
 
         // 파일 정보 수신
-        if(header.isMetadata()) {
+        if (header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
             isFinalFile = filespec.isEndOfFileList();
-            isCompressed = filespec.isCompressed();
+//            isCompressed = filespec.isCompressed();
 
-            if(isCompressed) {
-                filePath += ".zst";
-            } else {
+//            if (isCompressed) {
+//                filePath = filePath.split("\\\\")[0] + ".zst";
+//            } else {
                 FileUtils.mkdir(filePath);
-            }
+//            }
 
-            if(fos == null) {
+            if (fos == null) {
                 fos = new FileOutputStream(filePath);
             }
 
@@ -50,18 +49,20 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         }
 
         // 파일 수신
-        if(fos != null) {
+        if (fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
             if(header.isEof()) {
 
-                if( !isCompressed ) {
+//                if (!isCompressed) {
+                    ctx.close(); // 채널종료
                     fos.close();
                     fos = null;
-                }
 
-                if( isFinalFile ) {
-                    oos.close();
+//                }
+
+                if (isFinalFile) {
                     ctx.close(); // 채널종료
+                    if(oos != null) oos.close();
                     if(fos != null) fos.close();
                 }
             }

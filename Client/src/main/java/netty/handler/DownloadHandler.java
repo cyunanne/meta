@@ -55,10 +55,10 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
         } else if (fos != null && header.isData()) {
             fos.getChannel().write(byteBuf.nioBuffer());
 
-            if( header.isEof() ) {
+            if (header.isEof()) {
                 fos.close();
 
-                if( isFinalFile ) {
+                if (isFinalFile) {
                     ctx.close(); // 채널종료
                 }
             }
