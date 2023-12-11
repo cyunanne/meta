@@ -15,6 +15,7 @@ public class Header {
 
     public static final int CMD_PUT = 0x00;
     public static final int CMD_GET = 0x01;
+    public static final int CMD_FIN = 0x02;
 
     private static final int TYPE_BIT = 0b1100_0000;
     private static final int CMD_BIT = 0b0010_0000;
@@ -147,5 +148,18 @@ public class Header {
 
     public boolean isMessage() {
         return this.type == TYPE_MSG;
+    }
+
+    public boolean isSignal() {
+        return this.type == TYPE_SIG;
+    }
+
+    public boolean isFin() {
+        return this.cmd == CMD_FIN;
+    }
+
+    public Header setFin() {
+        this.cmd = CMD_FIN;
+        return this;
     }
 }

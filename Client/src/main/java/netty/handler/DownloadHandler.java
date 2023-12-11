@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import netty.FileTransfer;
 import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
@@ -15,53 +16,62 @@ import java.nio.charset.Charset;
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
-    private boolean isFinalFile = false;
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        super.channelActive(ctx);
-        System.out.println("Channel Connected.");
-    }
+    private FileSpec fs;
+    private String filePath;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        /* 메타 데이터 */
+        /* 1. 메타 데이터 */
         if(msg instanceof FileSpec) {
-            FileSpec fs = (FileSpec) msg;
-            String filePath = fs.getFilePath();
+            fs = (FileSpec) msg;
+            filePath = fs.getFilePath();
             FileUtils.mkdir(filePath);
-
-            System.out.println("donwload: " + filePath +
-                    " (" + fs.getOriginalFileSize() + " bytes)");
-
             fos = new FileOutputStream(filePath);
-            isFinalFile = fs.isEndOfFileList();
-
             return;
         }
 
-        /* 일반 데이터 */
+        /* 2. 일반 데이터 */
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
-        // 메세지
+        // 2-1) 메세지
         if (header.isMessage()) {
             String message = byteBuf.toString(Charset.defaultCharset());
-            System.out.println("Server: " + message);
 
-        // 파일
-        } else if (fos != null && header.isData()) {
+            // 에러 메시지
+            if(message.startsWith("error")) {
+                System.out.println(message);
+                ctx.close();
+
+            // 채널 종료 메시지
+            } else if(message.equals("fin")) {
+                ctx.close();
+
+            // 파일 목록
+            } else {
+                new FileTransfer("localhost", 8889).download(message);
+            }
+
+        // 2-2) 파일 데이터
+        } else if (header.isData() && fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
 
             if (header.isEof()) {
                 fos.close();
 
-                if (isFinalFile) {
-                    ctx.close(); // 채널종료
-                }
+                System.out.println("다운로드 성공: " + filePath +
+                        " (" + fs.getOriginalFileSize() + " bytes)");
+
+                ctx.close(); // 채널종료
             }
+
+        // 2-3) signal
+//        } else if (header.isSignal()) {
+//            if(header.isFin()) {
+//                ctx.close();
+//            }
         }
 
         ReferenceCountUtil.release(byteBuf);

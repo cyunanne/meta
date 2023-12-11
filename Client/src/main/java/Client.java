@@ -17,7 +17,7 @@ public class Client {
     private static boolean doCompress = false;
     private static String filePath = null;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         FileTransfer ft = new FileTransfer("localhost", 8889);
         Scanner scanner = new Scanner(System.in);
 
@@ -34,28 +34,19 @@ public class Client {
             switch (command) {
                 case SIG_PUT:
                     System.out.println("Upload Started.");
-
-//                    List<String> list = FileUtils.getFilePathList(filePath); // 파일 목록
-//                    for(int i=0; i<list.size(); i++) {
-//                        String curFile = list.get(i);
-//                        System.out.println("[" + (i+1) + "/" + list.size() + "]" + curFile + " 업로드 중");
-//                        ft.upload(curFile, doEncrypt, doCompress);
-//                    }
-
                     ft.upload(filePath, doEncrypt, doCompress);
-                    
                     System.out.println("Upload Succeed.");
                     break;
 
                 case SIG_GET:
-                    System.out.println("Download Started.");
-
                     ft.download(filePath);
-
-                    System.out.println("Download Complete.");
                     break;
-                case SIG_IGNORE: continue;
-                default: System.out.println("메시지 파싱 오류");
+
+                case SIG_IGNORE:
+                    continue;
+
+                default:
+                    System.out.println("메시지 파싱 오류");
             }
         }
 

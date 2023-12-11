@@ -36,10 +36,6 @@ public class FileTransfer {
     }
 
     public void upload(String filePath, boolean doEncrypt, boolean doCompress) {
-//        eventLoopGroup = new NioEventLoopGroup();
-//        bootstrap = new Bootstrap().group(eventLoopGroup);
-//        bootstrap.channel(NioSocketChannel.class);
-//        bootstrap.handler(new FileUploadInitializer());
         init(new FileUploadInitializer());
 
         try {
@@ -59,7 +55,6 @@ public class FileTransfer {
                 // 파일 정보 전송
                 FileSpec fs = new FileSpec(curFile);
                 fs.setEncrypted(doEncrypt).setCompressed(doCompress);
-//                channel.writeAndFlush(fs);
 
                 // 마지막 파일 확인
                 boolean isLastFile = (i == list.size() - 1);
@@ -67,11 +62,8 @@ public class FileTransfer {
 
                 ch.writeAndFlush(fs);
 
-
                 // 파일 전송 (전송완료 후 서버에서 채널 종료)
                 ch.writeAndFlush(curFile).addListener(ChannelFutureListener.CLOSE);
-//                ch.closeFuture().sync();
-
             }
 
             for(Channel ch : channels) {
@@ -88,10 +80,6 @@ public class FileTransfer {
     }
 
     public void download(String filePath) {
-//        eventLoopGroup = new NioEventLoopGroup();
-//        bootstrap = new Bootstrap().group(eventLoopGroup);
-//        bootstrap.channel(NioSocketChannel.class);
-//        bootstrap.handler(new FileDownloadInitializer());
         init(new FileDownloadInitializer());
 
         try {

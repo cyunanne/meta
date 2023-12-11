@@ -1,6 +1,8 @@
 package netty.handler;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.buffer.UnpooledDirectByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -48,6 +50,15 @@ public class TransferDataBuilder extends ChannelOutboundHandlerAdapter {
             TransferData td = new TransferData(header, message);
             ctx.writeAndFlush(td);
 
+        // signal
+//        } else if(msg instanceof Header) {
+//            Header header = (Header) msg;
+//            ByteBuf buf = Unpooled.directBuffer(0); // dummy
+//
+//            TransferData td = new TransferData(header, buf);
+//            ctx.writeAndFlush(td);
+
+        // 그 외
         } else {
             logger.warn("알 수 없는 데이터 타입");
         }

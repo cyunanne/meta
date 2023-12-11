@@ -2,6 +2,7 @@ package netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
@@ -31,13 +32,7 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
             isFinalFile = filespec.isEndOfFileList();
-//            isCompressed = filespec.isCompressed();
-
-//            if (isCompressed) {
-//                filePath = filePath.split("\\\\")[0] + ".zst";
-//            } else {
-                FileUtils.mkdir(filePath);
-//            }
+            FileUtils.mkdir(filePath);
 
             if (fos == null) {
                 fos = new FileOutputStream(filePath);
@@ -52,13 +47,9 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         if (fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
             if(header.isEof()) {
-
-//                if (!isCompressed) {
-                    ctx.close(); // 채널종료
-                    fos.close();
-                    fos = null;
-
-//                }
+                ctx.close(); // 채널종료
+                fos.close();
+                fos = null;
 
                 if (isFinalFile) {
                     ctx.close(); // 채널종료

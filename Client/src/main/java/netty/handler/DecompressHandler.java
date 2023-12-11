@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
@@ -26,12 +27,12 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
         // 메타 데이터
         if(msg instanceof FileSpec) {
-            FileSpec fs = (FileSpec) msg;
+            fs = (FileSpec) msg;
             doCompress = fs.isCompressed();
 
             // init decompressor
             if(doCompress && decomp == null) {
-                System.out.println("Decompressing...");
+                System.out.println("Decompressing...: " + fs.getFilePath());
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
                 buf = Unpooled.directBuffer(bufferSize);
@@ -67,7 +68,8 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             }
 
             if(header.isEof()) {
-                decomp = null;
+                System.out.println("Deompressing Finished: " + fs.getFilePath());
+                clearVariables();
             }
         }
 
@@ -75,5 +77,11 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             ctx.fireChannelRead(td);
         }
 
+    }
+
+    private void clearVariables() throws IOException {
+        decomp.close();
+        decomp = null;
+        ReferenceCountUtil.release(buf);
     }
 }

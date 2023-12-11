@@ -6,11 +6,13 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
+import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 import netty.compressor.Compressor;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class CompressHandler extends ChannelOutboundHandlerAdapter {
@@ -38,7 +40,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
             // init compressor
             if (doCompress && comp == null) {
-                System.out.println("Compressing...");
+                System.out.println("Compressing...: " + fs.getFilePath());
 
                 int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
                 buf = Unpooled.directBuffer(bufferSize);
@@ -63,12 +65,19 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             // 마지막 블록 eof 설정
             if (fs.getOriginalFileSize() == compressed) {
                 header.setEof(true);
-                compressed = 0L;
-                comp = null;
+                clearVariables();
+                System.out.println("Compressing Finished: " + fs.getFilePath());
             }
         }
 
         ctx.writeAndFlush(td);
+    }
+
+    private void clearVariables() throws IOException, InterruptedException {
+        comp.close();
+        compressed = 0L;
+        comp = null;
+        ReferenceCountUtil.release(buf);
     }
 
 }
