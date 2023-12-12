@@ -8,15 +8,18 @@ import java.nio.ByteBuffer;
 
 public class Compressor extends ZstdDirectBufferCompressingStream {
 
-    public Compressor(ByteBuffer byteBuffer, int i) throws IOException {
-        super(byteBuffer, i);
+    public Compressor(ByteBuffer byteBuffer, int compressionLevel) throws IOException {
+        super(byteBuffer, compressionLevel);
     }
 
-    public void compress(ByteBuf origin) throws IOException {
-        this.compress(origin.nioBuffer(0, origin.readableBytes()));
+    public void compress(ByteBuffer src) throws IOException {
+        this.compress(src);
         this.flush();
     }
 
-
+    public void compress(ByteBuf src) throws IOException {
+        this.compress(src.nioBuffer(0, src.readableBytes()));
+        this.flush();
+    }
 
 }
