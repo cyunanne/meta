@@ -55,7 +55,8 @@ public class Distributor extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
         logger.info("Channel Closed : " + ctx.channel().remoteAddress());
     }
 

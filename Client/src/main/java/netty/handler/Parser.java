@@ -34,7 +34,8 @@ public class Parser extends ReplayingDecoder<ByteBuf> {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
         ctx.channel().disconnect();
     }
 }

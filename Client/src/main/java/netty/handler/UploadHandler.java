@@ -48,8 +48,8 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
         super.close(ctx, promise);
         
         // 스트림 닫기
-        chunkedStream.close();
-        fis.close();
+        if(chunkedStream != null) chunkedStream.close();
+        if(fis != null) fis.close();
     }
 
 }

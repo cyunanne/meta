@@ -43,7 +43,7 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         if (fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
             if(header.isEof()) {
-                ctx.channel().close(); // 채널종료
+                ctx.close(); // 채널종료
                 if(oos != null) oos.close();
                 if(fos != null) fos.close();
             }
