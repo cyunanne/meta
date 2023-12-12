@@ -2,7 +2,6 @@ package netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import netty.common.FileSpec;
@@ -17,8 +16,6 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
 
     private FileOutputStream fos;
     private ObjectOutputStream oos;
-    private boolean isFinalFile = false;
-//    private boolean isCompressed = false;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -31,7 +28,6 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         if (header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
             String filePath = filespec.getFilePath();
-            isFinalFile = filespec.isEndOfFileList();
             FileUtils.mkdir(filePath);
 
             if (fos == null) {
