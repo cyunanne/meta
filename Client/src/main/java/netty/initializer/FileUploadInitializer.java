@@ -12,6 +12,9 @@ public class FileUploadInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
+        // inbound
+        pipeline.addLast(new Parser());
+
         // outbound
         pipeline.addLast(new Sender());                 // (6) send
         pipeline.addLast(new EncryptHandler());         // (5) encrypt

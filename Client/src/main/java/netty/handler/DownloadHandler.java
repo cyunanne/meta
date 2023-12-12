@@ -80,6 +80,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
         if(fos != null) fos.close();
     }
 
