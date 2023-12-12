@@ -32,4 +32,9 @@ public class Parser extends ReplayingDecoder<ByteBuf> {
         // Pass to Handler
         list.add(new TransferData(header, data.retain()));
     }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        ctx.channel().disconnect();
+    }
 }
