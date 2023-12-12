@@ -86,7 +86,7 @@ public class FileUtils {
         int num = 1;
         String newPath = path;
         while( exist( newPath ) ) {
-            newPath = filename + "(" + (++num) + ")" + extension;
+            newPath = filename + "(" + (num++) + ")" + extension;
         }
 
         return newPath;
