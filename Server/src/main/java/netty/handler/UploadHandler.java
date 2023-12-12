@@ -27,11 +27,10 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         // 파일 정보 수신
         if (header.isMetadata()) {
             FileSpec filespec = new FileSpec(byteBuf);
-            String filePath = filespec.getFilePath();
+            String filePath = FileUtils.rename(filespec.getFilePath());
             FileUtils.mkdir(filePath);
 
             if (fos == null) {
-                filePath = FileUtils.rename(filePath);
                 fos = new FileOutputStream(filePath, false);
             }
 

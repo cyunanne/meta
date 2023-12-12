@@ -79,14 +79,30 @@ public class FileUtils {
 
     public static String rename(String path) {
 
-        int extensionIdx = path.lastIndexOf(".");
-        String extension = path.substring(extensionIdx);
-        String filename = path.substring(0, extensionIdx);
-
-        int num = 1;
         String newPath = path;
-        while( exist( newPath ) ) {
-            newPath = filename + "(" + (num++) + ")" + extension;
+
+        if( path.contains("\\") ) {
+
+            int idx = path.indexOf('\\');
+            String dir = path.substring(0, idx);
+            String rest = path.substring(idx);
+
+            int num = 1;
+            while (exist(newPath)) {
+                newPath = dir + "(" + (num++) + ")" + rest;
+            }
+
+        } else {
+
+            int extensionIdx = path.lastIndexOf(".");
+            if(extensionIdx == -1) extensionIdx += path.length();
+            String extension = path.substring(extensionIdx);
+            String filename = path.substring(0, extensionIdx);
+
+            int num = 1;
+            while (exist(newPath)) {
+                newPath = filename + "(" + (num++) + ")" + extension;
+            }
         }
 
         return newPath;
