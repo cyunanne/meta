@@ -73,7 +73,8 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         ctx.writeAndFlush(td);
     }
 
-    private void clearVariables() throws IOException, InterruptedException {
+    private void clearVariables() throws IOException {
+        comp.setFinalize(true);
         comp.close();
         compressed = 0L;
         comp = null;

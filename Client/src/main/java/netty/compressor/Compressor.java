@@ -12,11 +12,6 @@ public class Compressor extends ZstdDirectBufferCompressingStream {
         super(byteBuffer, compressionLevel);
     }
 
-    public void compress(ByteBuffer src) throws IOException {
-        this.compress(src);
-        this.flush();
-    }
-
     public void compress(ByteBuf src) throws IOException {
         this.compress(src.nioBuffer(0, src.readableBytes()));
         this.flush();
