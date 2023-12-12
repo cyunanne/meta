@@ -55,4 +55,40 @@ public class FileUtils {
             throw new IOException("폴더 생성 실패");
         }
     }
+
+    public static void rm(String path) throws IOException {
+        if( !exist(path) || isDirectory(path) ) return;
+            
+        try {
+            Files.delete(Paths.get(path));
+        } catch (IOException e) {
+            throw new IOException("파일 삭제 실패");
+        }
+
+    }
+
+    public static void rmdir(String path) throws IOException {
+        if( !exist(path) || !isDirectory(path) ) return;
+
+        List<String> list = getFilePathList(path);
+        for(String filePath : list) {
+            rm(filePath);
+        }
+
+    }
+
+    public static String rename(String path) {
+
+        int extensionIdx = path.lastIndexOf(".");
+        String extension = path.substring(extensionIdx);
+        String filename = path.substring(0, extensionIdx);
+
+        int num = 1;
+        String newPath = path;
+        while( exist( newPath ) ) {
+            newPath = filename + "(" + (++num) + ")" + extension;
+        }
+
+        return newPath;
+    }
 }
