@@ -1,10 +1,10 @@
 package netty.handler;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
+import io.netty.channel.*;
 import io.netty.handler.stream.ChunkedFile;
 import io.netty.handler.stream.ChunkedStream;
+import io.netty.util.concurrent.FailedFuture;
+import io.netty.util.concurrent.FutureListener;
 import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
@@ -20,6 +20,10 @@ import java.util.List;
 public class DownloadHandler extends ChannelOutboundHandlerAdapter {
 
     private static final Logger logger = LogManager.getLogger(DownloadHandler.class);
+
+    private FileInputStream fis;
+    private ObjectInputStream ois;
+    private ChunkedStream chunkedStream;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
@@ -43,17 +47,18 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
             // 단일파일인 경우
             else {
 
-                FileInputStream fis = new FileInputStream(filePath);
+                fis = new FileInputStream(filePath);
 
                 // 메타 데이터 전송
-                ObjectInputStream ois = new ObjectInputStream(fis);
+                ois = new ObjectInputStream(fis);
                 FileSpec fs = (FileSpec) ois.readObject();
                 fs.setCurrentFileSize(FileUtils.getSize(filePath));
                 ctx.writeAndFlush(fs);
 
                 // 파일 데이터 전송
-                ChunkedStream chunkedStream = new ChunkedStream(fis);
+                chunkedStream = new ChunkedStream(fis);
                 ctx.writeAndFlush(chunkedStream);
+
             }
 
         } catch (FileNotFoundException e) {
@@ -70,6 +75,16 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        super.close(ctx, promise);
+        
+        // 스트림 닫기
+        if(chunkedStream != null) chunkedStream.close();
+        if(ois != null) ois.close();
+        if(fis != null) fis.close();
     }
 
 }

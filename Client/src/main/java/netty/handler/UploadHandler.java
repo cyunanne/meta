@@ -8,14 +8,11 @@ import netty.common.FileSpec;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.SocketAddress;
 
 public class UploadHandler extends ChannelOutboundHandlerAdapter {
 
-    @Override
-    public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
-        super.connect(ctx, remoteAddress, localAddress, promise);
-    }
+    private FileInputStream fis;
+    private ChunkedStream chunkedStream;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
@@ -31,18 +28,28 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
             try {
 
                 // 파일 데이터 전송
-                FileInputStream fis = new FileInputStream(filePath);
-                ChunkedStream chunkedStream = new ChunkedStream(fis);
+                fis = new FileInputStream(filePath);
+                chunkedStream = new ChunkedStream(fis);
                 ctx.writeAndFlush(chunkedStream);
 
             } catch (FileNotFoundException e) {
                 ctx.close();
                 System.out.println("파일을 찾을 수 없습니다.");
+
             } catch (Exception e) {
                 ctx.close();
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        super.close(ctx, promise);
+        
+        // 스트림 닫기
+        chunkedStream.close();
+        fis.close();
     }
 
 }

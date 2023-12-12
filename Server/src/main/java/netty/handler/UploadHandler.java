@@ -35,7 +35,8 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
             FileUtils.mkdir(filePath);
 
             if (fos == null) {
-                fos = new FileOutputStream(filePath);
+                filePath = FileUtils.rename(filePath);
+                fos = new FileOutputStream(filePath, false);
             }
 
             // 메타 데이터 저장
@@ -47,15 +48,9 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         if (fos != null) {
             fos.getChannel().write(byteBuf.nioBuffer());
             if(header.isEof()) {
-                ctx.close(); // 채널종료
-                fos.close();
-                fos = null;
-
-                if (isFinalFile) {
-                    ctx.close(); // 채널종료
-                    if(oos != null) oos.close();
-                    if(fos != null) fos.close();
-                }
+                ctx.channel().close(); // 채널종료
+                if(oos != null) oos.close();
+                if(fos != null) fos.close();
             }
         }
 
