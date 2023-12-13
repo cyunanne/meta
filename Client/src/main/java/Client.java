@@ -4,6 +4,7 @@ import netty.common.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -73,9 +74,7 @@ public class Client {
 
             // file transfer : download
             if (commands[0].equals("get")) {
-                for(int i=1; i<commands.length; i++) {
-                    filePath.add(commands[i]);
-                }
+                filePath.addAll(Arrays.asList(commands).subList(1, commands.length));
                 return SIG_GET;
             }
 

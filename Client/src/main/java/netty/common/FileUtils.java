@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,6 @@ public class FileUtils {
             list.remove(file);
             searchRecursively(list, i);
         }
-
     }
 
     public static boolean isDirectory(String path) {
@@ -78,7 +76,6 @@ public class FileUtils {
         } catch (IOException e) {
             throw new IOException("파일 삭제 실패");
         }
-
     }
 
     public static void rmdir(String path) throws IOException {
@@ -88,7 +85,6 @@ public class FileUtils {
         for(String filePath : list) {
             rm(filePath);
         }
-
     }
 
     public static String rename(String path) {

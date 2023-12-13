@@ -41,7 +41,6 @@ public class FileUtils {
             list.remove(file);
             searchRecursively(list, i);
         }
-
     }
 
     public static boolean isDirectory(String path) {
@@ -77,7 +76,6 @@ public class FileUtils {
         } catch (IOException e) {
             throw new IOException("파일 삭제 실패");
         }
-
     }
 
     public static void rmdir(String path) throws IOException {
@@ -87,7 +85,6 @@ public class FileUtils {
         for(String filePath : list) {
             rm(filePath);
         }
-
     }
 
     public static String rename(String path) {
