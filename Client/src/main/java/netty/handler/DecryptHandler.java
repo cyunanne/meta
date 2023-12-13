@@ -33,7 +33,8 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             if (doDecrypt) {
                 System.out.println("Decrypting...");
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
-                plain = Unpooled.directBuffer(Short.MAX_VALUE);
+//                plain = Unpooled.directBuffer(Short.MAX_VALUE);
+                plain = Unpooled.directBuffer(Header.CHUNK_SIZE);
             }
 
             ctx.fireChannelRead(fs);

@@ -54,8 +54,9 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             buf.clear();
             bufNio.clear();
 
-            int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
-            buf.ensureWritable(writableLength);
+//            int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
+//            buf.ensureWritable(writableLength);
+            buf.ensureWritable(Header.CHUNK_SIZE);
             bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
             decomp.setBuffer(data);

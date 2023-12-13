@@ -52,7 +52,6 @@ public class FileTransfer {
                 Channel ch = bootstrap.connect(host, port).sync().channel();
                 channels.add(ch);
 
-                // 파일 정보 전송
                 FileSpec fs = new FileSpec(curFile);
                 fs.setEncrypted(doEncrypt).setCompressed(doCompress);
 
@@ -60,12 +59,10 @@ public class FileTransfer {
                 boolean isLastFile = (i == list.size() - 1);
                 fs.setEndOfFileList(isLastFile);
 
-                ch.writeAndFlush(fs);
-
-                // 파일 전송 (전송완료 후 서버에서 채널 종료)
-                ch.writeAndFlush(curFile).addListener(ChannelFutureListener.CLOSE);
+                ch.writeAndFlush(fs).addListener(ChannelFutureListener.CLOSE);
             }
 
+            // 채널 종료 대기
             for(Channel ch : channels) {
                 ch.closeFuture().sync();
             }

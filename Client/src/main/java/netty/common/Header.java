@@ -6,7 +6,7 @@ import io.netty.buffer.Unpooled;
 public class Header {
 
     public static final int HEADER_SIZE = 5;
-//    public static final int CHUNK_SIZE = 64_000;
+    public static final int CHUNK_SIZE = 32_000;
 
     public static final int TYPE_SIG = 0x00;
     public static final int TYPE_META = 0x01;

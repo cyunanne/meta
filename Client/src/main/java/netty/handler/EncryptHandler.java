@@ -36,7 +36,8 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
             if (doEncrypt) {
                 System.out.println("Encrypting...");
-                enc = Unpooled.directBuffer(Short.MAX_VALUE);
+//                enc = Unpooled.directBuffer(Short.MAX_VALUE);
+                enc = Unpooled.directBuffer(Header.CHUNK_SIZE + 16);
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey());
                 fs.setIv(cipher.getIv());

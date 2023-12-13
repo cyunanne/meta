@@ -56,7 +56,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
                 ctx.writeAndFlush(fs);
 
                 // 파일 데이터 전송
-                chunkedStream = new ChunkedStream(fis);
+                chunkedStream = new ChunkedStream(fis, Header.CHUNK_SIZE);
                 ctx.writeAndFlush(chunkedStream);
 
             }

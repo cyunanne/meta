@@ -42,8 +42,8 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             if (doCompress && comp == null) {
                 System.out.println("Compressing...: " + fs.getFilePath());
 
-                int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
-                buf = Unpooled.directBuffer(bufferSize);
+//                int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
+                buf = Unpooled.directBuffer(Header.CHUNK_SIZE * 2);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 comp = new Compressor(bufNio, compressionLevel);
             }

@@ -11,6 +11,7 @@ public class FileSpec implements Serializable {
     private static final long serialVersionUID = 123L;
 
     private String filePath = "";
+    private String newFilePath = "";
     private long originalFileSize = 0L;
     private long currentFileSize = 0L;
     private byte[] key;
@@ -23,6 +24,7 @@ public class FileSpec implements Serializable {
 
     public FileSpec(FileSpec fs) {
         this.filePath = fs.filePath;
+        this.newFilePath = fs.newFilePath;
         this.originalFileSize = fs.originalFileSize;
         this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
@@ -34,6 +36,7 @@ public class FileSpec implements Serializable {
 
     public FileSpec(String filePath) {
         this.filePath = filePath;
+        this.newFilePath = filePath;
         this.originalFileSize = new File(filePath).length();
         this.currentFileSize = this.originalFileSize;
     }
@@ -51,6 +54,7 @@ public class FileSpec implements Serializable {
         }
 
         this.filePath = fs.filePath;
+        this.newFilePath = fs.newFilePath;
         this.originalFileSize = fs.originalFileSize;
         this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
@@ -75,6 +79,7 @@ public class FileSpec implements Serializable {
         }
 
         this.filePath = fs.filePath;
+        this.newFilePath = fs.newFilePath;
         this.originalFileSize = fs.originalFileSize;
         this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
@@ -173,5 +178,13 @@ public class FileSpec implements Serializable {
 
     public void setCurrentFileSize(long currentFileSize) {
         this.currentFileSize = currentFileSize;
+    }
+
+    public String getNewFilePath() {
+        return newFilePath;
+    }
+
+    public void setNewFilePath(String newFilePath) {
+        this.newFilePath = newFilePath;
     }
 }
