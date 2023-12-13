@@ -9,17 +9,21 @@ import netty.cipher.AES256Cipher;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.crypto.Cipher;
 import java.nio.ByteBuffer;
 
 public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
+    private static final Logger logger = LogManager.getLogger(EncryptHandler.class);
     private long fileSize = 0L;
     private long transferred = 0L;
     private boolean doEncrypt = false;
     private ByteBuf enc;
     private AES256Cipher cipher;
+    private FileSpec fs;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -30,12 +34,12 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
         // 메타 데이터
         if (header.isMetadata()) {
-            FileSpec fs = new FileSpec(data);
+            fs = new FileSpec(data);
             fileSize = fs.getOriginalFileSize();
             doEncrypt = fs.isEncrypted();
 
             if (doEncrypt) {
-                System.out.println("Encrypting...: " + fs.getFilePath());
+                logger.info("Encrypting...: " + fs.getFilePath());
                 enc = Unpooled.directBuffer(Header.CHUNK_SIZE + 16);
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey()).setIv(cipher.getIv());
@@ -53,9 +57,13 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             ByteBuffer encNio = enc.internalNioBuffer(0, enc.writableBytes());
 
             if (header.isEof() || transferred == fileSize) {
-                header.setEof(true);
                 cipher.doFinal(data.nioBuffer(), encNio);
+
+                header.setEof(true);
                 clearVariables();
+
+                logger.info("Encrypting finished: " + fs.getFilePath());
+
             } else {
                 cipher.update(data.nioBuffer(), encNio);
             }

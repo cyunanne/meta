@@ -8,15 +8,19 @@ import netty.cipher.AES256Cipher;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.crypto.Cipher;
 import java.nio.ByteBuffer;
 
 public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
+    private static final Logger logger = LogManager.getLogger(DecryptHandler.class);
     private ByteBuf plain;
     private boolean doDecrypt = false;
     private AES256Cipher cipher;
+    private FileSpec fs;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -27,16 +31,17 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
         // 메타 데이터 FileSpec 생성 및 전달
         if (header.isMetadata()) {
-            FileSpec fs = new FileSpec(data);
+            fs = new FileSpec(data);
             doDecrypt = fs.isEncrypted();
+            ctx.fireChannelRead(fs);
 
+            // Cipher 초기화
             if (doDecrypt) {
-                System.out.println("Decrypting...");
+                logger.info("Decrypting...: " + fs.getFilePath());
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
                 plain = Unpooled.directBuffer(Header.CHUNK_SIZE);
             }
 
-            ctx.fireChannelRead(fs);
             return;
         }
 
@@ -50,8 +55,12 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
             if (header.isEof()) {
                 cipher.doFinal(data.nioBuffer(), pNio);
+
                 header.setEof(true);
-                cipher = null;
+                clearVariables();
+
+                logger.info("Decrypting finished: " + fs.getFilePath());
+
             } else {
                 cipher.update(data.nioBuffer(), pNio);
             }
@@ -61,6 +70,10 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
         }
 
         ctx.fireChannelRead(td);
+    }
+
+    private void clearVariables() {
+        cipher = null;;
     }
 
 }

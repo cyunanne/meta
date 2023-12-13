@@ -27,9 +27,8 @@ public class Parser extends ReplayingDecoder<ByteBuf> {
             return;
         }
 
-        ByteBuf data = byteBuf.readSlice(len);
-
         // Pass to Handler
+        ByteBuf data = byteBuf.readSlice(len);
         list.add(new TransferData(header, data.retain()));
     }
 

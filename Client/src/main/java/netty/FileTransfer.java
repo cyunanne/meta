@@ -12,12 +12,15 @@ import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.initializer.FileDownloadInitializer;
 import netty.initializer.FileUploadInitializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileTransfer {
 
+    private static final Logger logger = LogManager.getLogger(FileTransfer.class);
     protected String host;
     protected int port;
     protected EventLoopGroup eventLoopGroup;
@@ -44,10 +47,7 @@ public class FileTransfer {
             List<Channel> channels = new ArrayList<>();
 
             for(int i=0; i<list.size(); i++) {
-
                 String curFile = list.get(i);
-                System.out.println("[" + (i + 1) + "/" + list.size() + "] " + curFile + " 업로드 중");
-
 
                 Channel ch = bootstrap.connect(host, port).sync().channel();
                 channels.add(ch);
@@ -59,6 +59,7 @@ public class FileTransfer {
                 boolean isLastFile = (i == list.size() - 1);
                 fs.setEndOfFileList(isLastFile);
 
+                logger.info(String.format("[%d/%d] %s 업로드 시작", i + 1, list.size(), curFile));
                 ch.writeAndFlush(fs).addListener(ChannelFutureListener.CLOSE);
             }
 
@@ -66,7 +67,6 @@ public class FileTransfer {
             for(Channel ch : channels) {
                 ch.closeFuture().sync();
             }
-
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

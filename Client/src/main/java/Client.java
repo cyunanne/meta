@@ -3,6 +3,7 @@ import netty.common.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class Client {
 
     private static boolean doEncrypt = false;
     private static boolean doCompress = false;
-    private static String filePath = null;
+    private static String filePath;
 
     public static void main(String[] args) {
         FileTransfer ft = new FileTransfer("localhost", 8889);

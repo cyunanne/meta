@@ -60,11 +60,9 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
             if (header.isEof()) {
                 fos.close();
-
-                System.out.println("다운로드 성공: " + filePath +
-                        " (" + fs.getOriginalFileSize() + " bytes)");
-
                 ctx.close(); // 채널종료
+
+                System.out.printf("다운로드 성공: %s (%d bytes)%n", filePath, fs.getOriginalFileSize());
             }
 
         // 2-3) signal

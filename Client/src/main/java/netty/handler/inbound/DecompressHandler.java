@@ -9,17 +9,21 @@ import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 import netty.compressor.Decompressor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
+    private static final Logger logger = LogManager.getLogger(DecompressHandler.class);
     private boolean doCompress = false;
     private Decompressor decomp;
     private ByteBuf buf;
     private ByteBuffer bufNio;
     private FileSpec fs;
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -31,7 +35,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
             // init decompressor
             if(doCompress && decomp == null) {
-                System.out.println("Decompressing...: " + fs.getFilePath());
+                logger.info("Decompressing...: " + fs.getFilePath());
 
                 buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
@@ -57,16 +61,16 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
             decomp.setBuffer(data);
-            while( decomp.decompress(bufNio) ) {
+            decomp.decompress(bufNio);
+            do {
                 buf.writerIndex(bufNio.position());
                 td.setDataAndLength(buf.retain());
                 ctx.fireChannelRead(td);
-            }
+            } while (decomp.decompress(bufNio));
 
-            if(header.isEof()) {
+            if (header.isEof()) {
                 clearVariables();
-
-                System.out.println("Deompressing Finished: " + fs.getFilePath());
+                logger.info("Decompressing Finished: " + fs.getFilePath());
             }
         }
 
