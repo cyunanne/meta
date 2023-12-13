@@ -1,6 +1,5 @@
-package netty.handler;
+package netty.handler.inbound;
 
-import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -34,8 +33,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             if(doCompress && decomp == null) {
                 System.out.println("Decompressing...: " + fs.getFilePath());
 
-                int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize() * 2;
-                buf = Unpooled.directBuffer(bufferSize);
+                buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 decomp = new Decompressor();
             }
@@ -54,35 +52,31 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             buf.clear();
             bufNio.clear();
 
-//            int writableLength = Math.min(header.getLength() * 2, Integer.MAX_VALUE);
-//            buf.ensureWritable(writableLength);
-            buf.ensureWritable(Header.CHUNK_SIZE);
+            int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
+            buf.ensureWritable(writableLength);
             bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
             decomp.setBuffer(data);
             while( decomp.decompress(bufNio) ) {
-
                 buf.writerIndex(bufNio.position());
                 td.setDataAndLength(buf.retain());
                 ctx.fireChannelRead(td);
-
             }
 
             if(header.isEof()) {
-                System.out.println("Deompressing Finished: " + fs.getFilePath());
                 clearVariables();
+
+                System.out.println("Deompressing Finished: " + fs.getFilePath());
             }
         }
 
         else {
             ctx.fireChannelRead(td);
         }
-
     }
 
     private void clearVariables() throws IOException {
         decomp.close();
-        decomp = null;
         ReferenceCountUtil.release(buf);
     }
 }

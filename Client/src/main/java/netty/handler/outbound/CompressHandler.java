@@ -1,6 +1,5 @@
-package netty.handler;
+package netty.handler.outbound;
 
-import com.github.luben.zstd.ZstdDirectBufferCompressingStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,11 +38,11 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             doCompress = fs.isCompressed();
 
             // init compressor
-            if (doCompress && comp == null) {
+            if (doCompress) {
                 System.out.println("Compressing...: " + fs.getFilePath());
 
-//                int bufferSize = ZstdDirectBufferCompressingStream.recommendedOutputBufferSize();
-                buf = Unpooled.directBuffer(Header.CHUNK_SIZE * 2);
+                int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
+                buf = Unpooled.directBuffer(writableLength);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
                 comp = new Compressor(bufNio, compressionLevel);
             }
@@ -66,6 +65,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
             if (fs.getOriginalFileSize() == compressed) {
                 header.setEof(true);
                 clearVariables();
+
                 System.out.println("Compressing Finished: " + fs.getFilePath());
             }
         }
@@ -77,7 +77,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         comp.setFinalize(true);
         comp.close();
         compressed = 0L;
-        comp = null;
         ReferenceCountUtil.release(buf);
     }
 

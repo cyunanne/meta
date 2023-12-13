@@ -1,4 +1,4 @@
-package netty.handler;
+package netty.handler.outbound;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -35,12 +35,10 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             doEncrypt = fs.isEncrypted();
 
             if (doEncrypt) {
-                System.out.println("Encrypting...");
-//                enc = Unpooled.directBuffer(Short.MAX_VALUE);
+                System.out.println("Encrypting...: " + fs.getFilePath());
                 enc = Unpooled.directBuffer(Header.CHUNK_SIZE + 16);
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
-                fs.setKey(cipher.getKey());
-                fs.setIv(cipher.getIv());
+                fs.setKey(cipher.getKey()).setIv(cipher.getIv());
                 td.setDataAndLength(fs.toByteBuf()); // key, iv 추가 된만큼 길이 증가
             }
         }

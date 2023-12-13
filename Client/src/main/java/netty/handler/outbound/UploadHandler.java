@@ -1,9 +1,10 @@
-package netty.handler;
+package netty.handler.outbound;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.stream.ChunkedStream;
+import netty.common.Builder;
 import netty.common.FileSpec;
 import netty.common.Header;
 
@@ -52,8 +53,8 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
             fis = new FileInputStream(fs.getFilePath());
             chunkedStream = new ChunkedStream(fis, Header.CHUNK_SIZE);
 
-            ctx.writeAndFlush(fs);              // 메타데이터
-            ctx.writeAndFlush(chunkedStream);   // 파일데이터
+            ctx.writeAndFlush(Builder.wrap(fs, Header.CMD_PUT)); // 메타데이터
+            ctx.writeAndFlush(chunkedStream);                    // 파일데이터
 
         } catch (FileNotFoundException e) {
             ctx.close();

@@ -1,4 +1,4 @@
-package netty.handler;
+package netty.handler.inbound;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -33,7 +33,6 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
             if (doDecrypt) {
                 System.out.println("Decrypting...");
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
-//                plain = Unpooled.directBuffer(Short.MAX_VALUE);
                 plain = Unpooled.directBuffer(Header.CHUNK_SIZE);
             }
 

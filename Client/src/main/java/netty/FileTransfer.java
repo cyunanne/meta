@@ -83,7 +83,8 @@ public class FileTransfer {
             Channel channel = bootstrap.connect(host, port).sync().channel();
 
             // 파일 정보(파일명) 전송
-            channel.writeAndFlush(new FileSpec().setFilePath(filePath));
+            FileSpec fs = new FileSpec().setFilePath(filePath);
+            channel.writeAndFlush(fs);
             channel.closeFuture().sync();
 
         } catch (Exception e) {
