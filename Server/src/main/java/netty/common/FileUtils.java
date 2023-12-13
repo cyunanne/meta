@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileUtils {
     public static List<String> getFilePathList(String initialPath) throws IOException {
@@ -13,6 +14,18 @@ public class FileUtils {
         list.add(initialPath);
         searchRecursively(list, 0);
         return list;
+    }
+
+    public static List<String> getFilePathList(List<String> initPathList) throws IOException {
+        List<String> list = new ArrayList<>();
+        for(String item : initPathList) {
+            list.addAll(getFilePathList(item));
+        }
+        return removeDuplication(list);
+    }
+
+    public static List<String> removeDuplication(List<String> input) {
+        return input.stream().distinct().collect(Collectors.toList());
     }
 
     private static void searchRecursively(List<String> list, int startIdx) throws IOException {

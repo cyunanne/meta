@@ -16,7 +16,7 @@ public class Client {
 
     private static boolean doEncrypt = false;
     private static boolean doCompress = false;
-    private static String filePath;
+    private static List<String> filePath;
 
     public static void main(String[] args) {
         FileTransfer ft = new FileTransfer("localhost", 8889);
@@ -27,6 +27,7 @@ public class Client {
             String input = scanner.nextLine().trim();
             if(input.isEmpty()) continue;
 
+            filePath = new ArrayList<>();
             String[] commands = input.split(" ");
 
             int command = parser(commands);
@@ -72,7 +73,9 @@ public class Client {
 
             // file transfer : download
             if (commands[0].equals("get")) {
-                filePath = commands[1];
+                for(int i=1; i<commands.length; i++) {
+                    filePath.add(commands[i]);
+                }
                 return SIG_GET;
             }
 
@@ -84,9 +87,15 @@ public class Client {
 
                 doEncrypt = options.contains("e");
                 doCompress = options.contains("c");
-                filePath = hasOptions ? commands[2] : commands[1];
 
-                if (isFileExist(filePath)) return SIG_PUT;
+                boolean allFileExist = true;
+                int startIdx = hasOptions ? 2 : 1;
+                for(int i=startIdx; i<commands.length; i++) {
+                    filePath.add(commands[i]);
+                    if ( !isFileExist(commands[i]) ) allFileExist = false;
+                }
+
+                if (allFileExist) return SIG_PUT;
             }
 
             System.out.println("파일을 찾을 수 없습니다.");

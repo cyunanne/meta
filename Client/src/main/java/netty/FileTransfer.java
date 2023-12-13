@@ -38,7 +38,7 @@ public class FileTransfer {
         bootstrap.handler(initializer);
     }
 
-    public void upload(String filePath, boolean doEncrypt, boolean doCompress) {
+    public void upload(List<String> filePath, boolean doEncrypt, boolean doCompress) {
         init(new FileUploadInitializer());
 
         try {
@@ -74,6 +74,10 @@ public class FileTransfer {
         } finally {
             eventLoopGroup.shutdownGracefully();
         }
+    }
+
+    public void download(List<String> list) {
+        list.forEach(this::download);
     }
 
     public void download(String filePath) {
