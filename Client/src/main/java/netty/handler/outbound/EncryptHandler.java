@@ -39,7 +39,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
             doEncrypt = fs.isEncrypted();
 
             if (doEncrypt) {
-                logger.info("Encrypting...: " + fs.getFilePath());
+                logger.info("Encrypting Started: " + fs.getFilePath());
                 enc = Unpooled.directBuffer(Header.CHUNK_SIZE + 16);
                 cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
                 fs.setKey(cipher.getKey()).setIv(cipher.getIv());
@@ -62,7 +62,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
                 header.setEof(true);
                 clearVariables();
 
-                logger.info("Encrypting finished: " + fs.getFilePath());
+                logger.info("Encrypting Finished: " + fs.getFilePath());
 
             } else {
                 cipher.update(data.nioBuffer(), encNio);

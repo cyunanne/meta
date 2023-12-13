@@ -21,10 +21,10 @@ import java.util.List;
 public class FileTransfer {
 
     private static final Logger logger = LogManager.getLogger(FileTransfer.class);
-    protected String host;
-    protected int port;
     protected EventLoopGroup eventLoopGroup;
     protected Bootstrap bootstrap;
+    protected String host;
+    protected int port;
 
     public FileTransfer(String host, int port) {
         this.host = host;
@@ -53,7 +53,7 @@ public class FileTransfer {
                 channels.add(ch);
 
                 FileSpec fs = new FileSpec(curFile);
-                fs.setEncrypted(doEncrypt).setCompressed(doCompress);
+                fs.encrypt(doEncrypt).compress(doCompress);
 
                 // 마지막 파일 확인
                 boolean isLastFile = (i == list.size() - 1);
@@ -81,7 +81,7 @@ public class FileTransfer {
     }
 
     public void download(String filePath) {
-        init(new FileDownloadInitializer());
+        init(new FileDownloadInitializer(this));
 
         try {
             Channel channel = bootstrap.connect(host, port).sync().channel();

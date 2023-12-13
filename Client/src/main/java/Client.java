@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 public class Client {
 
+    private static final String HOST = "localhost";
+    private static final int PORT = 8889;
+
     private static final int SIG_QUIT = -1;
     private static final int SIG_IGNORE = 0;
     private static final int SIG_PUT = 1;
@@ -20,7 +23,7 @@ public class Client {
     private static List<String> filePath;
 
     public static void main(String[] args) {
-        FileTransfer ft = new FileTransfer("localhost", 8889);
+        FileTransfer ft = new FileTransfer(HOST, PORT);
         Scanner scanner = new Scanner(System.in);
 
         while(true) {

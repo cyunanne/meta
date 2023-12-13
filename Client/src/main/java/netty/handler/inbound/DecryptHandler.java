@@ -17,9 +17,9 @@ import java.nio.ByteBuffer;
 public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LogManager.getLogger(DecryptHandler.class);
-    private ByteBuf plain;
     private boolean doDecrypt = false;
     private AES256Cipher cipher;
+    private ByteBuf plain;
     private FileSpec fs;
 
     @Override
@@ -37,7 +37,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
             // Cipher 초기화
             if (doDecrypt) {
-                logger.info("Decrypting...: " + fs.getFilePath());
+                logger.info("Decrypting Started: " + fs.getFilePath());
                 cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
                 plain = Unpooled.directBuffer(Header.CHUNK_SIZE);
             }
@@ -59,7 +59,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
                 header.setEof(true);
                 clearVariables();
 
-                logger.info("Decrypting finished: " + fs.getFilePath());
+                logger.info("Decrypting Finished: " + fs.getFilePath());
 
             } else {
                 cipher.update(data.nioBuffer(), pNio);

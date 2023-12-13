@@ -11,6 +11,7 @@ public class FileSpec implements Serializable {
     private static final long serialVersionUID = 123L;
 
     private String filePath = "";
+    private String newFilePath = "";
     private long originalFileSize = 0L;
     private long currentFileSize = 0L;
     private byte[] key;
@@ -23,6 +24,7 @@ public class FileSpec implements Serializable {
 
     public FileSpec(FileSpec fs) {
         this.filePath = fs.filePath;
+        this.newFilePath = fs.newFilePath;
         this.originalFileSize = fs.originalFileSize;
         this.currentFileSize = fs.currentFileSize;
         this.key = fs.key;
@@ -34,56 +36,55 @@ public class FileSpec implements Serializable {
 
     public FileSpec(String filePath) {
         this.filePath = filePath;
+        this.newFilePath = filePath;
         this.originalFileSize = new File(filePath).length();
         this.currentFileSize = this.originalFileSize;
     }
 
     public FileSpec(ByteBuf byteBuf) {
-        FileSpec fs = null;
 
         try (ByteBufInputStream bis = new ByteBufInputStream(byteBuf);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
 
-            fs = (FileSpec) ois.readObject();
+            FileSpec fs = (FileSpec) ois.readObject();
+            this.filePath = fs.filePath;
+            this.newFilePath = fs.newFilePath;
+            this.originalFileSize = fs.originalFileSize;
+            this.currentFileSize = fs.currentFileSize;
+            this.key = fs.key;
+            this.iv = fs.iv;
+            this.endOfFileList = fs.endOfFileList;
+            this.encrypted = fs.encrypted;
+            this.compressed = fs.compressed;
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        this.filePath = fs.filePath;
-        this.originalFileSize = fs.originalFileSize;
-        this.currentFileSize = fs.currentFileSize;
-        this.key = fs.key;
-        this.iv = fs.iv;
-        this.endOfFileList = fs.endOfFileList;
-        this.encrypted = fs.encrypted;
-        this.compressed = fs.compressed;
     }
 
     public FileSpec(byte[] data) {
 
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data);
-        FileSpec fs = null;
-
         try (ByteBufInputStream bis = new ByteBufInputStream(byteBuf);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
 
-            fs = (FileSpec) ois.readObject();
+            FileSpec fs = (FileSpec) ois.readObject();
+            this.filePath = fs.filePath;
+            this.newFilePath = fs.newFilePath;
+            this.originalFileSize = fs.originalFileSize;
+            this.currentFileSize = fs.currentFileSize;
+            this.key = fs.key;
+            this.iv = fs.iv;
+            this.endOfFileList = fs.endOfFileList;
+            this.encrypted = fs.encrypted;
+            this.compressed = fs.compressed;
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
+
+        } finally {
+            byteBuf.release();
         }
-
-        this.filePath = fs.filePath;
-        this.originalFileSize = fs.originalFileSize;
-        this.currentFileSize = fs.currentFileSize;
-        this.key = fs.key;
-        this.iv = fs.iv;
-        this.endOfFileList = fs.endOfFileList;
-        this.encrypted = fs.encrypted;
-        this.compressed = fs.compressed;
-
-        byteBuf.release();
     }
 
     public FileSpec setFilePath(String filePath) {
@@ -121,28 +122,27 @@ public class FileSpec implements Serializable {
         return this;
     }
 
-    public FileSpec setEncrypted(Boolean encrypted) {
+    public FileSpec encrypt(Boolean encrypted) {
         this.encrypted = encrypted;
         return this;
     }
 
-    public FileSpec setCompressed(Boolean compressed) {
+    public FileSpec compress(Boolean compressed) {
         this.compressed = compressed;
         return this;
     }
 
     public byte[] toByteArray() {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(bos);
+        try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos)) {
+
             out.writeObject(this);
+            return bos.toByteArray();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return bos.toByteArray();
     }
 
     public ByteBuf toByteBuf() {
@@ -173,5 +173,13 @@ public class FileSpec implements Serializable {
 
     public void setCurrentFileSize(long currentFileSize) {
         this.currentFileSize = currentFileSize;
+    }
+
+    public String getNewFilePath() {
+        return newFilePath;
+    }
+
+    public void setNewFilePath(String newFilePath) {
+        this.newFilePath = newFilePath;
     }
 }

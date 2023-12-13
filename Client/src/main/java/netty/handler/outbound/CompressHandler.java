@@ -42,7 +42,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
             // init compressor
             if (doCompress) {
-                logger.info("Compressing...: " + fs.getFilePath());
+                logger.info("Compressing Started: " + fs.getFilePath());
 
                 int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
                 buf = Unpooled.directBuffer(writableLength);

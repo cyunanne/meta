@@ -3,6 +3,7 @@ package netty.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import netty.FileTransfer;
 import netty.handler.inbound.DecompressHandler;
 import netty.handler.inbound.DecryptHandler;
 import netty.handler.inbound.DownloadHandler;
@@ -11,6 +12,12 @@ import netty.handler.outbound.DownloadReqHandler;
 import netty.handler.outbound.Sender;
 
 public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
+
+    private FileTransfer transfer;
+
+    public FileDownloadInitializer(FileTransfer transfer) {
+        this.transfer = transfer;
+    }
 
     @Override
     public void initChannel(SocketChannel ch) {
@@ -24,6 +31,6 @@ public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new Parser());
         pipeline.addLast(new DecryptHandler());    // decrypt
         pipeline.addLast(new DecompressHandler()); // decompress
-        pipeline.addLast(new DownloadHandler());
+        pipeline.addLast(new DownloadHandler(transfer));
     }
 }

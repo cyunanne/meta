@@ -2,7 +2,6 @@ package netty.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.util.ReferenceCountUtil;
 
 public class TransferData {
     private Header header;

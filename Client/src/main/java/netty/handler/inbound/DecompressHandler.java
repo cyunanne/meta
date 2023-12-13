@@ -35,7 +35,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
             // init decompressor
             if(doCompress && decomp == null) {
-                logger.info("Decompressing...: " + fs.getFilePath());
+                logger.info("Decompressing Started: " + fs.getFilePath());
 
                 buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
                 bufNio = buf.internalNioBuffer(0, buf.writableBytes());
@@ -61,7 +61,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             bufNio = buf.internalNioBuffer(0, buf.writableBytes());
 
             decomp.setBuffer(data);
-            decomp.decompress(bufNio);
+            decomp.decompress(bufNio); // 0byte 파일 전송
             do {
                 buf.writerIndex(bufNio.position());
                 td.setDataAndLength(buf.retain());

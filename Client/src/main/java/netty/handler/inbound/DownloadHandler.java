@@ -15,9 +15,14 @@ import java.nio.charset.Charset;
 
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
+    private FileTransfer transfer;
     private FileOutputStream fos;
     private FileSpec fs;
     private String filePath;
+
+    public DownloadHandler(FileTransfer transfer) {
+        this.transfer = transfer;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -51,7 +56,8 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
             // 파일 목록
             } else {
-                new FileTransfer("localhost", 8889).download(message);
+//                new FileTransfer("localhost", 8889).download(message);
+                transfer.download(message);
             }
 
         // 2-2) 파일 데이터
