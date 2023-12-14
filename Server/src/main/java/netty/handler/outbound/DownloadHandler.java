@@ -59,7 +59,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
 
         } catch (FileNotFoundException e) {
             logger.warn("No such file or directory");
-            ctx.writeAndFlush("error: 파일 또는 폴더를 찾을 수 없습니다.");
+            ctx.writeAndFlush(Builder.wrap("error: 파일 또는 폴더를 찾을 수 없습니다."));
             ctx.close();
 
         } catch (ClassNotFoundException | InvalidClassException e) {

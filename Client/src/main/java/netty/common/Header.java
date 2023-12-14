@@ -2,7 +2,13 @@ package netty.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Getter
+@Setter
+@Accessors(chain = true)
 public class Header {
 
     public static final int HEADER_SIZE = 5;
@@ -27,8 +33,8 @@ public class Header {
     private static final int EOF_OFFSET = 4;
     private static final int OK_OFFSET = 3;
 
-    private int type; // 0 : message / 1 : meta-data / 2 : data
-    private int cmd; // 0 : put / 1 : get
+    private int type;
+    private int cmd;
     private boolean eof;
     private boolean ok;
     private int length;
@@ -78,31 +84,11 @@ public class Header {
     }
 
     public ByteBuf toByteBuf() {
-        int data = ( this.type << TYPE_OFFSET) |
-                ( this.cmd << CMD_OFFSET) |
-                ( (this.eof ? 1 : 0) << EOF_OFFSET) |
-                ( (this.ok ? 1 : 0) << OK_OFFSET);
+        int data = (this.type << TYPE_OFFSET) |
+                (this.cmd << CMD_OFFSET) |
+                ((this.eof ? 1 : 0) << EOF_OFFSET) |
+                ((this.ok ? 1 : 0) << OK_OFFSET);
         return Unpooled.buffer().writeByte(data).writeInt(this.length);
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public int getCmd() {
-        return cmd;
-    }
-
-    public boolean isEof() {
-        return eof;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public int getLength() {
-        return length;
     }
 
     public Header setHeader(byte data) {
@@ -110,31 +96,6 @@ public class Header {
         this.cmd = (data & CMD_BIT) >> CMD_OFFSET;
         this.eof = ((data & EOF_BIT) >> EOF_OFFSET) == 1;
         this.ok = ((data & OK_BIT) >> OK_OFFSET) == 1;
-        return this;
-    }
-
-    public Header setLength(int length) {
-        this.length = length;
-        return this;
-    }
-
-    public Header setType(int type) {
-        this.type = type;
-        return this;
-    }
-
-    public Header setCmd(int cmd) {
-        this.cmd = cmd;
-        return this;
-    }
-
-    public Header setEof(boolean eof) {
-        this.eof = eof;
-        return this;
-    }
-
-    public Header setOk(boolean ok) {
-        this.ok = ok;
         return this;
     }
 
@@ -154,11 +115,4 @@ public class Header {
         return this.type == TYPE_SIG;
     }
 
-    public boolean isFin() {
-        return this.cmd == CMD_FIN;
-    }
-
-    public void setFin() {
-        this.cmd = CMD_FIN;
-    }
 }

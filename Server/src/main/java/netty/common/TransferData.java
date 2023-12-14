@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class TransferData {
+
     private Header header;
     private ByteBuf data;
 
@@ -21,16 +22,8 @@ public class TransferData {
         this(new Header(Header.TYPE_META), fs.toByteBuf());
     }
 
-    public Header getHeader() {
-        return header;
-    }
-
     public ByteBuf getData() {
         return data.resetReaderIndex();
-    }
-
-    public void delete() {
-        data.release();
     }
 
     public TransferData setData(ByteBuf buf) {
@@ -52,8 +45,7 @@ public class TransferData {
         return this.setDataAndLength(Unpooled.wrappedBuffer(data));
     }
 
-    public TransferData setHeader(Header header) {
-        this.header = header;
-        return this;
+    public Header getHeader() {
+        return header;
     }
 }

@@ -9,16 +9,21 @@ import netty.common.FileSpec;
 import netty.common.FileUtils;
 import netty.common.Header;
 import netty.common.TransferData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
-    private FileTransfer transfer;
+    private static final Logger logger = LogManager.getLogger(DownloadHandler.class);
+    private final FileTransfer transfer;
     private FileOutputStream fos;
     private FileSpec fs;
     private String filePath;
+    private long progress = 0L;
 
     public DownloadHandler(FileTransfer transfer) {
         this.transfer = transfer;
@@ -27,59 +32,40 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        /* 1. 메타 데이터 */
-        if(msg instanceof FileSpec) {
-            fs = (FileSpec) msg;
-            filePath = fs.getFilePath();
-            FileUtils.mkdir(filePath);
-            fos = new FileOutputStream(filePath);
-            return;
-        }
-
-        /* 2. 일반 데이터 */
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
-        ByteBuf byteBuf = td.getData();
+        ByteBuf data = td.getData();
 
-        // 2-1) 메세지
-        if (header.isMessage()) {
-            String message = byteBuf.toString(Charset.defaultCharset());
+        switch (header.getType()) {
 
-            // 에러 메시지
-            if(message.startsWith("error")) {
-                System.out.println(message);
-                ctx.close();
+            case Header.TYPE_SIG: break;
 
-            // 채널 종료 메시지
-            } else if(message.equals("fin")) {
-                ctx.close();
+            case Header.TYPE_META:
+                fs = new FileSpec(data);
+                initFileStream();
+                break;
 
-            // 파일 목록
-            } else {
-//                new FileTransfer("localhost", 8889).download(message);
-                transfer.download(message);
-            }
+            case Header.TYPE_DATA:
+                progress += fos.getChannel().write(data.nioBuffer());
+                printProgress(progress);
+                
+                if (header.isEof()) { // 파일 끝
+                    System.out.println();
+                    closeFileStream();
+                    ctx.close(); // 채널종료
+                }
+                break;
 
-        // 2-2) 파일 데이터
-        } else if (header.isData() && fos != null) {
-            fos.getChannel().write(byteBuf.nioBuffer());
+            case Header.TYPE_MSG:
+                processMessage(ctx, data);
+                break;
 
-            if (header.isEof()) {
-                fos.close();
-                ctx.close(); // 채널종료
-
-                System.out.printf("다운로드 성공: %s (%d bytes)%n", filePath, fs.getOriginalFileSize());
-            }
-
-        // 2-3) signal
-//        } else if (header.isSignal()) {
-//            if(header.isFin()) {
-//                ctx.close();
-//            }
+            default:
+                logger.error("알 수 없는 데이터 타입");
         }
 
-        ReferenceCountUtil.release(byteBuf);
         ReferenceCountUtil.release(msg);
+        ReferenceCountUtil.release(data);
     }
 
     @Override
@@ -92,6 +78,41 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
         cause.printStackTrace();
+    }
+
+    private void processMessage(ChannelHandlerContext ctx, ByteBuf data) {
+        String message = data.toString(Charset.defaultCharset());
+
+        // 에러 메시지
+        if(message.startsWith("error")) {
+            System.out.println(message);
+            ctx.close();
+
+        // 채널 종료 메시지
+        } else if(message.equals("fin")) {
+            ctx.close();
+
+        // 파일 목록 수신 -> 다운로드 요청
+        } else {
+            transfer.download(message);
+        }
+    }
+
+    private void initFileStream() throws IOException {
+        filePath = fs.getFilePath();
+        FileUtils.mkdir(filePath); // 경로 내 폴더 생성
+        fos = new FileOutputStream(filePath);
+    }
+
+    private void closeFileStream() throws IOException {
+        fos.close();
+        logger.info("Download Complete: " + filePath + " " + fs.getOriginalFileSize() + "bytes");
+    }
+
+    private void printProgress(long progress) {
+        long percentage = progress == 0 ? 100 : 100*progress/fs.getOriginalFileSize();
+        System.out.printf("\r%s : %d / %d bytes (%d %%)", fs.getFilePath(),
+                progress, fs.getOriginalFileSize(), percentage);
     }
 
 }

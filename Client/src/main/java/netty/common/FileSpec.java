@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -12,6 +13,7 @@ import java.io.*;
 @Getter
 @Setter
 @Accessors(chain = true)
+@NoArgsConstructor
 public class FileSpec implements Serializable {
 
     private static final long serialVersionUID = 123L;

@@ -28,59 +28,61 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
 
-        // 메타 데이터
-        if(msg instanceof FileSpec) {
-            fs = (FileSpec) msg;
-            doCompress = fs.isCompress();
-
-            // init decompressor
-            if(doCompress && decomp == null) {
-                logger.info("Decompressing Started: " + fs.getFilePath());
-
-                buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
-                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-                decomp = new Decompressor();
-            }
-
-            ctx.fireChannelRead(fs);
-            return;
-        }
-
-        // 파일 데이터 압축 해제
         TransferData td = (TransferData) msg;
         Header header = td.getHeader();
         ByteBuf data = td.getData();
 
-        if (doCompress && header.isData()) {
+        switch (header.getType()) {
 
-            buf.clear();
-            bufNio.clear();
+            case Header.TYPE_SIG: break;
 
-            int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
-            buf.ensureWritable(writableLength);
-            bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+            case Header.TYPE_META:
+                fs = new FileSpec(data);
+                doCompress = fs.isCompress();
+                if (doCompress) initDecompressor();
+                break;
 
-            decomp.setBuffer(data);
-            decomp.decompress(bufNio); // 0byte 파일 전송
-            do {
-                buf.writerIndex(bufNio.position());
-                td.setDataAndLength(buf.retain());
-                ctx.fireChannelRead(td);
-            } while (decomp.decompress(bufNio));
+            case Header.TYPE_DATA:
+                if (!doCompress) break;
+                decompress(ctx, td);
+                if (header.isEof()) clearProperties();
+                return;
 
-            if (header.isEof()) {
-                clearVariables();
-                logger.info("Decompressing Finished: " + fs.getFilePath());
-            }
+            case Header.TYPE_MSG: break;
+
+            default:
+                logger.error("알 수 없는 데이터 타입");
         }
 
-        else {
-            ctx.fireChannelRead(td);
-        }
+        ctx.fireChannelRead(td);
     }
 
-    private void clearVariables() throws IOException {
+    private void initDecompressor() {
+        buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
+        bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+        decomp = new Decompressor();
+        logger.debug("Decompressor has been created: " + fs.getFilePath());
+        logger.info("Decompression has been Started: " + fs.getFilePath()); // 위치 이동 예정
+    }
+
+    private void decompress(ChannelHandlerContext ctx, TransferData td) throws IOException {
+        int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
+        buf.clear().ensureWritable(writableLength);
+        bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+
+        decomp.setBuffer(td.getData());
+        decomp.decompress(bufNio);
+        do {
+            buf.writerIndex(bufNio.position());
+            td.setDataAndLength(buf.retain());
+            ctx.fireChannelRead(td);
+        } while (decomp.decompress(bufNio));
+    }
+
+    private void clearProperties() throws IOException {
         decomp.close();
         ReferenceCountUtil.release(buf);
+        logger.info("Decompression finished: " + fs.getFilePath());
     }
+
 }
