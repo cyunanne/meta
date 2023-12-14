@@ -24,13 +24,13 @@ public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
 
         // outbound
-        pipeline.addLast(new Sender());
-        pipeline.addLast(new TransferDataBuilder());
+        pipeline.addLast(new Sender());                     // (2)
+        pipeline.addLast(new TransferDataBuilder());        // (1)
 
         // inbound
-        pipeline.addLast(new Parser());
-        pipeline.addLast(new DecryptHandler());    // decrypt
-        pipeline.addLast(new DecompressHandler()); // decompress
-        pipeline.addLast(new DownloadHandler(transfer));
+        pipeline.addLast(new Parser());                     // (1)
+        pipeline.addLast(new DecryptHandler());             // (2) decrypt
+        pipeline.addLast(new DecompressHandler());          // (3) decompress
+        pipeline.addLast(new DownloadHandler(transfer));    // (4)
     }
 }

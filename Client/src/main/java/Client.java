@@ -45,7 +45,9 @@ public class Client {
                     break;
 
                 case SIG_GET:
+                    System.out.println("Download Started.");
                     ft.download(filePath);
+                    System.out.println("Download Succeed.");
                     break;
 
                 case SIG_IGNORE:
