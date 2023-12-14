@@ -14,6 +14,10 @@ public class Builder {
         return new TransferData(header, buf);
     }
 
+    public static TransferData wrap(FileSpec fs) {
+        return wrap(fs, Header.CMD_GET);
+    }
+
     public static TransferData wrap(ByteBuf data) {
 
         Header header = new Header(Header.TYPE_DATA);

@@ -31,7 +31,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         // 메타 데이터
         if(msg instanceof FileSpec) {
             fs = (FileSpec) msg;
-            doCompress = fs.isCompressed();
+            doCompress = fs.isCompress();
 
             // init decompressor
             if(doCompress && decomp == null) {

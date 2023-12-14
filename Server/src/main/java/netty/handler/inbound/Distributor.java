@@ -1,17 +1,13 @@
-package netty.handler;
+package netty.handler.inbound;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
-import netty.FileServer;
 import netty.common.FileSpec;
 import netty.common.Header;
 import netty.common.TransferData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.FileOutputStream;
 
 public class Distributor extends ChannelInboundHandlerAdapter {
 

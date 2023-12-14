@@ -1,4 +1,4 @@
-package netty.handler;
+package netty.handler.outbound;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;

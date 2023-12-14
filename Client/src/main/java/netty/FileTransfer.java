@@ -53,7 +53,7 @@ public class FileTransfer {
                 channels.add(ch);
 
                 FileSpec fs = new FileSpec(curFile);
-                fs.encrypt(doEncrypt).compress(doCompress);
+                fs.setEncrypt(doEncrypt).setCompress(doCompress);
 
                 // 마지막 파일 확인
                 boolean isLastFile = (i == list.size() - 1);

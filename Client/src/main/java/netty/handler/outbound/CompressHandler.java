@@ -38,7 +38,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         // 메타 데이터 확인 -> compressor 초기화
         if (header.isMetadata()) {
             fs = new FileSpec(data);
-            doCompress = fs.isCompressed();
+            doCompress = fs.isCompress();
 
             // init compressor
             if (doCompress) {

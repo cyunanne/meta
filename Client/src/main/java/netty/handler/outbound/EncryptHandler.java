@@ -36,7 +36,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         if (header.isMetadata()) {
             fs = new FileSpec(data);
             fileSize = fs.getOriginalFileSize();
-            doEncrypt = fs.isEncrypted();
+            doEncrypt = fs.isEncrypt();
 
             if (doEncrypt) {
                 logger.info("Encrypting Started: " + fs.getFilePath());
