@@ -40,8 +40,6 @@ public class UploadHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
         super.close(ctx, promise);
-        
-        // 스트림 닫기
         if(chunkedStream != null) chunkedStream.close();
         if(fis != null) fis.close();
     }
