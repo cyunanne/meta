@@ -8,8 +8,8 @@ import netty.handler.inbound.DecompressHandler;
 import netty.handler.inbound.DecryptHandler;
 import netty.handler.inbound.DownloadHandler;
 import netty.handler.inbound.Parser;
-import netty.handler.outbound.DownloadReqHandler;
 import netty.handler.outbound.Sender;
+import netty.handler.outbound.TransferDataBuilder;
 
 public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -25,7 +25,7 @@ public class FileDownloadInitializer extends ChannelInitializer<SocketChannel> {
 
         // outbound
         pipeline.addLast(new Sender());
-        pipeline.addLast(new DownloadReqHandler());
+        pipeline.addLast(new TransferDataBuilder());
 
         // inbound
         pipeline.addLast(new Parser());

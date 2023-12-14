@@ -7,9 +7,9 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import netty.handler.inbound.Distributor;
 import netty.handler.inbound.Parser;
 import netty.handler.inbound.UploadHandler;
-import netty.handler.outbound.ChunkedFileHandler;
 import netty.handler.outbound.DownloadHandler;
 import netty.handler.outbound.Sender;
+import netty.handler.outbound.TransferDataBuilder;
 
 public class FileInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -19,7 +19,7 @@ public class FileInitializer extends ChannelInitializer<SocketChannel> {
 
         // Download (outbound)
         pipeline.addLast(new Sender());                 // (4) send
-        pipeline.addLast(new ChunkedFileHandler());     // (3) bulid a TransferData from ChunkedFile data
+        pipeline.addLast(new TransferDataBuilder());    // (3) bulid a TransferData
         pipeline.addLast(new ChunkedWriteHandler());    // (2) chunk
         pipeline.addLast(new DownloadHandler());        // (1) load a file
 

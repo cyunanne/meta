@@ -1,6 +1,7 @@
 package netty.common;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class Builder {
 
@@ -24,6 +25,14 @@ public class Builder {
         header.setLength(data.readableBytes());
 
         return new TransferData(header, data);
+    }
+
+    public static TransferData wrap(String message) {
+
+        Header header = new Header(Header.TYPE_MSG);
+        header.setLength(message.length());
+
+        return new TransferData(header, Unpooled.wrappedBuffer(message.getBytes()));
     }
 
 }
