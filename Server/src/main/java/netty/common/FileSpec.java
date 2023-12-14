@@ -26,8 +26,6 @@ public class FileSpec implements Serializable {
     private boolean encrypt = false;
     private boolean compress = false;
 
-    public FileSpec() {}
-
     public void initializeWithFileSpec(FileSpec fs) {
         this.filePath = fs.filePath;
         this.newFilePath = fs.newFilePath;
@@ -68,51 +66,6 @@ public class FileSpec implements Serializable {
         this(Unpooled.wrappedBuffer(data));
     }
 
-//    public FileSpec setFilePath(String filePath) {
-//        this.filePath = filePath;
-//        return this;
-//    }
-//
-//    public String getFilePath() {
-//        return filePath;
-//    }
-//
-//    public long getOriginalFileSize() {
-//        return originalFileSize;
-//    }
-//
-//    public boolean isEndOfFileList() {
-//        return endOfFileList;
-//    }
-//
-//    public boolean isEncrypt() {
-//        return encrypt;
-//    }
-//
-//    public boolean isCompress() {
-//        return compress;
-//    }
-//
-//    public FileSpec setOriginalFileSize(Long originalFileSize) {
-//        this.originalFileSize = originalFileSize;
-//        return this;
-//    }
-//
-//    public FileSpec setEndOfFileList(Boolean endOfFileList) {
-//        this.endOfFileList = endOfFileList;
-//        return this;
-//    }
-//
-//    public FileSpec setEncrypt(Boolean encrypted) {
-//        this.encrypt = encrypted;
-//        return this;
-//    }
-//
-//    public FileSpec setCompress(Boolean compressed) {
-//        this.compress = compressed;
-//        return this;
-//    }
-
     public byte[] toByteArray() {
 
         try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -130,37 +83,4 @@ public class FileSpec implements Serializable {
         return Unpooled.wrappedBuffer(this.toByteArray());
     }
 
-//    public byte[] getKey() {
-//        return key;
-//    }
-//
-//    public byte[] getIv() {
-//        return iv;
-//    }
-//
-//    public FileSpec setKey(byte[] key) {
-//        this.key = key;
-//        return this;
-//    }
-//
-//    public FileSpec setIv(byte[] iv) {
-//        this.iv = iv;
-//        return this;
-//    }
-//
-//    public long getCurrentFileSize() {
-//        return currentFileSize;
-//    }
-//
-//    public void setCurrentFileSize(long currentFileSize) {
-//        this.currentFileSize = currentFileSize;
-//    }
-//
-//    public String getNewFilePath() {
-//        return newFilePath;
-//    }
-//
-//    public void setNewFilePath(String newFilePath) {
-//        this.newFilePath = newFilePath;
-//    }
 }
