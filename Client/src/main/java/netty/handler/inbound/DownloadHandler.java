@@ -49,7 +49,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
                 progress += fos.getChannel().write(data.nioBuffer());
                 printProgress(progress);
                 
-                if (header.isEof()) { // 파일 끝
+                if (progress == fs.getOriginalFileSize() && header.isEof()) { // 파일 끝
                     System.out.println();
                     closeFileStream();
                     ctx.close(); // 채널종료

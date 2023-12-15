@@ -1,5 +1,6 @@
 package netty.handler.inbound;
 
+import com.github.luben.zstd.ZstdDirectBufferDecompressingStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -46,7 +47,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 if (!doCompress) break;
                 decompress(ctx, td);
                 if (header.isEof()) clearProperties();
-                return;
+                return; // 마지막 channel read 스킵
 
             case Header.TYPE_MSG: break;
 
@@ -58,7 +59,8 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void initDecompressor() {
-        buf = Unpooled.directBuffer(Header.CHUNK_SIZE);
+        int bufferSize = ZstdDirectBufferDecompressingStream.recommendedTargetBufferSize();
+        buf = Unpooled.directBuffer(bufferSize);
         bufNio = buf.internalNioBuffer(0, buf.writableBytes());
         decomp = new Decompressor();
         logger.debug("Decompressor has been created: " + fs.getFilePath());
@@ -66,9 +68,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void decompress(ChannelHandlerContext ctx, TransferData td) throws IOException {
-        int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
-        buf.clear().ensureWritable(writableLength);
-        bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+        bufNio = buf.clear().internalNioBuffer(0, buf.writableBytes());
 
         decomp.setBuffer(td.getData());
         decomp.decompress(bufNio);
@@ -81,6 +81,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
     private void clearProperties() throws IOException {
         decomp.close();
+        doCompress = false;
         ReferenceCountUtil.release(buf);
         logger.info("Decompression finished: " + fs.getFilePath());
     }

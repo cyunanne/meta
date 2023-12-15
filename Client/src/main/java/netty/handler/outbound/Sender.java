@@ -10,8 +10,6 @@ import java.util.List;
 
 public class Sender extends MessageToMessageEncoder<TransferData> {
 
-    private static int total = 0;
-    private static int finished = 0;
     private long transferred = 0L;
     private long fileSize = 0L;
     private FileSpec fs;
@@ -23,7 +21,6 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
         if (header.isMetadata()) {
             fs = new FileSpec(td.getData());
             this.fileSize = fs.getOriginalFileSize();
-            total++;
 
         } else if (header.isData()) {
             transferred += header.getLength();
@@ -41,8 +38,6 @@ public class Sender extends MessageToMessageEncoder<TransferData> {
     }
 
     private void printProgress(long transferred) {
-        System.out.printf("[%d/%d] %s 업로드 완료 (%d bytes)\n",
-                ++finished, total, fs.getFilePath(), transferred);
-        if(finished == total) finished = total = 0;
+        System.out.printf("%s 업로드 완료 (%d bytes)\n", fs.getFilePath(), transferred);
     }
 }
