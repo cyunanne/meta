@@ -89,6 +89,7 @@ public class FileTransfer {
             // 파일 정보(파일명) 전송
             FileSpec fs = new FileSpec().setFilePath(filePath);
             channel.writeAndFlush(fs);
+            logger.info("download request: " + fs.getFilePath());
             channel.closeFuture().sync();
 
         } catch (Exception e) {

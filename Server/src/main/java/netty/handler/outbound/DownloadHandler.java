@@ -24,13 +24,14 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
     private ObjectInputStream ois;
     private ChunkedStream chunkedStream;
     private FileSpec fs;
+    private String filePath;
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
 
         try {
 
-            String filePath = (String) msg;
+            filePath = (String) msg;
 
             // 디렉터리인 경우
             if(FileUtils.isDirectory(filePath)) {
@@ -82,7 +83,7 @@ public class DownloadHandler extends ChannelOutboundHandlerAdapter {
         if(fis != null) fis.close();
         if(fs != null) {
             logger.info(String.format("file downloaded: %s (%d bytes)",
-                    fs.getFilePath(), FileUtils.getSize(fs.getFilePath())));
+                    filePath, FileUtils.getSize(filePath)));
         }
     }
 

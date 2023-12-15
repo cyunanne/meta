@@ -37,8 +37,6 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
         switch (header.getType()) {
 
-            case Header.TYPE_SIG: break;
-
             case Header.TYPE_META:
                 fs = new FileSpec(data);
                 fileSize = fs.getCurrentFileSize();
@@ -54,6 +52,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
                 if (header.isEof()) clearProperties(); // 파일 끝
                 break;
 
+            case Header.TYPE_SIG: break;
             case Header.TYPE_MSG: break;
 
             default: logger.error("알 수 없는 데이터 타입");

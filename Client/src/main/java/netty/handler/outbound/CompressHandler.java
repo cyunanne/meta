@@ -37,8 +37,6 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
 
         switch (header.getType()) {
 
-            case Header.TYPE_SIG: break;
-
             case Header.TYPE_META:
                 fs = new FileSpec(data);
                 doCompress = fs.isCompress();
@@ -52,6 +50,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
                 if (header.isEof()) clearProperties();
                 break;
 
+            case Header.TYPE_SIG: break;
             case Header.TYPE_MSG: break;
 
             default: logger.error("알 수 없는 데이터 타입");

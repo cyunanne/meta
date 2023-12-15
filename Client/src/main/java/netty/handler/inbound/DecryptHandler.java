@@ -32,8 +32,6 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
 
         switch (header.getType()) {
 
-            case Header.TYPE_SIG: break;
-
             case Header.TYPE_META:
                 fs = new FileSpec(data);
                 doDecrypt = fs.isEncrypt();
@@ -47,6 +45,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
                 if (header.isEof()) clearProperties(); // 파일 끝
                 break;
 
+            case Header.TYPE_SIG: break;
             case Header.TYPE_MSG: break;
 
             default: logger.error("알 수 없는 데이터 타입");

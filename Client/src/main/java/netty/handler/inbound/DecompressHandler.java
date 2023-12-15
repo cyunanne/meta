@@ -35,8 +35,6 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
         switch (header.getType()) {
 
-            case Header.TYPE_SIG: break;
-
             case Header.TYPE_META:
                 fs = new FileSpec(data);
                 doCompress = fs.isCompress();
@@ -49,6 +47,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
                 if (header.isEof()) clearProperties();
                 return; // 마지막 channel read 스킵
 
+            case Header.TYPE_SIG: break;
             case Header.TYPE_MSG: break;
 
             default: logger.error("알 수 없는 데이터 타입");
@@ -59,7 +58,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
     private void initDecompressor() {
         int bufferSize = ZstdDirectBufferDecompressingStream.recommendedTargetBufferSize();
-        buf = Unpooled.directBuffer(bufferSize);
+        buf = Unpooled.directBuffer(bufferSize * 2);
         bufNio = buf.internalNioBuffer(0, buf.writableBytes());
         decomp = new Decompressor();
         logger.debug("Decompressor has been created: " + fs.getFilePath());
@@ -70,7 +69,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         bufNio = buf.clear().internalNioBuffer(0, buf.writableBytes());
 
         decomp.setBuffer(td.getData());
-        decomp.decompress(bufNio);
+        decomp.decompress(bufNio); // 0byte 파일 처리
         do {
             buf.writerIndex(bufNio.position());
             td.setDataAndLength(buf.retain());

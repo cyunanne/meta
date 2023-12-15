@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 public class UploadHandler extends ChannelInboundHandlerAdapter {
@@ -28,30 +29,23 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
-        // 파일 정보 수신
-        if (header.isMetadata()) {
-            fs = new FileSpec(byteBuf);
-            String filePath = FileUtils.rename(fs.getFilePath());
-            FileUtils.mkdir(filePath);
+        switch (header.getType()) {
 
-            if (fos == null) {
-                fos = new FileOutputStream(filePath, false);
-            }
+            case Header.TYPE_META:
+                fs = new FileSpec(byteBuf);
+                writeMetaData();
+                break;
 
-            // 메타 데이터 저장
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(fs);
-        }
+            case Header.TYPE_DATA:
+                if(fos == null) break;
+                fos.getChannel().write(byteBuf.nioBuffer());
+                if(header.isEof()) ctx.close(); // 채널종료
+                break;
 
-        // 파일 수신
-        if (fos != null) {
-            fos.getChannel().write(byteBuf.nioBuffer());
-            if(header.isEof()) {
-                ctx.close(); // 채널종료
-                if(oos != null) oos.close();
-                if(fos != null) fos.close();
-                if(fs != null) logger.info(String.format("file uploaded: %s (%d bytes)", fs.getFilePath(), FileUtils.getSize(fs.getFilePath())));
-            }
+            case Header.TYPE_SIG: break;
+            case Header.TYPE_MSG: break;
+
+            default: logger.error("알 수 없는 데이터 타입");
         }
 
         ReferenceCountUtil.release(byteBuf);
@@ -59,9 +53,36 @@ public class UploadHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        closeFileStream();
+        if(fs != null) {
+            logger.info(String.format("file uploaded: %s (%d bytes)",
+                    fs.getFilePath(), FileUtils.getSize(fs.getFilePath())));
+        }
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
         cause.printStackTrace();
+    }
+
+    private void writeMetaData() throws IOException {
+        openFileStream(fs.getFilePath());
+        oos = new ObjectOutputStream(fos);
+        oos.writeObject(fs);
+    }
+
+    private void openFileStream(String path) throws IOException {
+        String filePath = FileUtils.rename(path);
+        FileUtils.mkdir(filePath);
+        fos = new FileOutputStream(filePath, false);
+    }
+
+    private void closeFileStream() throws IOException {
+        if(oos != null) oos.close();
+        if(fos != null) fos.close();
     }
 
 }

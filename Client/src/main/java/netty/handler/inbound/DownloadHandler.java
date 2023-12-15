@@ -38,8 +38,6 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
 
         switch (header.getType()) {
 
-            case Header.TYPE_SIG: break;
-
             case Header.TYPE_META:
                 fs = new FileSpec(data);
                 initFileStream();
@@ -48,7 +46,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             case Header.TYPE_DATA:
                 progress += fos.getChannel().write(data.nioBuffer());
                 printProgress(progress);
-                
+
                 if (progress == fs.getOriginalFileSize() && header.isEof()) { // 파일 끝
                     System.out.println();
                     closeFileStream();
@@ -59,6 +57,8 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
             case Header.TYPE_MSG:
                 processMessage(ctx, data);
                 break;
+
+            case Header.TYPE_SIG: break;
 
             default: logger.error("알 수 없는 데이터 타입");
         }

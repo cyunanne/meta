@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 public class Distributor extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LogManager.getLogger(Distributor.class);
+    private FileSpec fs;
+    private String filePath;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -25,29 +27,26 @@ public class Distributor extends ChannelInboundHandlerAdapter {
         Header header = td.getHeader();
         ByteBuf byteBuf = td.getData();
 
-        // 파일 정보 수신
-        if (header.isMetadata()) {
-            FileSpec filespec = new FileSpec(byteBuf);
-            String filePath = filespec.getFilePath();
+        switch (header.getType()) {
 
-            switch (header.getCmd()) {
+            case Header.TYPE_META:
+                fs = new FileSpec(byteBuf);
+                filePath = fs.getFilePath();
 
-                // upload
-                case Header.CMD_PUT:
-                    ctx.fireChannelRead(msg);
-                    break;
+                if(header.getCmd() == Header.CMD_GET) {
+                    ctx.writeAndFlush(filePath); // download
+                    return; // channel read 연쇄 중단
+                }
+                break;
 
-                // download
-                case Header.CMD_GET:
-                    ctx.writeAndFlush(filePath);
-                    break;
-            }
+            case Header.TYPE_SIG: break;
+            case Header.TYPE_DATA: break;
+            case Header.TYPE_MSG: break;
+
+            default: logger.error("알 수 없는 데이터 타입");
         }
-        
-        // 파일 데이터 전달
-        else if (header.isData()) {
-            ctx.fireChannelRead(msg);
-        }
+
+        ctx.fireChannelRead(msg);
     }
 
     @Override
