@@ -35,52 +35,58 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         Header header = td.getHeader();
         ByteBuf data = td.getData();
 
-        // 메타 데이터 확인 -> compressor 초기화
-        if (header.isMetadata()) {
-            fs = new FileSpec(data);
-            doCompress = fs.isCompress();
+        switch (header.getType()) {
 
-            // init compressor
-            if (doCompress) {
-                logger.info("Compressing Started: " + fs.getFilePath());
+            case Header.TYPE_SIG: break;
 
-                int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
-                buf = Unpooled.directBuffer(writableLength);
-                bufNio = buf.internalNioBuffer(0, buf.writableBytes());
-                comp = new Compressor(bufNio, compressionLevel);
-            }
-        }
+            case Header.TYPE_META:
+                fs = new FileSpec(data);
+                doCompress = fs.isCompress();
+                if (doCompress) initCompressor();
+                break;
 
-        // 데이터 압축
-        else if (doCompress && header.isData()) {
-            int len = header.getLength();
-            compressed += len;
+            case Header.TYPE_DATA:
+                if (!doCompress) break;
+                compress(header, data);
+                td.setDataAndLength(buf.duplicate());
+                if (header.isEof()) clearProperties();
+                break;
 
-            buf.clear();
-            bufNio.clear();
+            case Header.TYPE_MSG: break;
 
-            comp.compress(data);
-
-            buf.writerIndex(bufNio.position());
-            td.setDataAndLength(buf.duplicate());
-
-            // 마지막 블록 eof 설정
-            if (fs.getOriginalFileSize() == compressed) {
-                header.setEof(true);
-                clearVariables();
-
-                logger.info("Compressing Finished: " + fs.getFilePath());
-            }
+            default: logger.error("알 수 없는 데이터 타입");
         }
 
         ctx.writeAndFlush(td);
     }
 
-    private void clearVariables() throws IOException {
+    private void initCompressor() throws IOException {
+        int writableLength = Math.min(Header.CHUNK_SIZE * 2, Integer.MAX_VALUE);
+        buf = Unpooled.directBuffer(writableLength);
+        bufNio = buf.internalNioBuffer(0, buf.writableBytes());
+        comp = new Compressor(bufNio, compressionLevel);
+        logger.debug("Compressor has been created: " + fs.getFilePath());
+        logger.info("Compression has been Started: " + fs.getFilePath()); // 위치 이동 예정
+    }
+
+    private void compress(Header header, ByteBuf data) throws IOException {
+        buf.clear();
+        bufNio.clear();
+        comp.compress(data);
+        buf.writerIndex(bufNio.position());
+
+        compressed += header.getLength();
+        if (fs.getOriginalFileSize() == compressed) {
+            header.setEof(true);
+        }
+    }
+
+    private void clearProperties() throws IOException {
         comp.setFinalize(true);
         comp.close();
         compressed = 0L;
         ReferenceCountUtil.release(buf);
+        logger.info("Compressing Finished: " + fs.getFilePath());
     }
 
 }

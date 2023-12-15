@@ -51,8 +51,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
 
             case Header.TYPE_MSG: break;
 
-            default:
-                logger.error("알 수 없는 데이터 타입");
+            default: logger.error("알 수 없는 데이터 타입");
         }
 
         ctx.fireChannelRead(td);

@@ -60,8 +60,7 @@ public class DownloadHandler extends ChannelInboundHandlerAdapter {
                 processMessage(ctx, data);
                 break;
 
-            default:
-                logger.error("알 수 없는 데이터 타입");
+            default: logger.error("알 수 없는 데이터 타입");
         }
 
         ReferenceCountUtil.release(msg);
