@@ -12,20 +12,17 @@ import netty.common.TransferData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
 import java.nio.ByteBuffer;
 
 public class EncryptHandler extends ChannelOutboundHandlerAdapter {
 
     private static final Logger logger = LogManager.getLogger(EncryptHandler.class);
+    private AES256Cipher cipher;
     private long fileSize = 0L;
     private long transferred = 0L;
     private boolean doEncrypt = false;
     private ByteBuf enc;
-    private AES256Cipher cipher;
     private FileSpec fs;
 
     @Override
@@ -65,6 +62,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         enc = Unpooled.directBuffer(Header.CHUNK_SIZE + 16);
         cipher = new AES256Cipher(Cipher.ENCRYPT_MODE);
         fs.setKey(cipher.getKey()).setIv(cipher.getIv());
+
         logger.debug("Cipher for encryption has been created: " + fs.getFilePath());
         logger.info("Encryption has been Started: " + fs.getFilePath()); // 위치 이동 예정
     }
@@ -74,12 +72,15 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         enc.clear().ensureWritable(header.getLength() + 16);
         ByteBuffer encNio = enc.internalNioBuffer(0, enc.writableBytes());
 
-        if (header.isEof() || transferred == fileSize) { // 압축된 파일은 transferred != fileSize
+        // 압축O 파일 : header.isEof() == true
+        // 압축X 파일 : transferred == fileSize
+        if (header.isEof() || transferred == fileSize) {
             cipher.doFinal(data.nioBuffer(), encNio);
             header.setEof(true);
         } else {
             cipher.update(data.nioBuffer(), encNio);
         }
+
         enc.writerIndex(encNio.position());
     }
 
@@ -87,6 +88,7 @@ public class EncryptHandler extends ChannelOutboundHandlerAdapter {
         cipher = null;
         doEncrypt = false;
         transferred = 0L;
+
         logger.info("Encryption Finished: " + fs.getFilePath());
     }
 

@@ -44,8 +44,10 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
             case Header.TYPE_DATA:
                 if (!doCompress) break;
                 decompress(ctx, td);
-                if (header.isEof()) clearProperties();
-                return; // 마지막 channel read 스킵
+                if (header.isEof()) {
+                    clearProperties();
+                }
+                return; // switch 밖 channel read 스킵
 
             case Header.TYPE_SIG: break;
             case Header.TYPE_MSG: break;
@@ -61,7 +63,8 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         buf = Unpooled.directBuffer(bufferSize * 2);
         bufNio = buf.internalNioBuffer(0, buf.writableBytes());
         decomp = new Decompressor();
-        logger.debug("Decompressor has been created: " + fs.getFilePath());
+
+        logger.info("Decompressor has been created: " + fs.getFilePath());
         logger.info("Decompression has been Started: " + fs.getFilePath()); // 위치 이동 예정
     }
 
@@ -81,6 +84,7 @@ public class DecompressHandler extends ChannelInboundHandlerAdapter {
         decomp.close();
         doCompress = false;
         ReferenceCountUtil.release(buf);
+
         logger.info("Decompression finished: " + fs.getFilePath());
     }
 

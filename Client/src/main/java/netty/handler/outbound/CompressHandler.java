@@ -64,6 +64,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         buf = Unpooled.directBuffer(writableLength);
         bufNio = buf.internalNioBuffer(0, buf.writableBytes());
         comp = new Compressor(bufNio, compressionLevel);
+
         logger.debug("Compressor has been created: " + fs.getFilePath());
         logger.info("Compression has been Started: " + fs.getFilePath()); // 위치 이동 예정
     }
@@ -74,6 +75,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         comp.compress(data);
         buf.writerIndex(bufNio.position());
 
+        // 파일 끝 설정
         compressed += header.getLength();
         if (fs.getOriginalFileSize() == compressed) {
             header.setEof(true);
@@ -85,6 +87,7 @@ public class CompressHandler extends ChannelOutboundHandlerAdapter {
         comp.close();
         compressed = 0L;
         ReferenceCountUtil.release(buf);
+
         logger.info("Compressing Finished: " + fs.getFilePath());
     }
 

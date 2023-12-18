@@ -57,6 +57,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
     private void initCipher() {
         cipher = new AES256Cipher(Cipher.DECRYPT_MODE, fs.getKey(), fs.getIv());
         plain = Unpooled.directBuffer(Header.CHUNK_SIZE);
+
         logger.debug("Cipher for decryption has been created: " + fs.getFilePath());
         logger.info("Decryption has been Started: " + fs.getFilePath()); // 위치 이동 예정
     }
@@ -74,6 +75,7 @@ public class DecryptHandler extends ChannelInboundHandlerAdapter {
     private void clearProperties() {
         cipher = null;
         ReferenceCountUtil.release(plain);
+
         logger.info("Decryption finished: " + fs.getFilePath());
     }
 
